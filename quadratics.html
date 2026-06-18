@@ -403,14 +403,14 @@ const topics = {
       const a = d==='hard'?pick([1,-1,2,-2]):1;
       const eq = showQ(a,h,k);
       let parts = [];
-      if(h!==0) parts.push(h<0?`right ${abs(h)}`:`left ${h}`);
-      if(k!==0) parts.push(k<0?`down ${abs(k)}`:`up ${k}`);
+      if(h!==0) parts.push(h>0?`right ${abs(h)}`:`left ${abs(h)}`);
+      if(k!==0) parts.push(k<0?`down ${abs(k)}`:`up ${abs(k)}`);
       if(a===-1) parts.push('reflect over x-axis');
       else if(a!=1) parts.push(`vertical ${abs(a)>1?'stretch':'compression'} by ${abs(a)}`);
       if(parts.length===0) parts=['no shift (same as parent)'];
       const ans = parts.join(', ');
       const text = `Describe the transformation(s) from y = x² to:\n  ${eq}`;
-      const hint = `h = ${h}: shift ${h<0?`right ${abs(h)}`:`left ${abs(h)}`}\nk = ${k}: shift ${k<0?`down ${abs(k)}`:`up ${abs(k)}`}${a!==1?`\na = ${a}: stretch/reflect`:''}`;
+      const hint = `h = ${h}: shift ${h>0?`right ${abs(h)}`:`left ${abs(h)}`}\nk = ${k}: shift ${k<0?`down ${abs(k)}`:`up ${abs(k)}`}${a!==1?`\na = ${a}: stretch/reflect`:''}`;
       return {text, answers:[ans], hint, multi:false, freetext:true};
     }
   },
@@ -837,8 +837,8 @@ Direction of Opening:
 Compare: y = 3x² is narrower,  y = ½x² is wider than y = x²`,
   shift:
 `Translations from y = x² to y = a(x − h)² + k:
-  h > 0  →  shift LEFT  h units     (x − h means move right = h > 0 is LEFT!)
-  h < 0  →  shift RIGHT |h| units
+  h > 0  →  shift RIGHT h units   e.g. (x − 3)²  →  right 3
+  h < 0  →  shift LEFT  |h| units  e.g. (x + 3)²  →  left 3
   k > 0  →  shift UP    k units
   k < 0  →  shift DOWN  |k| units`,
   grapheq:
