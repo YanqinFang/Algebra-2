@@ -8,23 +8,18 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: system-ui, sans-serif; background: #f3f0ff; color: #111; min-height: 100vh; padding: 2rem 1rem; font-size: 17px; }
     .app { max-width: 760px; margin: 0 auto; }
-
     h1 { font-size: 30px; font-weight: 700; color: #4527a0; margin-bottom: 4px; }
     .subtitle { font-size: 16px; color: #666; margin-bottom: 1.5rem; }
-
     .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 1.5rem; }
     .stat { background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 14px; text-align: center; }
     .stat-num { font-size: 28px; font-weight: 700; color: #4527a0; }
     .stat-lbl { font-size: 14px; color: #999; margin-top: 2px; }
-
-    /* Section headers */
     .section-label { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #9e9e9e; margin-bottom: 6px; margin-top: 1rem; }
-
-    /* Topic tabs — grouped */
     .group { margin-bottom: 1.2rem; }
     .group-title { font-size: 13px; font-weight: 700; color: #fff; padding: 4px 14px; border-radius: 20px; display: inline-block; margin-bottom: 6px; }
     .group-title.qt { background: #4527a0; }
     .group-title.fc { background: #00695c; }
+    .group-title.gr { background: #1565c0; }
     .tab-row { display: flex; gap: 6px; flex-wrap: wrap; }
     .tab { padding: 7px 13px; border: 2px solid #ddd; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; background: #fff; transition: all .15s; }
     .tab.qt { color: #4527a0; border-color: #b39ddb; }
@@ -33,8 +28,9 @@
     .tab.fc { color: #00695c; border-color: #80cbc4; }
     .tab.fc:hover { background: #e0f2f1; }
     .tab.fc.active { background: #00695c; color: #fff; border-color: #00695c; }
-
-    /* Difficulty */
+    .tab.gr { color: #1565c0; border-color: #90caf9; }
+    .tab.gr:hover { background: #e3f2fd; }
+    .tab.gr.active { background: #1565c0; color: #fff; border-color: #1565c0; }
     .diff-row { display: flex; gap: 8px; margin-bottom: 1.4rem; }
     .diff-btn { flex: 1; padding: 9px; border: 2px solid #ddd; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; background: #fff; }
     .diff-btn.easy   { color: #2e7d32; border-color: #a5d6a7; }
@@ -43,8 +39,6 @@
     .diff-btn.easy.active   { background: #e8f5e9; border-color: #2e7d32; }
     .diff-btn.medium.active { background: #fff3e0; border-color: #e65100; }
     .diff-btn.hard.active   { background: #ffebee; border-color: #b71c1c; }
-
-    /* Controls */
     .controls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1.3rem; }
     .btn { padding: 10px 20px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; cursor: pointer; background: #fff; color: #111; }
     .btn:hover { background: #f0f0f0; }
@@ -52,49 +46,15 @@
     .btn-primary:hover { background: #512da8; }
     .btn-primary.fc-active { background: #00695c; border-color: #00695c; }
     .btn-primary.fc-active:hover { background: #00796b; }
-    .btn-example { background: #fff8e1; color: #f57f17; border-color: #ffe082; font-weight: 600; }
-    .btn-example:hover { background: #fff3cd; }
-
-    /* Example panel */
-    .example-panel { background: #fffde7; border: 1.5px solid #ffe082; border-radius: 12px; padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; display: none; }
-    .example-panel.open { display: block; }
-    .ex-title { font-size: 17px; font-weight: 700; color: #f57f17; margin-bottom: .75rem; display: flex; justify-content: space-between; align-items: center; }
-    .ex-close { cursor: pointer; font-size: 22px; color: #bbb; }
-    .ex-close:hover { color: #555; }
-    .ex-problem { font-size: 18px; font-weight: 500; color: #111; margin-bottom: .75rem; white-space: pre-line; }
-    .ex-steps { list-style: none; }
-    .ex-steps li { font-size: 16px; color: #333; padding: 7px 0; border-bottom: 1px dashed #ffe082; line-height: 1.7; white-space: pre-line; }
-    .ex-steps li:last-child { border-bottom: none; }
-    .step-lbl { display: inline-block; background: #fff8e1; border: 1px solid #ffe082; border-radius: 6px; font-size: 13px; font-weight: 700; color: #f57f17; padding: 1px 9px; margin-right: 8px; }
-    .ex-answer { margin-top: 10px; font-weight: 700; color: #4527a0; font-size: 17px; }
-
-    /* Problem card */
-    .card { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 1.6rem; margin-bottom: 1rem; }
-    .badges { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
-    .badge { display: inline-block; font-size: 13px; padding: 4px 13px; border-radius: 20px; font-weight: 600; }
-    .badge-qt   { background: #ede7f6; color: #4527a0; }
-    .badge-fc   { background: #e0f2f1; color: #00695c; }
-    .badge-easy   { background: #e8f5e9; color: #2e7d32; }
-    .badge-medium { background: #fff3e0; color: #e65100; }
-    .badge-hard   { background: #ffebee; color: #b71c1c; }
-
-    .problem-text { font-size: 22px; font-weight: 500; color: #111; margin-bottom: 1.25rem; line-height: 1.7; white-space: pre-line; }
-    .input-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-    .answer-input { padding: 11px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 17px; min-width: 220px; flex: 1; max-width: 340px; }
-    .answer-input:focus { outline: none; border-color: #4527a0; box-shadow: 0 0 0 2px rgba(69,39,160,.15); }
-
-    .hint-link { font-size: 15px; color: #4527a0; cursor: pointer; text-decoration: underline; margin-top: 10px; display: none; }
-    .hint { margin-top: 10px; padding: 12px 16px; border-left: 3px solid #b39ddb; background: #f5f5f5; font-size: 16px; color: #444; border-radius: 0 8px 8px 0; display: none; white-space: pre-line; }
-    .feedback { margin-top: 12px; padding: 12px 16px; border-radius: 8px; font-size: 17px; display: none; }
-    .feedback.correct { background: #e8f5e9; color: #2e7d32; display: block; }
-    .feedback.wrong   { background: #ffebee; color: #c62828; display: block; }
-
-    .footer { text-align: center; margin-top: 2rem; font-size: 14px; color: #bbb; }
-    /* Concept box */
+    .btn-primary.gr-active { background: #1565c0; border-color: #1565c0; }
+    .btn-primary.gr-active:hover { background: #1976d2; }
+    .btn-giveup { background: #fff8e1; color: #e65100; border-color: #ffcc80; font-size: 14px; padding: 8px 16px; }
+    .btn-giveup:hover { background: #fff3cd; }
     .concept-box { background: #ede7f6; border: 1.5px solid #b39ddb; border-radius: 12px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
     .concept-header { font-size: 17px; font-weight: 700; color: #4527a0; margin-bottom: 0.8rem; }
     .concept-rule { background: #fff; border-left: 4px solid #4527a0; padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 14px; color: #333; margin-bottom: 0.8rem; line-height: 1.7; white-space: pre-line; }
     .concept-rule.fc { border-left-color: #00695c; }
+    .concept-rule.gr { border-left-color: #1565c0; }
     .concept-example-title { font-size: 14px; font-weight: 700; color: #f57f17; margin: 8px 0 4px; }
     .concept-example-prob { font-size: 15px; font-weight: 500; color: #111; margin-bottom: 6px; white-space: pre-line; }
     .concept-steps { list-style: none; }
@@ -104,20 +64,10 @@
     .concept-box.fc { background: #e0f2f1; border-color: #80cbc4; }
     .concept-box.fc .concept-header { color: #00695c; }
     .concept-box.fc .concept-answer { color: #00695c; }
-
-    /* Multiple choice */
-    .mc-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1rem; }
-    .mc-opt { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border: 2px solid #ddd; border-radius: 10px; cursor: pointer; font-size: 16px; transition: all .15s; background: #fff; line-height: 1.5; }
-    .mc-opt:hover:not(.locked) { border-color: #b39ddb; background: #f5f5f5; }
-    .mc-opt.correct { border-color: #2e7d32 !important; background: #e8f5e9 !important; font-weight: 600; color: #2e7d32; }
-    .mc-opt.wrong   { border-color: #c62828 !important; background: #ffebee !important; color: #c62828; }
-    .mc-opt.reveal  { border-color: #2e7d32 !important; background: #e8f5e9 !important; }
-    .mc-opt.locked  { cursor: default; }
-    .mc-label { display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 30px; border-radius: 50%; background: #ede7f6; color: #4527a0; font-weight: 700; font-size: 14px; flex-shrink: 0; }
-    .mc-opt.correct .mc-label { background: #2e7d32; color: #fff; }
-    .mc-opt.wrong   .mc-label { background: #c62828; color: #fff; }
-    .mc-opt.reveal  .mc-label { background: #2e7d32; color: #fff; }
-    /* Quiz setup */
+    .concept-box.gr { background: #e3f2fd; border-color: #90caf9; }
+    .concept-box.gr .concept-header { color: #1565c0; }
+    .concept-box.gr .concept-answer { color: #1565c0; }
+    .concept-box.gr .concept-steps li { border-bottom-color: #bbdefb; }
     .quiz-setup { background: #fff; border: 1.5px solid #b39ddb; border-radius: 12px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
     .quiz-setup-title { font-size: 16px; font-weight: 700; color: #4527a0; margin-bottom: 1rem; }
     .quiz-row { display: flex; align-items: center; gap: 12px; margin-bottom: 0.8rem; flex-wrap: wrap; }
@@ -127,7 +77,6 @@
     .quiz-preview { font-size: 14px; color: #555; margin: 0.5rem 0 1rem; padding: 8px 12px; background: #ede7f6; border-radius: 8px; }
     .btn-quiz-start { padding: 10px 26px; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; background: #4527a0; color: #fff; }
     .btn-quiz-start:hover { background: #512da8; }
-    /* Quiz progress */
     .quiz-progress { background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 12px 18px; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
     .quiz-prog-label { font-size: 15px; font-weight: 700; color: #4527a0; }
     .quiz-dots { display: flex; gap: 5px; flex-wrap: wrap; }
@@ -137,7 +86,7 @@
     .qd.ok   { background: #2e7d32; border-color: #2e7d32; }
     .qd.bad  { background: #c62828; border-color: #c62828; }
     .next-row { display: none; gap: 10px; margin-top: 14px; align-items: center; }
-    /* Student name bar */
+    .giveup-row { display: none; gap: 10px; margin-top: 10px; align-items: center; }
     .name-bar { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 14px 18px; margin-bottom: 1.2rem; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
     .name-bar label { font-size: 15px; font-weight: 600; color: #4527a0; white-space: nowrap; }
     .name-input { padding: 9px 14px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; flex: 1; min-width: 160px; max-width: 260px; }
@@ -148,14 +97,59 @@
     .submit-msg { font-size: 14px; margin-top: 6px; width: 100%; }
     .submit-msg.ok  { color: #2e7d32; }
     .submit-msg.err { color: #c62828; }
+    .card { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 1.6rem; margin-bottom: 1rem; }
+    .badges { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
+    .badge { display: inline-block; font-size: 13px; padding: 4px 13px; border-radius: 20px; font-weight: 600; }
+    .badge-qt   { background: #ede7f6; color: #4527a0; }
+    .badge-fc   { background: #e0f2f1; color: #00695c; }
+    .badge-gr   { background: #e3f2fd; color: #1565c0; }
+    .badge-easy   { background: #e8f5e9; color: #2e7d32; }
+    .badge-medium { background: #fff3e0; color: #e65100; }
+    .badge-hard   { background: #ffebee; color: #b71c1c; }
+    .prob-svg-wrap { margin-bottom: 1rem; }
+    .problem-text { font-size: 22px; font-weight: 500; color: #111; margin-bottom: 1.25rem; line-height: 1.7; white-space: pre-line; }
+    .answer-input { padding: 11px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 17px; min-width: 220px; flex: 1; max-width: 340px; }
+    .answer-input:focus { outline: none; border-color: #4527a0; box-shadow: 0 0 0 2px rgba(69,39,160,.15); }
+    .hint-link { font-size: 15px; color: #4527a0; cursor: pointer; text-decoration: underline; margin-top: 10px; display: none; }
+    .hint { margin-top: 10px; padding: 12px 16px; border-left: 3px solid #b39ddb; background: #f5f5f5; font-size: 16px; color: #444; border-radius: 0 8px 8px 0; display: none; white-space: pre-line; }
+    .feedback { margin-top: 12px; padding: 12px 16px; border-radius: 8px; font-size: 17px; display: none; }
+    .feedback.correct { background: #e8f5e9; color: #2e7d32; display: block; }
+    .feedback.wrong   { background: #fff3e0; color: #e65100; display: block; }
+    .feedback.reveal  { background: #ffebee; color: #c62828; display: block; }
+    /* Multiple choice */
+    .mc-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1rem; }
+    .mc-opt { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border: 2px solid #ddd; border-radius: 10px; cursor: pointer; font-size: 16px; transition: all .15s; background: #fff; line-height: 1.5; }
+    .mc-opt:hover:not(.locked):not(.tried) { border-color: #b39ddb; background: #f5f5f5; }
+    .mc-opt.correct { border-color: #2e7d32 !important; background: #e8f5e9 !important; font-weight: 600; color: #2e7d32; cursor: default; }
+    .mc-opt.wrong   { border-color: #e65100 !important; background: #fff3e0 !important; color: #e65100; cursor: default; }
+    .mc-opt.reveal  { border-color: #2e7d32 !important; background: #e8f5e9 !important; cursor: default; }
+    .mc-opt.locked  { cursor: default; }
+    .mc-opt.tried   { cursor: default; }
+    .mc-label { display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 30px; border-radius: 50%; background: #ede7f6; color: #4527a0; font-weight: 700; font-size: 14px; flex-shrink: 0; }
+    .mc-opt.correct .mc-label { background: #2e7d32; color: #fff; }
+    .mc-opt.wrong   .mc-label { background: #e65100; color: #fff; }
+    .mc-opt.reveal  .mc-label { background: #2e7d32; color: #fff; }
+    /* Graph match grid */
+    .graph-mc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem; }
+    .graph-mc-opt { border: 2px solid #ddd; border-radius: 10px; padding: 8px; cursor: pointer; text-align: center; background: #fff; transition: border-color .15s, background .15s; position: relative; }
+    .graph-mc-opt:hover:not(.locked) { border-color: #b39ddb; background: #f5f0ff; }
+    .graph-mc-opt.correct { border-color: #2e7d32 !important; background: #e8f5e9 !important; cursor: default; }
+    .graph-mc-opt.wrong   { border-color: #e65100 !important; background: #fff3e0 !important; cursor: default; }
+    .graph-mc-opt.reveal  { border-color: #2e7d32 !important; background: #e8f5e9 !important; cursor: default; }
+    .graph-mc-opt.locked  { cursor: default; }
+    .graph-mc-corner { position: absolute; top: 6px; left: 8px; font-size: 12px; font-weight: 700; color: #4527a0; background: #ede7f6; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
+    .graph-mc-opt.correct .graph-mc-corner { background: #2e7d32; color: #fff; }
+    .graph-mc-opt.wrong .graph-mc-corner { background: #e65100; color: #fff; }
+    .graph-mc-opt.reveal .graph-mc-corner { background: #2e7d32; color: #fff; }
+    .footer { text-align: center; margin-top: 2rem; font-size: 14px; color: #bbb; }
+    .attempt-badge { font-size: 13px; color: #888; background: #f5f5f5; border-radius: 20px; padding: 3px 10px; display: inline-block; }
   </style>
 </head>
 <body>
 <div class="app">
   <h1>📐 Quadratics &amp; Factoring</h1>
-  <p class="subtitle">Transformations · Vertex Form · Factoring — Easy to Hard</p>
+  <p class="subtitle">Transformations · Vertex Form · Factoring · Graph Reading — Easy to Hard</p>
 
-  <!-- Student name + submit -->
   <div class="name-bar">
     <label>👤 Your name:</label>
     <input class="name-input" id="student-name" placeholder="First Last" />
@@ -169,7 +163,7 @@
     <div class="stat"><div class="stat-num" id="s-pct">—</div><div class="stat-lbl">accuracy</div></div>
   </div>
 
-  <!-- Topic groups -->
+  <!-- Quadratic Transformations -->
   <div class="group">
     <span class="group-title qt">Quadratic Transformations</span>
     <div class="tab-row">
@@ -179,6 +173,8 @@
       <button class="tab qt" data-topic="grapheq" onclick="setTopic('grapheq',this)">Graph → Equation</button>
     </div>
   </div>
+
+  <!-- Factoring -->
   <div class="group">
     <span class="group-title fc">Factoring</span>
     <div class="tab-row">
@@ -189,6 +185,15 @@
     </div>
   </div>
 
+  <!-- Graph Reading (NEW) -->
+  <div class="group">
+    <span class="group-title gr">Graph Reading</span>
+    <div class="tab-row">
+      <button class="tab gr" data-topic="graphread" onclick="setTopic('graphread',this)">Read a Graph</button>
+      <button class="tab gr" data-topic="graphmatch" onclick="setTopic('graphmatch',this)">Match Graph to Equation</button>
+    </div>
+  </div>
+
   <!-- Difficulty -->
   <div class="diff-row">
     <button class="diff-btn easy active" onclick="setDiff('easy')">⭐ Easy</button>
@@ -196,16 +201,14 @@
     <button class="diff-btn hard" onclick="setDiff('hard')">⭐⭐⭐ Hard</button>
   </div>
 
-  <!-- Buttons -->
   <div class="controls">
     <button class="btn btn-primary" id="new-btn" onclick="newProblem()">↻ New Problem</button>
     <button class="btn" onclick="resetStats()">✕ Reset</button>
   </div>
 
-  <!-- Concept box — always visible, updates on topic change -->
   <div class="concept-box" id="concept-box"></div>
 
-  <!-- Quiz Setup Panel -->
+  <!-- Quiz Setup -->
   <div class="quiz-setup" id="quiz-setup">
     <div class="quiz-setup-title">📝 Quiz Mode — Mix MC &amp; Fill-in</div>
     <div class="quiz-row">
@@ -231,17 +234,23 @@
     <button class="btn" onclick="endQuiz()" style="font-size:13px;padding:6px 14px">✕ End Quiz</button>
   </div>
 
-  <!-- Practice card -->
+  <!-- Problem Card -->
   <div class="card">
     <div class="badges">
       <span class="badge badge-qt" id="badge-topic">Vertex Form</span>
       <span class="badge badge-easy" id="badge-diff">Easy</span>
+      <span class="attempt-badge" id="attempt-badge" style="display:none"></span>
     </div>
+    <div class="prob-svg-wrap" id="prob-svg"></div>
     <div class="problem-text" id="prob">Press "New Problem" to start</div>
     <div class="mc-options" id="mc-options"></div>
-    <span class="hint-link" id="hint-link" onclick="showHint()">Show hint</span>
+    <span class="hint-link" id="hint-link" onclick="showHint()">💡 Show hint</span>
     <div class="hint" id="hint"></div>
     <div class="feedback" id="feedback"></div>
+    <div class="giveup-row" id="giveup-row">
+      <button class="btn btn-giveup" onclick="giveUp()">🏳 Show Answer</button>
+      <span style="font-size:13px;color:#999">— or keep trying!</span>
+    </div>
     <div class="next-row" id="next-row">
       <button class="btn btn-primary" onclick="nextQ()">Next Question →</button>
     </div>
@@ -249,427 +258,621 @@
 
   <div class="footer">Quadratics &amp; Factoring Generator — YanqinFang</div>
 </div>
-
 <script>
+// ── State ─────────────────────────────────────────────────────────────────────
 let current = null, total = 0, correct = 0;
 let difficulty = 'easy', currentTopic = 'vertex';
 const FC_TOPICS = new Set(['gcf','trinomial','diff2','leada']);
-let mcCorrect = null, mcAnswered = false;
+const GR_TOPICS = new Set(['graphread','graphmatch']);
+
+// Per-question state
+let questionAnswered = false;
+let attemptCount = 0;
+let triedMcIndices = new Set();
+let mcCorrect = null;
+
+// Quiz state
 let quizMode = false, quizQ = [], quizIdx = 0, quizRes = [];
 
+// ── Utilities ─────────────────────────────────────────────────────────────────
 function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
-function sign(n){ return n>=0?'+':'-'; }
 function abs(n){ return Math.abs(n); }
-function fmt(n){ return n<0?`(${n})`:String(n); }
 function gcd(a,b){ a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b];}return a; }
+function sup(n){ return n===2?'²':n===3?'³':n===4?'⁴':`^${n}`; }
 
-// ── Helpers to write expressions ─────────────────────────────────────────────
 function showQ(a,h,k){
-  // a(x-h)²+k  nicely formatted
   const aStr = a===1?'':(a===-1?'-':`${a}`);
   const hStr = h===0?'':(h>0?` - ${h}`:` + ${abs(h)}`);
   const kStr = k===0?'':(k>0?` + ${k}`:` - ${abs(k)}`);
   return `y = ${aStr}(x${hStr})²${kStr}`;
 }
-function showStd(a,b,c){
-  const aStr = a===1?'x²':(a===-1?'-x²':`${a}x²`);
-  const bStr = b===0?'':(b>0?` + ${b}x`:` - ${abs(b)}x`);
-  const cStr = c===0?'':(c>0?` + ${c}`:` - ${abs(c)}`);
-  return `y = ${aStr}${bStr}${cStr}`;
+
+function normalize(s){
+  return s.trim().toLowerCase()
+    .replace(/\s+/g,'').replace(/×/g,'*')
+    .replace(/²/g,'^2').replace(/³/g,'^3')
+    .replace(/upwards/,'upward').replace(/downwards/,'downward');
 }
 
-// ── Examples ──────────────────────────────────────────────────────────────────
-const examples = {
-  vertex:{
-    problem:'Identify the vertex, axis of symmetry, and direction of opening:\n  y = -2(x - 3)² + 5',
-    steps:[
-      ['Vertex form','y = a(x - h)² + k,  vertex = (h, k)'],
-      ['Read h and k','h = 3,  k = 5  →  vertex = (3, 5)'],
-      ['Axis of symmetry','x = h  →  x = 3'],
-      ['Direction','a = -2 < 0  →  opens downward'],
-    ],
-    answer:'Vertex: (3, 5)  |  Axis: x = 3  |  Opens: downward'
-  },
-  stretch:{
-    problem:'Compare y = 3(x)² to the parent y = x².\nDescribe the transformation.',
-    steps:[
-      ['Identify a','a = 3'],
-      ['|a| > 1','Vertical stretch by factor of 3'],
-      ['a > 0','No reflection (opens upward)'],
-    ],
-    answer:'Vertical stretch by a factor of 3; opens upward'
-  },
-  shift:{
-    problem:'Describe the transformation from y = x² to:\n  y = (x + 4)² - 7',
-    steps:[
-      ['Horizontal shift','(x + 4) → h = -4  →  shift LEFT 4'],
-      ['Vertical shift','k = -7  →  shift DOWN 7'],
-    ],
-    answer:'Shift left 4, shift down 7'
-  },
-  grapheq:{
-    problem:'A parabola has vertex (-2, 5) and passes through (0, 1).\nWrite its equation in vertex form.',
-    steps:[
-      ['Start with vertex form','y = a(x - (-2))² + 5 = a(x + 2)² + 5'],
-      ['Plug in (0, 1)','1 = a(0 + 2)² + 5  →  1 = 4a + 5'],
-      ['Solve for a','4a = -4  →  a = -1'],
-      ['Write equation','y = -(x + 2)² + 5'],
-    ],
-    answer:'y = -(x + 2)² + 5'
-  },
-  gcf:{
-    problem:'Factor completely:\n  6x³ + 9x² - 12x',
-    steps:[
-      ['Find GCF','GCF of 6, 9, 12 = 3; lowest power of x = x¹\nGCF = 3x'],
-      ['Divide each term','6x³÷3x = 2x²,  9x²÷3x = 3x,  -12x÷3x = -4'],
-      ['Write factored form','3x(2x² + 3x - 4)'],
-    ],
-    answer:'3x(2x² + 3x - 4)'
-  },
-  trinomial:{
-    problem:'Factor:\n  x² + 7x + 12',
-    steps:[
-      ['Find two numbers','Multiply to 12 AND add to 7\n3 × 4 = 12  ✓   3 + 4 = 7  ✓'],
-      ['Write factors','(x + 3)(x + 4)'],
-    ],
-    answer:'(x + 3)(x + 4)'
-  },
-  diff2:{
-    problem:'Factor:\n  x² - 49',
-    steps:[
-      ['Recognize pattern','a² - b² = (a + b)(a - b)\nx² - 49 = x² - 7²'],
-      ['Apply formula','(x + 7)(x - 7)'],
-    ],
-    answer:'(x + 7)(x - 7)'
-  },
-  leada:{
-    problem:'Factor:\n  2x² + 7x + 3',
-    steps:[
-      ['AC method','a×c = 2×3 = 6\nFind two numbers that multiply to 6 and add to 7:\n1 and 6'],
-      ['Rewrite middle term','2x² + x + 6x + 3'],
-      ['Group','x(2x + 1) + 3(2x + 1)'],
-      ['Factor out common binomial','(2x + 1)(x + 3)'],
-    ],
-    answer:'(2x + 1)(x + 3)'
+function normalizeRange(s){
+  return s.trim().toLowerCase()
+    .replace(/\s+/g,'')
+    .replace(/∞/g,'inf').replace(/−/g,'-').replace(/\+inf/g,'inf')
+    .replace(/allrealnumbers?/g,'(-inf,inf)')
+    .replace(/allreals?/g,'(-inf,inf)')
+    .replace(/ℝ/g,'(-inf,inf)')
+    .replace(/r$/,'(-inf,inf)');
+}
+
+// ── SVG Parabola Generator ────────────────────────────────────────────────────
+function parabolaSVG(a, h, k, opts={}) {
+  const W = opts.W || 280;
+  const H = opts.H || 220;
+  const mini = opts.mini || false;
+  const showVertexLabel = opts.showVertexLabel !== undefined ? opts.showVertexLabel : !mini;
+  const showAxisDash = opts.showAxisDash !== undefined ? opts.showAxisDash : !mini;
+
+  const margin = mini ? 10 : 28;
+  const iw = W - 2*margin, ih = H - 2*margin;
+
+  // Viewing window
+  const xHalf = mini ? 4 : 5;
+  const xMin = h - xHalf, xMax = h + xHalf;
+  const ySpan = mini ? 10 : 12;
+  const yMin = a > 0 ? k - 1.5 : k - ySpan + 1.5;
+  const yMax = a > 0 ? k + ySpan - 1.5 : k + 1.5;
+
+  const tx = x => margin + (x - xMin) / (xMax - xMin) * iw;
+  const ty = y => margin + (yMax - y) / (yMax - yMin) * ih;
+
+  // Axes (clamped to visible area)
+  const ax0 = Math.max(margin, Math.min(W-margin, tx(0)));
+  const ay0 = Math.max(margin, Math.min(H-margin, ty(0)));
+
+  // Grid
+  let grid = '';
+  if (!mini) {
+    for (let x = Math.ceil(xMin); x <= Math.floor(xMax); x++) {
+      if (x % 2 !== 0 && (xMax-xMin) > 8) continue;
+      const sx = tx(x);
+      grid += `<line x1="${sx|0}" y1="${margin}" x2="${sx|0}" y2="${H-margin}" stroke="#efefef" stroke-width="1"/>`;
+      if (x !== 0) grid += `<text x="${sx|0}" y="${(ay0+13)|0}" text-anchor="middle" font-size="10" fill="#ccc">${x}</text>`;
+    }
+    for (let y = Math.ceil(yMin); y <= Math.floor(yMax); y++) {
+      if (y % 2 !== 0 && (yMax-yMin) > 10) continue;
+      const sy = ty(y);
+      grid += `<line x1="${margin}" y1="${sy|0}" x2="${W-margin}" y2="${sy|0}" stroke="#efefef" stroke-width="1"/>`;
+      if (y !== 0) grid += `<text x="${(ax0-5)|0}" y="${(sy+3)|0}" text-anchor="end" font-size="10" fill="#ccc">${y}</text>`;
+    }
   }
-};
 
-// ── Generators ────────────────────────────────────────────────────────────────
+  // Parabola path
+  let pts = [];
+  for (let i = 0; i <= 100; i++) {
+    const x = xMin + (xMax-xMin)*i/100;
+    const y = a*(x-h)*(x-h)+k;
+    if (y >= yMin-0.5 && y <= yMax+0.5) {
+      pts.push(`${tx(x).toFixed(1)},${ty(y).toFixed(1)}`);
+    }
+  }
+  const pathD = pts.length > 1 ? 'M'+pts.join(' L') : '';
+
+  // Axis of symmetry
+  const vsx = tx(h);
+  const axisDash = (showAxisDash && !mini)
+    ? `<line x1="${vsx|0}" y1="${margin}" x2="${vsx|0}" y2="${H-margin}" stroke="#7c4dff" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.5"/>`
+    : '';
+
+  // Vertex dot + optional label
+  const vsy = ty(k);
+  let vertexMark = `<circle cx="${vsx.toFixed(1)}" cy="${vsy.toFixed(1)}" r="${mini?3.5:5}" fill="#e65100" stroke="#fff" stroke-width="${mini?1:1.5}"/>`;
+  if (showVertexLabel && !mini) {
+    const lx = vsx + 8, ly = vsy - 8;
+    vertexMark += `<text x="${lx|0}" y="${ly|0}" font-size="11" fill="#e65100" font-weight="bold">(${h},${k})</text>`;
+  }
+
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;border-radius:8px">
+    <rect width="${W}" height="${H}" fill="#f9f9ff" rx="8"/>
+    ${grid}
+    <line x1="${margin}" y1="${ay0|0}" x2="${W-margin}" y2="${ay0|0}" stroke="#aaa" stroke-width="1.5"/>
+    <line x1="${ax0|0}" y1="${margin}" x2="${ax0|0}" y2="${H-margin}" stroke="#aaa" stroke-width="1.5"/>
+    ${axisDash}
+    <path d="${pathD}" fill="none" stroke="#4527a0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    ${vertexMark}
+  </svg>`;
+}
+
+// ── Topic Generators ──────────────────────────────────────────────────────────
 const topics = {
-
   vertex:{
     label:'Vertex Form', group:'qt',
     gen(d){
-      const hR = d==='easy'?[-3,3]:d==='medium'?[-6,6]:[-9,9];
-      const kR = d==='easy'?[-5,5]:d==='medium'?[-9,9]:[-15,15];
-      const aOpts = d==='easy'?[1,-1]:d==='medium'?[1,-1,2,-2]:[1,-1,2,-2,3,-3];
-      const a=pick(aOpts), h=rnd(hR[0],hR[1]), k=rnd(kR[0],kR[1]);
-      const dir = a>0?'upward':'downward';
-      const eq = showQ(a,h,k);
-      const text = `Identify the vertex, axis of symmetry, and direction of opening:\n  ${eq}`;
-      const answers = [`(${h}, ${k})`, `x=${h}`, dir];
-      const hint = `Vertex form: y = a(x−h)² + k\nVertex = (h, k) = (${h}, ${k})\nAxis: x = ${h}\na = ${a}: opens ${dir}`;
-      return {text, answers, hint, multi:true,
-              labels:['Vertex (h,k):','Axis x =','Opens:'],
-              phs:['e.g. (2,-3)','e.g. 1','upward/downward']};
+      const hR=d==='easy'?[-3,3]:d==='medium'?[-6,6]:[-9,9];
+      const kR=d==='easy'?[-5,5]:d==='medium'?[-9,9]:[-15,15];
+      const aOpts=d==='easy'?[1,-1]:d==='medium'?[1,-1,2,-2]:[1,-1,2,-2,3,-3];
+      const a=pick(aOpts),h=rnd(hR[0],hR[1]),k=rnd(kR[0],kR[1]);
+      const dir=a>0?'upward':'downward';
+      const eq=showQ(a,h,k);
+      return {text:`Identify the vertex, axis of symmetry, and direction of opening:\n  ${eq}`,
+              answers:[`(${h}, ${k})`,`x=${h}`,dir],multi:true,
+              labels:['Vertex (h,k):','Axis x =','Opens:'],phs:['e.g. (2,-3)','e.g. 1','upward/downward'],
+              hint:`Vertex form: y = a(x−h)² + k\nVertex = (h, k) = (${h}, ${k})\nAxis: x = ${h}\na = ${a}: opens ${dir}`};
     }
   },
-
   stretch:{
     label:'Stretch / Compress / Reflect', group:'qt',
     gen(d){
-      const aOpts = d==='easy'?[2,3,1/2]:d==='medium'?[2,3,4,1/2,1/3,-1,-2]:[-2,-3,2,3,4,5,1/2,1/3,-1/2];
-      const a = pick(aOpts);
-      const aFmt = Number.isInteger(a)?String(a):`1/${Math.round(1/a)}`;
-      const parent = `y = x²`;
-      let desc;
-      const absA = Math.abs(a);
-      const stretch = absA>1?`vertical stretch by factor ${aFmt}`:`vertical compression by factor ${aFmt}`;
-      const reflect = a<0?' and reflection over x-axis':'';
-      desc = stretch + reflect;
-      const eq = `y = ${aFmt}x²`;
-      const text = `Compare to the parent function y = x².\nDescribe the transformation:\n  ${eq}`;
-      const hints = `|a| = ${aFmt}: ${absA>1?'stretch (>1)':'compression (<1)'}${a<0?'\na < 0: reflection over x-axis':''}`;
-      return {text, answers:[desc], hint:hints, multi:false};
+      const aOpts=d==='easy'?[2,3,0.5]:d==='medium'?[2,3,4,0.5,1/3,-1,-2]:[-2,-3,2,3,4,5,0.5,1/3,-0.5];
+      const a=pick(aOpts);
+      const aFmt=Number.isInteger(a)?String(a):(a===0.5?'1/2':a===-0.5?'-1/2':a===1/3?'1/3':String(a));
+      const absA=Math.abs(a);
+      const stretch=absA>1?`vertical stretch by factor of ${aFmt.replace('-','')}`:`vertical compression by factor of ${aFmt.replace('-','')}`;
+      const reflect=a<0?' and reflection over x-axis':'';
+      const desc=stretch+reflect;
+      const eq=`y = ${aFmt}x²`;
+      return {text:`Compare to the parent function y = x².\nDescribe the transformation:\n  ${eq}`,
+              answers:[desc],hint:`|a| = ${aFmt.replace('-','')}: ${absA>1?'stretch (|a|>1)':'compression (|a|<1)'}${a<0?'\na < 0: reflection over x-axis':''}`,multi:false};
     }
   },
-
   shift:{
     label:'Shifts (Translations)', group:'qt',
     gen(d){
-      const r = d==='easy'?5:d==='medium'?9:14;
-      const h=rnd(-r,r), k=rnd(-r,r);
-      const a = d==='hard'?pick([1,-1,2,-2]):1;
-      const eq = showQ(a,h,k);
-      let parts = [];
+      const r=d==='easy'?5:d==='medium'?9:14;
+      const h=rnd(-r,r),k=rnd(-r,r);
+      const a=d==='hard'?pick([1,-1,2,-2]):1;
+      const eq=showQ(a,h,k);
+      let parts=[];
       if(h!==0) parts.push(h>0?`right ${abs(h)}`:`left ${abs(h)}`);
       if(k!==0) parts.push(k<0?`down ${abs(k)}`:`up ${abs(k)}`);
       if(a===-1) parts.push('reflect over x-axis');
-      else if(a!=1) parts.push(`vertical ${abs(a)>1?'stretch':'compression'} by ${abs(a)}`);
+      else if(a!==1) parts.push(`vertical ${abs(a)>1?'stretch':'compression'} by factor of ${abs(a)}`);
       if(parts.length===0) parts=['no shift (same as parent)'];
-      const ans = parts.join(', ');
-      const text = `Describe the transformation(s) from y = x² to:\n  ${eq}`;
-      const hint = `h = ${h}: shift ${h>0?`right ${abs(h)}`:`left ${abs(h)}`}\nk = ${k}: shift ${k<0?`down ${abs(k)}`:`up ${abs(k)}`}${a!==1?`\na = ${a}: stretch/reflect`:''}`;
-      return {text, answers:[ans], hint, multi:false, freetext:true};
+      const ans=parts.join(', ');
+      return {text:`Describe the transformation(s) from y = x² to:\n  ${eq}`,
+              answers:[ans],hint:`h = ${h}: shift ${h>0?`right ${abs(h)}`:`left ${abs(h)}`}\nk = ${k}: shift ${k<0?`down ${abs(k)}`:`up ${abs(k)}`}${a!==1?`\na = ${a}: stretch/reflect`:''}`,
+              multi:false,freetext:true};
     }
   },
-
   grapheq:{
     label:'Graph → Equation', group:'qt',
     gen(d){
-      const r = d==='easy'?3:d==='medium'?5:7;
-      const h=rnd(-r,r), k=rnd(-r,r);
-      const aOpts = d==='easy'?[1,-1]:d==='medium'?[1,-1,2,-2]:[1,-1,2,-2,3,-3,1/2];
+      const r=d==='easy'?3:d==='medium'?5:7;
+      const h=rnd(-r,r),k=rnd(-r,r);
+      const aOpts=d==='easy'?[1,-1]:d==='medium'?[1,-1,2,-2]:[1,-1,2,-2,3,-3];
       const a=pick(aOpts);
-      const aFmt = Number.isInteger(a)?String(a):`1/${Math.round(1/a)}`;
-      // make a point on the parabola
-      const dx = rnd(1,3)*pick([-1,1]);
-      const px = h+dx;
-      const py = a*dx*dx+k;
-      const eq = showQ(a,h,k);
-      const text = `Write the equation in vertex form.\nVertex: (${h}, ${k})\nPasses through point: (${px}, ${py})`;
-      const ans = eq;
-      const hint = `Start: y = a(x - ${h})² + ${k}\nSub (${px}, ${py}): ${py} = a(${px}-${h})² + ${k}\nSolve: a = ${aFmt}`;
-      return {text, answers:[ans], hint, multi:false};
+      const aFmt=String(a);
+      const dx=rnd(1,3)*pick([-1,1]);
+      const px=h+dx,py=a*dx*dx+k;
+      const eq=showQ(a,h,k);
+      return {text:`Write the equation in vertex form.\nVertex: (${h}, ${k})\nPasses through point: (${px}, ${py})`,
+              answers:[eq],hint:`Start: y = a(x - ${h})² + ${k}\nSub (${px}, ${py}): ${py} = a(${px}-${h})² + ${k}\nSolve: a = ${aFmt}`,
+              multi:false};
     }
   },
-
   gcf:{
     label:'GCF', group:'fc',
     gen(d){
-      const g = d==='easy'?pick([2,3,4,5]):d==='medium'?pick([2,3,4,5,6]):pick([3,4,5,6,7,8]);
-      const xp = d==='easy'?1:d==='medium'?pick([1,2]):pick([1,2,3]);
-      const terms = d==='easy'?2:3;
-      const cs = Array.from({length:terms},()=>rnd(1,5)*g);
-      const pows = Array.from({length:terms},(_,i)=>xp+i);
-      let expr = cs.map((c,i)=>{
-        const p=pows[i];
-        const coe = c/g;
-        const xstr = p===0?'':(p===1?'x':`x${sup(p)}`);
-        return `${c}${xstr}`;
-      }).join(' + ');
-      let inner = cs.map((c,i)=>{
-        const p=pows[i];
-        const coe = c/g;
-        const xstr = p===xp?'':(p-xp===1?'x':`x${sup(p-xp)}`);
-        return `${coe}${xstr}`;
-      }).join(' + ');
-      const gcfStr = g + (xp>0?(xp===1?'x':`x${sup(xp)}`):'');
-      const ans = `${gcfStr}(${inner})`;
-      const text = `Factor out the GCF completely:\n  ${expr}`;
-      const hint = `GCF of coefficients ${cs.join(', ')} = ${g}\nLowest power of x = x${sup(xp)}\nGCF = ${gcfStr}`;
-      return {text, answers:[ans], hint, multi:false};
+      const g=d==='easy'?pick([2,3,4,5]):d==='medium'?pick([2,3,4,5,6]):pick([3,4,5,6,7,8]);
+      const xp=d==='easy'?1:d==='medium'?pick([1,2]):pick([1,2,3]);
+      const terms=d==='easy'?2:3;
+      const cs=Array.from({length:terms},()=>rnd(1,5)*g);
+      const pows=Array.from({length:terms},(_,i)=>xp+i);
+      const expr=cs.map((c,i)=>{const p=pows[i];return `${c}${p===0?'':(p===1?'x':`x${sup(p)}`)}`}).join(' + ');
+      const inner=cs.map((c,i)=>{const p=pows[i];const coe=c/g;const rp=p-xp;return `${coe}${rp===0?'':(rp===1?'x':`x${sup(rp)}`)}`}).join(' + ');
+      const gcfStr=g+(xp>0?(xp===1?'x':`x${sup(xp)}`):' ');
+      const ans=`${gcfStr.trim()}(${inner})`;
+      return {text:`Factor out the GCF completely:\n  ${expr}`,answers:[ans],
+              hint:`GCF of coefficients ${cs.join(', ')} = ${g}\nLowest power of x = x${sup(xp)}\nGCF = ${gcfStr.trim()}`,multi:false};
     }
   },
-
   trinomial:{
     label:'Trinomial x²+bx+c', group:'fc',
     gen(d){
-      const r = d==='easy'?[-4,4]:d==='medium'?[-7,7]:[-10,10];
+      const r=d==='easy'?[-4,4]:d==='medium'?[-7,7]:[-10,10];
       let r1,r2,tries=0;
-      do{ r1=rnd(r[0],r[1]); r2=rnd(r[0],r[1]); tries++; }
+      do{r1=rnd(r[0],r[1]);r2=rnd(r[0],r[1]);tries++;}
       while(r1===0||r2===0||tries<20);
-      const b=-(r1+r2), c=r1*r2;
+      const b=-(r1+r2),c=r1*r2;
       const bStr=b===0?'':(b>0?` + ${b}x`:` - ${abs(b)}x`);
       const cStr=c===0?'':(c>0?` + ${c}`:` - ${abs(c)}`);
-      const f1 = r1>0?`(x - ${r1})`:`(x + ${abs(r1)})`;
-      const f2 = r2>0?`(x - ${r2})`:`(x + ${abs(r2)})`;
-      const ans = f1+f2;
-      const text = `Factor completely:\n  x²${bStr}${cStr}`;
-      const hint = `Find two numbers that multiply to ${c} and add to ${b}.\nThose numbers: ${-r1} and ${-r2}`;
-      return {text, answers:[ans, f2+f1], hint, multi:false};
+      const f1=r1>0?`(x - ${r1})`:`(x + ${abs(r1)})`;
+      const f2=r2>0?`(x - ${r2})`:`(x + ${abs(r2)})`;
+      return {text:`Factor completely:\n  x²${bStr}${cStr}`,answers:[f1+f2,f2+f1],
+              hint:`Find two numbers that multiply to ${c} and add to ${b}.\nThose numbers: ${-r1} and ${-r2}`,multi:false};
     }
   },
-
   diff2:{
     label:'Difference of Squares', group:'fc',
     gen(d){
-      const nOpts = d==='easy'?[1,4,9,16,25]:d==='medium'?[1,4,9,16,25,36,49]:[1,4,9,16,25,36,49,64,81,100];
-      const aOpts = d==='easy'?[1]:d==='medium'?[1,4,9]:[1,4,9,25];
-      const a2=pick(aOpts), b2=pick(nOpts.filter(n=>n!==a2));
-      const a=Math.sqrt(a2), b=Math.sqrt(b2);
-      const aStr = a===1?'x':`${a}x`;
-      const aStr2 = a===1?'x²':`${a2}x²`;
-      const expr = `${aStr2} - ${b2}`;
-      const ans = `(${aStr} + ${b})(${aStr} - ${b})`;
-      const text = `Factor:\n  ${expr}`;
-      const hint = `Pattern: a² - b² = (a+b)(a-b)\na = ${aStr},  b = ${b}`;
-      return {text, answers:[ans, `(${aStr} - ${b})(${aStr} + ${b})`], hint, multi:false};
+      const nOpts=d==='easy'?[4,9,16,25]:d==='medium'?[4,9,16,25,36,49]:[4,9,16,25,36,49,64,81,100];
+      const aOpts=d==='easy'?[1]:d==='medium'?[1,4]:[1,4,9];
+      const a2=pick(aOpts),b2=pick(nOpts.filter(n=>n!==a2));
+      const a=Math.sqrt(a2),b=Math.sqrt(b2);
+      const aStr=a===1?'x':`${a}x`;
+      const aStr2=a===1?'x²':`${a2}x²`;
+      const ans=`(${aStr} + ${b})(${aStr} - ${b})`;
+      return {text:`Factor:\n  ${aStr2} - ${b2}`,answers:[ans,`(${aStr} - ${b})(${aStr} + ${b})`],
+              hint:`Pattern: a² - b² = (a+b)(a-b)\na = ${aStr},  b = ${b}`,multi:false};
     }
   },
-
   leada:{
     label:'ax²+bx+c (a≠1)', group:'fc',
     gen(d){
-      const aOpts = d==='easy'?[2,3]:d==='medium'?[2,3,4,5]:[2,3,4,5,6];
-      let a=pick(aOpts), r1,r2,tries=0;
-      const r = d==='easy'?[-3,3]:d==='medium'?[-5,5]:[-7,7];
-      do{ r1=rnd(r[0],r[1]); r2=rnd(r[0],r[1]); tries++; }
-      while(r1===0||r2===0||r1===r2||tries<30);
-      // ax²+bx+c = a(x-r1)(x-r2) expanded... but let's use nice factored pairs
-      // Instead: (px+q)(sx+t) style — pick factor pairs of a
-      const pairs = [[1,a],[a,1]];
-      if(a%2===0) pairs.push([2,a/2]);
-      if(a%3===0) pairs.push([3,a/3]);
+      const aOpts=d==='easy'?[2,3]:d==='medium'?[2,3,4,5]:[2,3,4,5,6];
+      let A=pick(aOpts);
+      const r=d==='easy'?[-3,3]:d==='medium'?[-5,5]:[-7,7];
+      const pairs=[[1,A],[A,1]];
+      if(A%2===0)pairs.push([2,A/2]);if(A%3===0)pairs.push([3,A/3]);
       const [p,s]=pick(pairs);
-      const q=rnd(r[0],r[1]), t=rnd(r[0],r[1]);
-      const B=p*t+s*q, C=q*t;
-      const A=p*s;
+      let q,t,tries=0;
+      do{q=rnd(r[0],r[1]);t=rnd(r[0],r[1]);tries++;}
+      while(q===0||t===0||tries<30);
+      const B=p*t+s*q,C=q*t;
       const bStr=B===0?'':(B>0?` + ${B}x`:` - ${abs(B)}x`);
       const cStr=C===0?'':(C>0?` + ${C}`:` - ${abs(C)}`);
       const f1str=q===0?`${p}x`:(q>0?`(${p}x + ${q})`:`(${p}x - ${abs(q)})`);
       const f2str=t===0?`${s}x`:(t>0?`(${s}x + ${t})`:`(${s}x - ${abs(t)})`);
       const ans=f1str+f2str;
-      const text=`Factor completely:\n  ${A}x²${bStr}${cStr}`;
       const prod=A*C;
-      const hint=`AC method: a×c = ${A}×${C} = ${prod}\nFind two numbers that multiply to ${prod} and add to ${B}.\nThen factor by grouping.`;
-      return {text, answers:[ans, f2str+f1str], hint, multi:false};
+      return {text:`Factor completely:\n  ${A}x²${bStr}${cStr}`,answers:[ans,f2str+f1str],
+              hint:`AC method: a×c = ${A}×${C} = ${prod}\nFind two numbers that multiply to ${prod} and add to ${B}.\nThen factor by grouping.`,multi:false};
+    }
+  },
+
+  // ── NEW: Read a Graph ──────────────────────────────────────────────────────
+  graphread:{
+    label:'Read a Graph', group:'gr',
+    gen(d){
+      const aOpts=d==='easy'?[1,-1]:d==='medium'?[1,-1,2,-2]:[1,-1,2,-2,3,-3];
+      const r=d==='easy'?3:d==='medium'?5:6;
+      const a=pick(aOpts),h=rnd(-r,r),k=rnd(-r,r);
+      const props=['vertex','axis','domain','range'];
+      const prop=pick(props);
+      // Hide label for vertex/axis questions so student must read the graph
+      const svg=parabolaSVG(a,h,k,{showVertexLabel:prop==='domain'||prop==='range', showAxisDash:prop==='domain'||prop==='range'});
+      let text,answers,hint;
+      if(prop==='vertex'){
+        text=`What is the vertex of this parabola?`;
+        answers=[`(${h}, ${k})`,`(${h},${k})`];
+        hint=`The vertex is the orange dot — the turning point of the parabola.\nRead its (x, y) coordinates from the grid.`;
+      } else if(prop==='axis'){
+        text=`What is the equation of the axis of symmetry?`;
+        answers=[`x = ${h}`,`x=${h}`];
+        hint=`The axis of symmetry is a vertical line through the vertex.\nIt has equation x = h, where h = ${h}.`;
+      } else if(prop==='domain'){
+        text=`What is the domain of this function?`;
+        answers=['(-∞, ∞)','(-inf, inf)','all real numbers','ℝ','all reals'];
+        hint=`Parabolas extend infinitely left and right — no x-values are excluded.\nDomain = all real numbers = (-∞, ∞)`;
+      } else {
+        text=`What is the range of this function?`;
+        if(a>0){
+          answers=[`[${k}, ∞)`,`[${k}, +∞)`,`[${k},∞)`,`y ≥ ${k}`,`y>=${k}`];
+          hint=`The parabola opens upward — the vertex (${h}, ${k}) is the MINIMUM.\nRange = [${k}, ∞)  (y can be ${k} or larger)`;
+        } else {
+          answers=[`(-∞, ${k}]`,`(-inf, ${k}]`,`(-∞,${k}]`,`y ≤ ${k}`,`y<=${k}`];
+          hint=`The parabola opens downward — the vertex (${h}, ${k}) is the MAXIMUM.\nRange = (-∞, ${k}]  (y can be ${k} or smaller)`;
+        }
+      }
+      return {text,answers,hint,svg,multi:false,isSVG:true};
+    }
+  },
+
+  // ── NEW: Match Graph to Equation ──────────────────────────────────────────
+  graphmatch:{
+    label:'Match Graph to Equation', group:'gr',
+    gen(d){
+      const aOpts=d==='easy'?[1,-1]:d==='medium'?[1,-1,2,-2]:[1,-1,2,-2,3,-3];
+      const r=d==='easy'?3:d==='medium'?4:5;
+      const a=pick(aOpts),h=rnd(-r,r),k=rnd(-r,r);
+      const eq=showQ(a,h,k);
+      // 3 distractors
+      const dShift=pick([2,3,-2,-3]);
+      const choices=[
+        {a,h,k},
+        {a:-a,h,k},
+        {a,h:h+dShift,k},
+        {a,h,k:k+(dShift>0?-3:3)}
+      ];
+      // Shuffle
+      for(let i=choices.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[choices[i],choices[j]]=[choices[j],choices[i]];}
+      const correctIdx=choices.findIndex(c=>c.a===a&&c.h===h&&c.k===k);
+      return {text:`Which graph matches the equation?\n  ${eq}`,
+              answers:[String(correctIdx)],
+              hint:`Vertex is at (${h}, ${k}).\nThe parabola opens ${a>0?'upward':'downward'}.`,
+              multi:false,isGraphMatch:true,choices,correctIdx};
     }
   }
 };
 
-function sup(n){ return n===2?'²':n===3?'³':n===4?'⁴':`^${n}`; }
+// ── Examples & Rules (Concept Box) ───────────────────────────────────────────
+const examples = {
+  vertex:{problem:'Identify the vertex, axis of symmetry, and direction of opening:\n  y = -2(x - 3)² + 5',
+    steps:[['Vertex form','y = a(x - h)² + k,  vertex = (h, k)'],['Read h and k','h = 3,  k = 5  →  vertex = (3, 5)'],['Axis of symmetry','x = h  →  x = 3'],['Direction','a = -2 < 0  →  opens downward']],answer:'Vertex: (3, 5)  |  Axis: x = 3  |  Opens: downward'},
+  stretch:{problem:'Compare y = 3(x)² to the parent y = x².\nDescribe the transformation.',
+    steps:[['Identify a','a = 3'],['|a| > 1','Vertical stretch by factor of 3'],['a > 0','No reflection (opens upward)']],answer:'Vertical stretch by a factor of 3; opens upward'},
+  shift:{problem:'Describe the transformation from y = x² to:\n  y = (x + 4)² - 7',
+    steps:[['Horizontal shift','(x + 4) → h = -4  →  shift LEFT 4'],['Vertical shift','k = -7  →  shift DOWN 7']],answer:'Shift left 4, shift down 7'},
+  grapheq:{problem:'A parabola has vertex (-2, 5) and passes through (0, 1).\nWrite its equation in vertex form.',
+    steps:[['Start with vertex form','y = a(x + 2)² + 5'],['Plug in (0, 1)','1 = a(0 + 2)² + 5  →  1 = 4a + 5'],['Solve for a','4a = -4  →  a = -1'],['Write equation','y = -(x + 2)² + 5']],answer:'y = -(x + 2)² + 5'},
+  gcf:{problem:'Factor completely:\n  6x³ + 9x² - 12x',
+    steps:[['Find GCF','GCF of 6, 9, 12 = 3; lowest power = x¹\nGCF = 3x'],['Divide each term','6x³÷3x=2x², 9x²÷3x=3x, -12x÷3x=-4'],['Write factored form','3x(2x² + 3x - 4)']],answer:'3x(2x² + 3x - 4)'},
+  trinomial:{problem:'Factor:\n  x² + 7x + 12',
+    steps:[['Find two numbers','Multiply to 12 AND add to 7\n3 × 4 = 12  ✓   3 + 4 = 7  ✓'],['Write factors','(x + 3)(x + 4)']],answer:'(x + 3)(x + 4)'},
+  diff2:{problem:'Factor:\n  x² - 49',
+    steps:[['Recognize pattern','a² - b² = (a + b)(a - b)\nx² - 49 = x² - 7²'],['Apply formula','(x + 7)(x - 7)']],answer:'(x + 7)(x - 7)'},
+  leada:{problem:'Factor:\n  2x² + 7x + 3',
+    steps:[['AC method','a×c = 2×3 = 6\nFind two numbers: multiply to 6, add to 7 → 1 and 6'],['Rewrite middle term','2x² + x + 6x + 3'],['Group','x(2x + 1) + 3(2x + 1)'],['Factor out','(2x + 1)(x + 3)']],answer:'(2x + 1)(x + 3)'},
+  graphread:{problem:'A parabola opens upward with vertex at (2, -3).\nState the domain and range.',
+    steps:[['Domain','All parabolas extend left & right without restriction.\nDomain = all real numbers = (-∞, ∞)'],['Range','Opens upward → minimum at vertex k = -3\nRange = [-3, ∞)']],answer:'Domain: (-∞, ∞)   Range: [-3, ∞)'},
+  graphmatch:{problem:'Match  y = -2(x - 1)² + 4  to its graph.',
+    steps:[['Vertex','h = 1, k = 4  →  vertex at (1, 4)'],['Direction','a = -2 < 0  →  opens DOWNWARD'],['Width','|a| = 2 > 1  →  narrower than y = x²'],['Identify','Find the graph opening down with vertex at (1, 4)']],answer:'Graph opens downward, vertex (1, 4), narrow'}
+};
 
-// ── Multiple Choice engine ────────────────────────────────────────────────────
-const MC_LABELS = ['A','B','C','D'];
+const rules = {
+  vertex:`Vertex Form: y = a(x − h)² + k\nVertex = (h, k)\nAxis of Symmetry: x = h\nDirection of Opening:\n  a > 0  →  opens UPWARD  (minimum at vertex)\n  a < 0  →  opens DOWNWARD (maximum at vertex)`,
+  stretch:`Vertical Transformations of y = ax²:\n  |a| > 1  →  vertical STRETCH (graph is narrower)\n  |a| < 1  →  vertical COMPRESSION (graph is wider)\n  a < 0    →  REFLECTION over the x-axis\nCompare: y = 3x² is narrower,  y = ½x² is wider than y = x²`,
+  shift:`Translations from y = x² to y = a(x − h)² + k:\n  h > 0  →  shift RIGHT h units   e.g. (x − 3)²  →  right 3\n  h < 0  →  shift LEFT  |h| units  e.g. (x + 3)²  →  left 3\n  k > 0  →  shift UP    k units\n  k < 0  →  shift DOWN  |k| units`,
+  grapheq:`Writing the Equation from a Graph (Vertex Form):\n1. Identify the vertex (h, k)  →  y = a(x − h)² + k\n2. Pick another known point (x, y) on the parabola\n3. Substitute (x, y) and solve for a\n4. Write the final equation`,
+  gcf:`Factoring Out the Greatest Common Factor (GCF):\n1. Find the GCF of all numerical coefficients\n2. Find the lowest power of each variable present\n3. Divide each term by the GCF\n4. Write: GCF(remaining terms)\nExample: 6x³ + 9x² − 12x  →  GCF = 3x  →  3x(2x² + 3x − 4)`,
+  trinomial:`Factoring x² + bx + c:\nFind two numbers p and q such that:\n  p × q = c   (multiply to give c)\n  p + q = b   (add to give b)\nThen: x² + bx + c = (x + p)(x + q)\nTip: list factor pairs of c, check which pair sums to b`,
+  diff2:`Difference of Squares Pattern:\n  a² − b² = (a + b)(a − b)\nSteps:\n1. Verify both terms are perfect squares with subtraction\n2. Find the square root of each term\n3. Write (√first + √second)(√first − √second)\nExamples: x²−25 = (x+5)(x−5),   4x²−9 = (2x+3)(2x−3)`,
+  leada:`Factoring ax² + bx + c  (a ≠ 1) — AC Method:\n1. Compute the product: A = a × c\n2. Find p, q such that p × q = A  AND  p + q = b\n3. Rewrite the middle term: ax² + px + qx + c\n4. Factor by grouping:\n   (ax² + px) + (qx + c)\n   Factor each group, then factor out common binomial`,
+  graphread:`Reading a Parabola — Key Properties:\n• Vertex (h, k): the turning point (orange dot on graph)\n• Axis of Symmetry: x = h  (vertical line through vertex)\n• Domain: ALWAYS (-∞, ∞) — parabolas extend left & right forever\n• Range:\n    a > 0 (opens UP)   →  [k, ∞)   minimum at vertex\n    a < 0 (opens DOWN) →  (-∞, k]  maximum at vertex`,
+  graphmatch:`Matching Equation to Graph — Checklist:\n1. Find vertex (h, k) from y = a(x − h)² + k\n2. Direction: a > 0 → opens up,  a < 0 → opens down\n3. Width: |a| > 1 → narrower,  |a| < 1 → wider\n4. Locate the graph with matching vertex AND direction`
+};
 
-function buildMC(cur, topic) {
-  let ans_str, wrong = [];
-  if (topic === 'vertex') {
-    // cur.answers = ['(h, k)', 'x=h', 'upward/downward']
-    const [vert, axis, dir] = cur.answers;
-    ans_str = `${vert}  |  Axis: ${axis}  |  Opens: ${dir}`;
-    // parse h, k
-    const m = vert.match(/\((-?\d+),\s*(-?\d+)\)/);
-    const h = m ? parseInt(m[1]) : 0, k = m ? parseInt(m[2]) : 0;
-    const axNum = axis.replace('x=','');
-    const oppDir = dir === 'upward' ? 'downward' : 'upward';
-    wrong = [
-      `(${k}, ${h})  |  Axis: x=${k}  |  Opens: ${dir}`,
-      `(${-h}, ${k})  |  Axis: x=${-h}  |  Opens: ${dir}`,
-      `${vert}  |  Axis: ${axis}  |  Opens: ${oppDir}`
-    ];
-  } else if (topic === 'stretch') {
-    ans_str = cur.answers[0];
-    // generate plausible wrong descriptions
-    const a_str = ans_str;
-    const isStretch = a_str.includes('stretch');
-    const isReflect = a_str.includes('reflect');
-    const opp = isStretch ? a_str.replace('stretch','compression') : a_str.replace('compression','stretch');
-    wrong = [
-      opp,
-      isReflect ? a_str.replace(' and reflection over x-axis','') : a_str + ' and reflection over x-axis',
-      a_str.replace(/factor \d+(\.\d+)?/,'factor 2') === a_str ? a_str.replace(/factor \d+(\.\d+)?/,'factor 4') : a_str.replace(/factor \d+(\.\d+)?/,'factor 2')
-    ];
-    wrong = wrong.filter(w => w !== ans_str);
-    if (wrong.length < 3) wrong.push('horizontal stretch by factor 2');
-  } else if (topic === 'shift') {
-    ans_str = cur.answers[0];
-    // parse directional words and flip them
-    const flip = s => s.replace(/\bright\b/g,'__R__').replace(/\bleft\b/g,'right').replace(/__R__/g,'left')
-                       .replace(/\bup\b/g,'__U__').replace(/\bdown\b/g,'up').replace(/__U__/g,'down');
-    wrong = [
-      flip(ans_str),
-      ans_str.replace(/\bright\b/g,'left').replace(/\bleft\b/g,'right'),
-      ans_str.replace(/\bup\b/g,'down').replace(/\bdown\b/g,'up')
-    ].filter(w => w !== ans_str);
-    if (wrong.length < 3) wrong.push('left 3, down 4');
-  } else if (topic === 'grapheq') {
-    ans_str = cur.answers[0]; // e.g. "y = 2(x - 3)² + 5"
-    const mE = ans_str.match(/y = (-?\d+(?:\/\d+)?)\(x([+-]\d+)\)² ([+-] \d+)/);
-    wrong = [
-      ans_str.replace(/\+ (\d+)$/, '- $1').replace(/- (\d+)$/, '+ $1'),
-      ans_str.replace(/\(x([+-])(\d+)\)/, (_, s, n) => `(x${s==='-'?'+':'-'}${n})`),
-      ans_str.replace(/^y = (-?)/, (_, s) => `y = ${s?'':'-'}`)
-    ].filter(w => w !== ans_str);
-    if (wrong.length < 3) wrong.push('y = (x - 1)² + 1');
-  } else if (topic === 'gcf') {
-    ans_str = cur.answers[0];
-    wrong = [
-      ans_str.replace(/^(\d+)x?/, (_, n) => `${n}(`).replace(/\(([^)]+)\)$/, 'x($1)'),
-      ans_str.replace(/\+ (\d)/g, '- $1').replace(/- (\d)/g, '+ $1'),
-      ans_str.replace(/^(\w+)\(/, '$1² (')
-    ].filter(w => w !== ans_str);
-    if (wrong.length < 3) wrong.push(ans_str + '²');
-  } else if (topic === 'trinomial') {
-    ans_str = cur.answers[0];
-    wrong = [
-      ans_str.replace(/\+ (\d+)\)/g, '- $1)').replace(/- (\d+)\)/g, '+ $1)'),
-      ans_str.replace(/\(x ([+-]) (\d+)\)\(x ([+-]) (\d+)\)/, (_, s1, n1, s2, n2) =>
-        `(x ${s1} ${n2})(x ${s2} ${n1})`),
-      '(x + 1)(x + 1)'
-    ].filter(w => w !== ans_str);
-  } else if (topic === 'diff2') {
-    ans_str = cur.answers[0]; // (ax+b)(ax-b)
-    wrong = [
-      ans_str.replace(/\)\(.*\)/, ')(ax + b)').replace('ax + b','ax + b'),
-      ans_str.replace('- ','+ '),
-      ans_str + '²'
-    ].filter(w => w !== ans_str);
-    if (wrong.length < 3) wrong.push('(x + 1)²');
-  } else if (topic === 'leada') {
-    ans_str = cur.answers[0];
-    wrong = [
-      ans_str.replace(/\+ (\d+)\)/g,'- $1)').replace(/- (\d+)\)/g,'+ $1)'),
-      cur.answers[1] && cur.answers[1] !== ans_str ? cur.answers[1] : ans_str.replace(/(\d+)x/,'$1x + 1'),
-      ans_str.replace(/\((\d+)x/, '($1x + 2)')
-    ].filter(w => w !== ans_str);
-    if (wrong.length < 3) wrong.push('(x + 1)(x + 1)');
-  }
-  const opts = [ans_str, ...wrong.slice(0,3)];
-  for (let i = opts.length-1; i > 0; i--) {
-    const j = Math.floor(Math.random()*(i+1));
-    [opts[i], opts[j]] = [opts[j], opts[i]];
-  }
-  return { opts, ans_str };
+// ── Concept Box ───────────────────────────────────────────────────────────────
+function renderConcept(key){
+  const box=document.getElementById('concept-box');
+  if(!box) return;
+  const isFc=FC_TOPICS.has(key), isGr=GR_TOPICS.has(key);
+  const cls=isFc?' fc':isGr?' gr':'';
+  box.className=`concept-box${cls}`;
+  const rule=rules[key]||'';
+  const ex=examples[key];
+  const lbl=topics[key]?topics[key].label:key;
+  const stepsHtml=ex.steps.map(([l,t])=>`<li><span class="step-lbl" style="display:inline-block;background:${isFc?'#e0f2f1':isGr?'#e3f2fd':'#fff8e1'};border:1px solid ${isFc?'#80cbc4':isGr?'#90caf9':'#ffe082'};border-radius:6px;font-size:13px;font-weight:700;color:${isFc?'#00695c':isGr?'#1565c0':'#f57f17'};padding:1px 9px;margin-right:8px">${l}</span>${t.replace(/\n/g,'<br>')}</li>`).join('');
+  box.innerHTML=`<div class="concept-header">📚 ${lbl}</div><div class="concept-rule${cls}">${rule}</div><div class="concept-example-title">📖 Worked Example</div><div class="concept-example-prob">${ex.problem.replace(/\n/g,'<br>')}</div><ul class="concept-steps">${stepsHtml}</ul><div class="concept-answer">${ex.answer}</div>`;
 }
 
-function renderMC(cur, topic) {
-  const { opts, ans_str } = buildMC(cur, topic);
-  mcCorrect = ans_str;
-  mcAnswered = false;
-  const isFc = FC_TOPICS.has(topic);
-  const container = document.getElementById('mc-options');
-  container.innerHTML = '';
-  opts.forEach((opt, i) => {
-    const div = document.createElement('div');
-    div.className = 'mc-opt';
-    div.innerHTML = `<span class="mc-label">${MC_LABELS[i]}</span><span>${opt}</span>`;
-    div.onclick = () => {
-      if (mcAnswered) return;
-      mcAnswered = true;
-      total++;
-      const isOk = (opt === mcCorrect);
-      if (isOk) correct++;
-      updateStats();
-      container.querySelectorAll('.mc-opt').forEach((el, j) => {
-        el.classList.add('locked');
-        if (opts[j] === mcCorrect) el.classList.add('reveal');
-      });
-      div.classList.remove('reveal');
-      div.classList.add(isOk ? 'correct' : 'wrong');
-      const fb = document.getElementById('feedback');
-      fb.className = 'feedback ' + (isOk ? 'correct' : 'wrong');
-      fb.innerHTML = isOk ? '✓ Correct!' : `✗ Not quite.  Correct answer: <b>${mcCorrect}</b>`;
-      if (quizMode) { quizRes.push(isOk); renderDots(); document.getElementById('next-row').style.display='flex'; }
+// ── MC Builder (text options) ─────────────────────────────────────────────────
+const MC_LABELS=['A','B','C','D'];
+
+function buildMC(cur, topic){
+  let ans_str, wrong=[];
+  if(topic==='vertex'){
+    const[vert,axis,dir]=cur.answers;
+    ans_str=`${vert}  |  Axis: ${axis}  |  Opens: ${dir}`;
+    const m=vert.match(/\((-?\d+),\s*(-?\d+)\)/);
+    const h=m?parseInt(m[1]):0,k=m?parseInt(m[2]):0;
+    const oppDir=dir==='upward'?'downward':'upward';
+    wrong=[`(${k}, ${h})  |  Axis: x=${k}  |  Opens: ${dir}`,`(${-h}, ${k})  |  Axis: x=${-h}  |  Opens: ${dir}`,`${vert}  |  Axis: ${axis}  |  Opens: ${oppDir}`];
+  } else if(topic==='stretch'){
+    ans_str=cur.answers[0];
+    const isStretch=ans_str.includes('stretch'),isReflect=ans_str.includes('reflect');
+    const opp=isStretch?ans_str.replace('stretch','compression'):ans_str.replace('compression','stretch');
+    wrong=[opp,isReflect?ans_str.replace(' and reflection over x-axis',''):ans_str+' and reflection over x-axis','horizontal stretch by factor of 2'].filter(w=>w!==ans_str);
+  } else if(topic==='shift'){
+    ans_str=cur.answers[0];
+    const flip=s=>s.replace(/\bright\b/g,'__R__').replace(/\bleft\b/g,'right').replace(/__R__/g,'left').replace(/\bup\b/g,'__U__').replace(/\bdown\b/g,'up').replace(/__U__/g,'down');
+    wrong=[flip(ans_str),ans_str.replace(/\bright\b/g,'left').replace(/\bleft\b/g,'right'),ans_str.replace(/\bup\b/g,'down').replace(/\bdown\b/g,'up')].filter(w=>w!==ans_str);
+    if(wrong.length<3)wrong.push('left 3, down 4');
+  } else if(topic==='grapheq'){
+    ans_str=cur.answers[0];
+    wrong=[ans_str.replace(/\+ (\d+)$/,'- $1').replace(/- (\d+)$/,'+ $1'),ans_str.replace(/\(x([+-])(\d+)\)/,(_,s,n)=>`(x${s==='-'?'+':'-'}${n})`),ans_str.replace(/^y = (-?)/,(_,s)=>`y = ${s?'':'-'}`)].filter(w=>w!==ans_str);
+    if(wrong.length<3)wrong.push('y = (x - 1)² + 1');
+  } else if(topic==='gcf'){
+    ans_str=cur.answers[0];
+    wrong=[ans_str.replace(/\+ (\d)/g,'- $1').replace(/- (\d)/g,'+ $1'),ans_str+'²','2x('+ans_str.replace(/^\w+\(/,'')].filter(w=>w!==ans_str);
+    if(wrong.length<3)wrong.push(ans_str+'²');
+  } else if(topic==='trinomial'){
+    ans_str=cur.answers[0];
+    wrong=[ans_str.replace(/\+ (\d+)\)/g,'- $1)').replace(/- (\d+)\)/g,'+ $1)'),ans_str.replace(/\(x ([+-]) (\d+)\)\(x ([+-]) (\d+)\)/,(_,s1,n1,s2,n2)=>`(x ${s1} ${n2})(x ${s2} ${n1})`),(ans_str.match(/\d+/g)||['1','1']).slice(0,2).reduce((_,n)=>`(x + ${n})²`,'')||'(x + 1)²'].filter(w=>w!==ans_str);
+  } else if(topic==='diff2'){
+    ans_str=cur.answers[0];
+    wrong=[ans_str.replace('- ','+ '),ans_str.replace(/\)\(.*\)/,')²'),ans_str+'²'].filter(w=>w!==ans_str);
+    if(wrong.length<3)wrong.push('(x + 1)²');
+  } else if(topic==='leada'){
+    ans_str=cur.answers[0];
+    wrong=[ans_str.replace(/\+ (\d+)\)/g,'- $1)').replace(/- (\d+)\)/g,'+ $1)'),cur.answers[1]&&cur.answers[1]!==ans_str?cur.answers[1]:ans_str.replace(/(\d+)x/,'$1x + 1'),ans_str.replace(/\((\d+)x/,'($1x + 2)')].filter(w=>w!==ans_str);
+    if(wrong.length<3)wrong.push('(x + 1)(x + 1)');
+  } else if(topic==='graphread'){
+    ans_str=cur.answers[0];
+    // Generate plausible wrong answers based on what's being asked
+    const txt=cur.text;
+    if(txt.includes('vertex')){
+      const m=ans_str.match(/\((-?\d+),\s*(-?\d+)\)/);
+      const h=m?parseInt(m[1]):0,k=m?parseInt(m[2]):0;
+      wrong=[`(${k}, ${h})`,`(${-h}, ${k})`,`(${h}, ${-k})`].filter(w=>w!==ans_str);
+    } else if(txt.includes('axis')){
+      const m=ans_str.match(/-?\d+/);const h=m?parseInt(m[0]):0;
+      wrong=[`x = ${h+2}`,`x = ${h-2}`,`y = ${h}`].filter(w=>w!==ans_str);
+    } else if(txt.includes('domain')){
+      wrong=['[0, ∞)','(-∞, 0]','[k, ∞)'].filter(w=>w!==ans_str);
+    } else {
+      // range — give wrong range alternatives
+      wrong=['(-∞, ∞)','[0, ∞)','(-∞, 0]'].filter(w=>w!==ans_str);
+    }
+    if(wrong.length<3)while(wrong.length<3)wrong.push(`(${wrong.length}, ∞)`);
+  }
+  const opts=[ans_str,...wrong.slice(0,3)];
+  for(let i=opts.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[opts[i],opts[j]]=[opts[j],opts[i]];}
+  return{opts,ans_str};
+}
+
+// ── Render MC (text options) ─────────────────────────────────────────────────
+function renderMC(cur, topic){
+  if(cur.isGraphMatch){ renderGraphMatch(cur); return; }
+  const{opts,ans_str}=buildMC(cur,topic);
+  mcCorrect=ans_str;
+  const container=document.getElementById('mc-options');
+  container.innerHTML='';
+  opts.forEach((opt,i)=>{
+    const div=document.createElement('div');
+    div.className='mc-opt';
+    div.dataset.idx=i;
+    div.innerHTML=`<span class="mc-label">${MC_LABELS[i]}</span><span>${opt}</span>`;
+    div.onclick=()=>{
+      if(questionAnswered||triedMcIndices.has(i)) return;
+      triedMcIndices.add(i);
+      attemptCount++;
+      const isOk=(opt===mcCorrect);
+      if(isOk){
+        div.classList.add('correct');
+        div.querySelector('.mc-label').style.cssText='background:#2e7d32;color:#fff';
+        // Lock all others
+        container.querySelectorAll('.mc-opt').forEach(el=>el.classList.add('locked'));
+        showFeedback('correct', attemptCount===1?'✓ Correct! First try! 🌟':`✓ Correct! You got it in ${attemptCount} ${attemptCount===1?'try':'tries'}! 👍`);
+        resolveQuestion(true);
+      } else {
+        div.classList.add('wrong','tried');
+        div.querySelector('.mc-label').style.cssText='background:#e65100;color:#fff';
+        const msgs=['Not quite — give it another try! 💪','Think it through again — you can do it! 🤔',"Keep going, check your reasoning! 💡",'Almost there — what did you miss? 🔍'];
+        showFeedback('wrong',msgs[Math.min(attemptCount-1,msgs.length-1)]);
+        updateAttemptBadge();
+        document.getElementById('giveup-row').style.display='flex';
+      }
     };
     container.appendChild(div);
   });
 }
 
-// ── UI ────────────────────────────────────────────────────────────────────────
-function setTopic(key, btn){
-  currentTopic = key;
+// ── Render Graph Match (SVG grid) ────────────────────────────────────────────
+function renderGraphMatch(cur){
+  mcCorrect=String(cur.correctIdx);
+  const container=document.getElementById('mc-options');
+  container.innerHTML='<div class="graph-mc-grid" id="graph-mc-grid"></div>';
+  const grid=document.getElementById('graph-mc-grid');
+  cur.choices.forEach((c,i)=>{
+    const div=document.createElement('div');
+    div.className='graph-mc-opt';
+    div.innerHTML=`<span class="graph-mc-corner">${MC_LABELS[i]}</span>${parabolaSVG(c.a,c.h,c.k,{W:170,H:140,mini:true,showVertexLabel:false,showAxisDash:false})}`;
+    div.onclick=()=>{
+      if(questionAnswered||div.classList.contains('locked')) return;
+      attemptCount++;
+      const isOk=(i===cur.correctIdx);
+      if(isOk){
+        div.classList.add('correct');
+        grid.querySelectorAll('.graph-mc-opt').forEach(el=>el.classList.add('locked'));
+        showFeedback('correct',attemptCount===1?'✓ Correct! 🌟':`✓ Got it in ${attemptCount} tries! 👍`);
+        resolveQuestion(true);
+      } else {
+        div.classList.add('wrong','locked');
+        const msgs=['Not quite — try another graph! 💪','Look carefully at vertex and direction 🤔',"Check: does the vertex match? Does it open the right way? 💡"];
+        showFeedback('wrong',msgs[Math.min(attemptCount-1,msgs.length-1)]);
+        updateAttemptBadge();
+        document.getElementById('giveup-row').style.display='flex';
+      }
+    };
+    grid.appendChild(div);
+  });
+}
+
+// ── Render Fill-in ────────────────────────────────────────────────────────────
+function renderFill(){
+  const container=document.getElementById('mc-options');
+  container.innerHTML=`<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px">
+    <input class="answer-input" id="ans" placeholder="Type your answer" onkeydown="if(event.key==='Enter')checkFill()">
+    <button class="btn btn-primary" onclick="checkFill()">✓ Check</button></div>`;
+  setTimeout(()=>{const a=document.getElementById('ans');if(a)a.focus();},50);
+}
+
+function checkFill(){
+  if(!current||questionAnswered) return;
+  const raw=(document.getElementById('ans')||{value:''}).value.trim();
+  if(!raw) return;
+  const got=normalize(raw);
+  const gotR=normalizeRange(raw);
+  let ok=current.answers.some(a=>{
+    const na=normalize(String(a));
+    const nar=normalizeRange(String(a));
+    return na===got||gotR===nar||got.replace(/[()]/g,'')===na.replace(/[()]/g,'');
+  });
+  if(!ok&&current.freetext){
+    const expWords=normalize(current.answers[0]).split(/[\s,]+/);
+    const gotWords=got.split(/[\s,]+/);
+    ok=expWords.every(w=>gotWords.some(g=>g.includes(w)||w.includes(g)));
+  }
+  attemptCount++;
+  if(ok){
+    const inp=document.getElementById('ans');if(inp)inp.disabled=true;
+    showFeedback('correct',attemptCount===1?'✓ Correct! 🌟':`✓ Correct on attempt ${attemptCount}! 👍`);
+    resolveQuestion(true);
+  } else {
+    updateAttemptBadge();
+    showFeedback('wrong',attemptCount===1?'Not quite — try again! 💪':'Almost! Double-check your answer 🤔');
+    // Keep input active, just select text for easy re-type
+    const inp=document.getElementById('ans');if(inp){inp.select();}
+    document.getElementById('giveup-row').style.display='flex';
+  }
+}
+
+// ── Give Up / Reveal ──────────────────────────────────────────────────────────
+function giveUp(){
+  if(questionAnswered) return;
+  // Reveal correct MC option
+  document.querySelectorAll('.mc-opt').forEach(el=>{
+    el.classList.add('locked');
+    const optText=el.querySelector('span:last-child')?.textContent;
+    if(optText===mcCorrect){el.classList.add('reveal');el.querySelector('.mc-label').style.cssText='background:#2e7d32;color:#fff';}
+  });
+  // Reveal correct graph option
+  if(current&&current.isGraphMatch){
+    document.querySelectorAll('.graph-mc-opt').forEach((el,i)=>{
+      el.classList.add('locked');
+      if(i===current.correctIdx)el.classList.add('reveal');
+    });
+  }
+  // Disable fill-in
+  const inp=document.getElementById('ans');if(inp)inp.disabled=true;
+  showFeedback('reveal',`Answer: <b>${current?current.answers[0]:''}</b>`);
+  resolveQuestion(false);
+}
+
+// ── Score Tracking ────────────────────────────────────────────────────────────
+function resolveQuestion(isCorrect){
+  if(questionAnswered) return;
+  questionAnswered=true;
+  total++;
+  if(isCorrect) correct++;
+  updateStats();
+  document.getElementById('giveup-row').style.display='none';
+  if(quizMode){quizRes.push(isCorrect);renderDots();document.getElementById('next-row').style.display='flex';}
+}
+
+// ── UI Helpers ────────────────────────────────────────────────────────────────
+function showFeedback(type, html){
+  const fb=document.getElementById('feedback');
+  fb.className='feedback '+type;
+  fb.innerHTML=html;
+}
+function updateAttemptBadge(){
+  const b=document.getElementById('attempt-badge');
+  b.style.display='inline-block';
+  b.textContent=`Attempt ${attemptCount}`;
+}
+function resetPerQuestion(){
+  questionAnswered=false;
+  attemptCount=0;
+  triedMcIndices=new Set();
+  mcCorrect=null;
+  document.getElementById('giveup-row').style.display='none';
+  document.getElementById('next-row').style.display='none';
+  document.getElementById('attempt-badge').style.display='none';
+}
+
+// ── Topic / Difficulty ────────────────────────────────────────────────────────
+function setTopic(key,btn){
+  currentTopic=key;
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  const isFc = FC_TOPICS.has(key);
-  document.getElementById('new-btn').className = `btn btn-primary${isFc?' fc-active':''}`;
-  document.getElementById('check-btn').className = `btn btn-primary${isFc?' fc-active':''}`;
+  const isFc=FC_TOPICS.has(key),isGr=GR_TOPICS.has(key);
+  const cls=isFc?' fc-active':isGr?' gr-active':'';
+  document.getElementById('new-btn').className=`btn btn-primary${cls}`;
   renderConcept(key);
   newProblem();
 }
-
 function setDiff(d){
   difficulty=d;
   document.querySelectorAll('.diff-btn').forEach(b=>b.classList.remove('active'));
@@ -677,142 +880,25 @@ function setDiff(d){
   newProblem();
 }
 
+// ── New Problem ───────────────────────────────────────────────────────────────
 function newProblem(){
-  if (quizMode) return;
-  current = topics[currentTopic].gen(difficulty);
-  const isFc = FC_TOPICS.has(currentTopic);
-
-  // badges
-  const bt = document.getElementById('badge-topic');
-  bt.textContent = topics[currentTopic].label;
-  bt.className = `badge badge-${isFc?'fc':'qt'}`;
-  const bd = document.getElementById('badge-diff');
-  bd.className = `badge badge-${difficulty}`;
-  bd.textContent = difficulty.charAt(0).toUpperCase()+difficulty.slice(1);
-
-  document.getElementById('prob').innerText = current.text;
-  document.getElementById('feedback').className = 'feedback';
-  document.getElementById('hint').style.display = 'none';
-  document.getElementById('hint-link').style.display = 'inline';
-  document.getElementById('next-row').style.display = 'none';
-  renderMC(current, currentTopic);
-}
-
-function normalize(s){
-  return s.trim().toLowerCase()
-    .replace(/\s+/g,'').replace(/×/g,'*')
-    .replace(/²/g,'^2').replace(/³/g,'^3')
-    .replace(/\(/g,'(').replace(/\)/g,')')
-    .replace(/upwards/,'upward').replace(/downwards/,'downward');
-}
-
-// ── Quiz Mode ─────────────────────────────────────────────────────────────────
-function qp() {
-  const mc = +document.getElementById('mc-count').value;
-  const fi = +document.getElementById('fill-count').value;
-  document.getElementById('mc-val').textContent = mc;
-  document.getElementById('fill-val').textContent = fi;
-  const t = mc + fi;
-  document.getElementById('quiz-preview').textContent =
-    t === 0 ? 'Please select at least 1 problem'
-    : `${t} problems total: ${mc} Multiple Choice + ${fi} Fill-in`;
-}
-function startQuiz() {
-  const mc = +document.getElementById('mc-count').value;
-  const fi = +document.getElementById('fill-count').value;
-  if (mc + fi === 0) { alert('Please select at least 1 problem.'); return; }
-  quizMode = true;
-  quizQ = [...Array(mc).fill('mc'), ...Array(fi).fill('fill')];
-  for (let i = quizQ.length-1; i > 0; i--) {
-    const j = Math.floor(Math.random()*(i+1));
-    [quizQ[i], quizQ[j]] = [quizQ[j], quizQ[i]];
-  }
-  quizIdx = 0; quizRes = [];
-  document.getElementById('quiz-setup').style.display = 'none';
-  document.getElementById('quiz-prog').style.display = 'flex';
-  renderDots(); showQProblem();
-}
-function renderDots() {
-  const c = document.getElementById('quiz-dots'); c.innerHTML = '';
-  quizQ.forEach((t, i) => {
-    const d = document.createElement('div');
-    d.className = 'qd ' + (i < quizRes.length ? (quizRes[i] ? 'ok' : 'bad') : t);
-    c.appendChild(d);
-  });
-  document.getElementById('quiz-label').textContent =
-    quizIdx < quizQ.length
-    ? `Question ${quizIdx+1} / ${quizQ.length}  —  ${quizQ[quizIdx]==='mc'?'🔘 Multiple Choice':'✏️ Fill-in'}`
-    : '✓ All done!';
-}
-function showQProblem() {
-  if (quizIdx >= quizQ.length) { showQuizSummary(); return; }
-  current = topics[currentTopic].gen(difficulty);
-  const isFc = FC_TOPICS.has(currentTopic);
-  const bt = document.getElementById('badge-topic');
-  bt.textContent = topics[currentTopic].label;
-  bt.className = `badge badge-${isFc?'fc':'qt'}`;
-  document.getElementById('prob').innerText = current.text;
-  document.getElementById('feedback').className = 'feedback';
-  document.getElementById('hint').style.display = 'none';
-  document.getElementById('hint-link').style.display = 'inline';
-  document.getElementById('next-row').style.display = 'none';
-  if (quizQ[quizIdx] === 'mc') renderMC(current, currentTopic);
-  else renderFill();
-}
-function renderFill() {
-  const container = document.getElementById('mc-options');
-  container.innerHTML = `
-    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px">
-      <input class="answer-input" id="ans" placeholder="Type your answer"
-             onkeydown="if(event.key==='Enter')checkFill()">
-      <button class="btn btn-primary" onclick="checkFill()">✓ Check</button>
-    </div>`;
-  setTimeout(() => { const a = document.getElementById('ans'); if(a) a.focus(); }, 50);
-}
-function checkFill() {
-  if (!current) return;
-  const raw = (document.getElementById('ans')||{value:''}).value.trim();
-  if (!raw) return;
-  const got = normalize(raw);
-  let ok = current.answers.some(a =>
-    normalize(String(a)) === got ||
-    got.replace(/[()]/g,'') === normalize(String(a)).replace(/[()]/g,''));
-  if (!ok && current.freetext) {
-    const expWords = normalize(current.answers[0]).split(/[\s,]+/);
-    const gotWords = got.split(/[\s,]+/);
-    ok = expWords.every(w => gotWords.some(g => g.includes(w) || w.includes(g)));
-  }
-  const inp = document.getElementById('ans'); if(inp) inp.disabled = true;
-  total++; if(ok) correct++; updateStats();
-  const fb = document.getElementById('feedback');
-  fb.className = 'feedback '+(ok?'correct':'wrong');
-  fb.innerHTML = ok ? '✓ Correct!' : `✗ Not quite.  Answer: ${current.answers[0]}`;
-  if (quizMode) { quizRes.push(ok); renderDots(); document.getElementById('next-row').style.display='flex'; }
-}
-function nextQ() {
-  quizIdx++;
-  if (quizIdx >= quizQ.length) { showQuizSummary(); return; }
-  renderDots(); showQProblem();
-}
-function showQuizSummary() {
-  document.getElementById('quiz-prog').style.display = 'none';
-  document.getElementById('next-row').style.display = 'none';
-  const right = quizRes.filter(Boolean).length, tot = quizRes.length;
-  const pct = tot ? Math.round(right/tot*100) : 0;
-  const emoji = pct>=90?'🌟':pct>=70?'😊':pct>=50?'💪':'📚';
-  document.getElementById('prob').innerText = `${emoji} Quiz Complete!\n\nScore: ${right} / ${tot} correct  (${pct}%)`;
-  document.getElementById('mc-options').innerHTML =
-    `<button class="btn btn-primary" style="margin-top:12px" onclick="endQuiz()">↩ Back to Practice</button>`;
-  document.getElementById('feedback').className = 'feedback';
-  document.getElementById('hint-link').style.display = 'none';
-  quizMode = false;
-}
-function endQuiz() {
-  quizMode = false;
-  document.getElementById('quiz-setup').style.display = 'block';
-  document.getElementById('quiz-prog').style.display = 'none';
-  document.getElementById('next-row').style.display = 'none';
-  newProblem();
+  if(quizMode) return;
+  resetPerQuestion();
+  current=topics[currentTopic].gen(difficulty);
+  const isFc=FC_TOPICS.has(currentTopic),isGr=GR_TOPICS.has(currentTopic);
+  const bt=document.getElementById('badge-topic');
+  bt.textContent=topics[currentTopic].label;
+  bt.className=`badge badge-${isFc?'fc':isGr?'gr':'qt'}`;
+  const bd=document.getElementById('badge-diff');
+  bd.className=`badge badge-${difficulty}`;
+  bd.textContent=difficulty.charAt(0).toUpperCase()+difficulty.slice(1);
+  document.getElementById('prob').innerText=current.text;
+  document.getElementById('prob-svg').innerHTML=current.svg||'';
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('hint').style.display='none';
+  document.getElementById('hint-link').style.display='inline';
+  if(current.isGraphMatch) renderGraphMatch(current);
+  else renderMC(current,currentTopic);
 }
 
 function showHint(){
@@ -820,86 +906,6 @@ function showHint(){
   document.getElementById('hint').textContent=current.hint;
   document.getElementById('hint-link').style.display='none';
 }
-
-const rules = {
-  vertex:
-`Vertex Form: y = a(x − h)² + k
-Vertex = (h, k)
-Axis of Symmetry: x = h
-Direction of Opening:
-  a > 0  →  opens UPWARD  (minimum at vertex)
-  a < 0  →  opens DOWNWARD (maximum at vertex)`,
-  stretch:
-`Vertical Transformations of y = ax²:
-  |a| > 1  →  vertical STRETCH (graph is narrower)
-  |a| < 1  →  vertical COMPRESSION (graph is wider)
-  a < 0    →  REFLECTION over the x-axis (flipped upside-down)
-Compare: y = 3x² is narrower,  y = ½x² is wider than y = x²`,
-  shift:
-`Translations from y = x² to y = a(x − h)² + k:
-  h > 0  →  shift RIGHT h units   e.g. (x − 3)²  →  right 3
-  h < 0  →  shift LEFT  |h| units  e.g. (x + 3)²  →  left 3
-  k > 0  →  shift UP    k units
-  k < 0  →  shift DOWN  |k| units`,
-  grapheq:
-`Writing the Equation from a Graph (Vertex Form):
-1. Identify the vertex (h, k)  →  y = a(x − h)² + k
-2. Pick another known point (x, y) on the parabola
-3. Substitute (x, y) into the equation and solve for a
-4. Write the final equation with the found value of a`,
-  gcf:
-`Factoring Out the Greatest Common Factor (GCF):
-1. Find the GCF of all numerical coefficients
-2. Find the lowest power of each variable present
-3. Divide each term by the GCF
-4. Write: GCF(remaining terms)
-Example: 6x³ + 9x² − 12x  →  GCF = 3x  →  3x(2x² + 3x − 4)`,
-  trinomial:
-`Factoring x² + bx + c:
-Find two numbers p and q such that:
-  p × q = c   (multiply to give c)
-  p + q = b   (add to give b)
-Then: x² + bx + c = (x + p)(x + q)
-Tip: list factor pairs of c, check which pair sums to b`,
-  diff2:
-`Difference of Squares Pattern:
-  a² − b² = (a + b)(a − b)
-Steps:
-1. Verify: both terms are perfect squares, separated by subtraction
-2. Find the square root of each term
-3. Write (√first + √second)(√first − √second)
-Examples: x²−25 = (x+5)(x−5),   4x²−9 = (2x+3)(2x−3)`,
-  leada:
-`Factoring ax² + bx + c  (a ≠ 1) — AC Method:
-1. Compute the product: A = a × c
-2. Find p, q such that p × q = A  AND  p + q = b
-3. Rewrite the middle term: ax² + px + qx + c
-4. Factor by grouping:
-   Group as (ax² + px) + (qx + c)
-   Factor each group, then factor out the common binomial`
-};
-
-function renderConcept(key) {
-  const box = document.getElementById('concept-box');
-  if (!box) return;
-  const isFc = FC_TOPICS.has(key);
-  box.className = `concept-box${isFc?' fc':''}`;
-  const rule = rules[key] || '';
-  const ex = examples[key];
-  const lbl = topics[key] ? topics[key].label : key;
-  const stepsHtml = ex.steps.map(([l,t]) =>
-    `<li><span class="step-lbl">${l}</span>${t.replace(/\n/g,'<br>')}</li>`
-  ).join('');
-  box.innerHTML = `
-    <div class="concept-header">📚 ${lbl}</div>
-    <div class="concept-rule${isFc?' fc':''}">${rule}</div>
-    <div class="concept-example-title">📖 Worked Example</div>
-    <div class="concept-example-prob">${ex.problem.replace(/\n/g,'<br>')}</div>
-    <ul class="concept-steps">${stepsHtml}</ul>
-    <div class="concept-answer">${ex.answer}</div>
-  `;
-}
-
 function updateStats(){
   document.getElementById('s-total').textContent=total;
   document.getElementById('s-correct').textContent=correct;
@@ -907,45 +913,88 @@ function updateStats(){
 }
 function resetStats(){ total=0; correct=0; updateStats(); newProblem(); }
 
-// ── Google Sheets submission ──────────────────────────────────────────────────
-// STEP: After deploying your Apps Script, paste the Web App URL here:
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzGwQNy9QcikDheuK4FOSo8rw2mVNnYW0vGAzGS0yvQhd9Tf-dIRlBFgFDqPvWc5cFwkQ/exec';
+// ── Quiz Mode ─────────────────────────────────────────────────────────────────
+function qp(){
+  const mc=+document.getElementById('mc-count').value,fi=+document.getElementById('fill-count').value;
+  document.getElementById('mc-val').textContent=mc;
+  document.getElementById('fill-val').textContent=fi;
+  const t=mc+fi;
+  document.getElementById('quiz-preview').textContent=t===0?'Please select at least 1 problem':`${t} problems total: ${mc} Multiple Choice + ${fi} Fill-in`;
+}
+function startQuiz(){
+  const mc=+document.getElementById('mc-count').value,fi=+document.getElementById('fill-count').value;
+  if(mc+fi===0){alert('Please select at least 1 problem.');return;}
+  quizMode=true;
+  quizQ=[...Array(mc).fill('mc'),...Array(fi).fill('fill')];
+  for(let i=quizQ.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[quizQ[i],quizQ[j]]=[quizQ[j],quizQ[i]];}
+  quizIdx=0;quizRes=[];
+  document.getElementById('quiz-setup').style.display='none';
+  document.getElementById('quiz-prog').style.display='flex';
+  renderDots();showQProblem();
+}
+function renderDots(){
+  const c=document.getElementById('quiz-dots');c.innerHTML='';
+  quizQ.forEach((t,i)=>{const d=document.createElement('div');d.className='qd '+(i<quizRes.length?(quizRes[i]?'ok':'bad'):t);c.appendChild(d);});
+  document.getElementById('quiz-label').textContent=quizIdx<quizQ.length?`Question ${quizIdx+1} / ${quizQ.length}  —  ${quizQ[quizIdx]==='mc'?'🔘 Multiple Choice':'✏️ Fill-in'}`:'✓ All done!';
+}
+function showQProblem(){
+  if(quizIdx>=quizQ.length){showQuizSummary();return;}
+  resetPerQuestion();
+  current=topics[currentTopic].gen(difficulty);
+  const isFc=FC_TOPICS.has(currentTopic),isGr=GR_TOPICS.has(currentTopic);
+  const bt=document.getElementById('badge-topic');
+  bt.textContent=topics[currentTopic].label;
+  bt.className=`badge badge-${isFc?'fc':isGr?'gr':'qt'}`;
+  document.getElementById('prob').innerText=current.text;
+  document.getElementById('prob-svg').innerHTML=current.svg||'';
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('hint').style.display='none';
+  document.getElementById('hint-link').style.display='inline';
+  if(quizQ[quizIdx]==='mc'){
+    if(current.isGraphMatch) renderGraphMatch(current);
+    else renderMC(current,currentTopic);
+  } else renderFill();
+}
+function nextQ(){quizIdx++;renderDots();showQProblem();}
+function showQuizSummary(){
+  document.getElementById('quiz-prog').style.display='none';
+  document.getElementById('next-row').style.display='none';
+  const right=quizRes.filter(Boolean).length,tot=quizRes.length;
+  const pct=tot?Math.round(right/tot*100):0;
+  const emoji=pct>=90?'🌟':pct>=70?'😊':pct>=50?'💪':'📚';
+  document.getElementById('prob').innerText=`${emoji} Quiz Complete!\n\nScore: ${right} / ${tot} correct  (${pct}%)`;
+  document.getElementById('mc-options').innerHTML=`<button class="btn btn-primary" style="margin-top:12px" onclick="endQuiz()">↩ Back to Practice</button>`;
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('hint-link').style.display='none';
+  document.getElementById('prob-svg').innerHTML='';
+  quizMode=false;
+}
+function endQuiz(){
+  quizMode=false;
+  document.getElementById('quiz-setup').style.display='block';
+  document.getElementById('quiz-prog').style.display='none';
+  document.getElementById('next-row').style.display='none';
+  newProblem();
+}
 
+// ── Google Sheets submission ──────────────────────────────────────────────────
+const SHEET_URL='https://script.google.com/macros/s/AKfycbzGwQNy9QcikDheuK4FOSo8rw2mVNnYW0vGAzGS0yvQhd9Tf-dIRlBFgFDqPvWc5cFwkQ/exec';
 async function submitScore(){
-  const name = document.getElementById('student-name').value.trim();
-  const msg  = document.getElementById('submit-msg');
-  const btn  = document.getElementById('submit-btn');
-  if(!name){ msg.className='submit-msg err'; msg.textContent='⚠ Please enter your name first.'; return; }
-  if(total===0){ msg.className='submit-msg err'; msg.textContent='⚠ Complete at least 1 problem first.'; return; }
-  if(SHEET_URL==='YOUR_APPS_SCRIPT_URL_HERE'){
-    msg.className='submit-msg err'; msg.textContent='⚠ Teacher: please add the Apps Script URL to the site.'; return;
-  }
-  btn.disabled=true; msg.className='submit-msg'; msg.textContent='Sending…';
-  const pct = total?Math.round(correct/total*100):0;
-  const payload = {
-    name,
-    topic: topics[currentTopic].label,
-    difficulty,
-    attempted: total,
-    correct,
-    accuracy: pct+'%',
-    time: new Date().toLocaleString()
-  };
-  try {
-    await fetch(SHEET_URL, {
-      method:'POST', mode:'no-cors',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
-    });
-    msg.className='submit-msg ok';
-    msg.textContent=`✓ Score submitted! (${total} attempted, ${correct} correct, ${pct}%)`;
-  } catch(e) {
-    msg.className='submit-msg err';
-    msg.textContent='✗ Could not send. Check your internet connection.';
-  }
+  const name=document.getElementById('student-name').value.trim();
+  const msg=document.getElementById('submit-msg'),btn=document.getElementById('submit-btn');
+  if(!name){msg.className='submit-msg err';msg.textContent='⚠ Please enter your name first.';return;}
+  if(total===0){msg.className='submit-msg err';msg.textContent='⚠ Complete at least 1 problem first.';return;}
+  btn.disabled=true;msg.className='submit-msg';msg.textContent='Sending…';
+  const pct=total?Math.round(correct/total*100):0;
+  const payload={name,topic:topics[currentTopic].label,difficulty,attempted:total,correct,accuracy:pct+'%',time:new Date().toLocaleString()};
+  try{
+    await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    msg.className='submit-msg ok';msg.textContent=`✓ Score submitted! (${total} attempted, ${correct} correct, ${pct}%)`;
+  }catch(e){msg.className='submit-msg err';msg.textContent='✗ Could not send. Check your internet connection.';}
   btn.disabled=false;
 }
 
+// ── Init ──────────────────────────────────────────────────────────────────────
 renderConcept(currentTopic);
 newProblem();
 </script>
