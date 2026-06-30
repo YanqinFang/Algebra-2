@@ -48,8 +48,6 @@
     .btn-primary.fc-active:hover { background: #00796b; }
     .btn-primary.gr-active { background: #1565c0; border-color: #1565c0; }
     .btn-primary.gr-active:hover { background: #1976d2; }
-    .btn-giveup { background: #fff8e1; color: #e65100; border-color: #ffcc80; font-size: 14px; padding: 8px 16px; }
-    .btn-giveup:hover { background: #fff3cd; }
     .concept-box { background: #ede7f6; border: 1.5px solid #b39ddb; border-radius: 12px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
     .concept-header { font-size: 17px; font-weight: 700; color: #4527a0; margin-bottom: 0.8rem; }
     .concept-rule { background: #fff; border-left: 4px solid #4527a0; padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 14px; color: #333; margin-bottom: 0.8rem; line-height: 1.7; white-space: pre-line; }
@@ -86,7 +84,9 @@
     .qd.ok   { background: #2e7d32; border-color: #2e7d32; }
     .qd.bad  { background: #c62828; border-color: #c62828; }
     .next-row { display: none; gap: 10px; margin-top: 14px; align-items: center; }
-    .giveup-row { display: none; gap: 10px; margin-top: 10px; align-items: center; }
+    /* attempts-left indicator */
+    .attempts-left { font-size: 14px; color: #888; background: #f5f5f5; border-radius: 20px; padding: 3px 12px; display: inline-block; margin-top: 8px; }
+    .attempts-left.warn { color: #e65100; background: #fff3e0; font-weight: 600; }
     .name-bar { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 14px 18px; margin-bottom: 1.2rem; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
     .name-bar label { font-size: 15px; font-weight: 600; color: #4527a0; white-space: nowrap; }
     .name-input { padding: 9px 14px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; flex: 1; min-width: 160px; max-width: 260px; }
@@ -142,27 +142,23 @@
     .graph-mc-opt.wrong .graph-mc-corner { background: #e65100; color: #fff; }
     .graph-mc-opt.reveal .graph-mc-corner { background: #2e7d32; color: #fff; }
     .footer { text-align: center; margin-top: 2rem; font-size: 14px; color: #bbb; }
-    .attempt-badge { font-size: 13px; color: #888; background: #f5f5f5; border-radius: 20px; padding: 3px 10px; display: inline-block; }
   </style>
 </head>
 <body>
 <div class="app">
   <h1>📐 Quadratics &amp; Factoring</h1>
   <p class="subtitle">Transformations · Vertex Form · Factoring · Graph Reading — Easy to Hard</p>
-
   <div class="name-bar">
     <label>👤 Your name:</label>
     <input class="name-input" id="student-name" placeholder="First Last" />
     <button class="btn-submit" id="submit-btn" onclick="submitScore()">📤 Submit Score</button>
     <span class="submit-msg" id="submit-msg"></span>
   </div>
-
   <div class="stats">
     <div class="stat"><div class="stat-num" id="s-total">0</div><div class="stat-lbl">attempted</div></div>
     <div class="stat"><div class="stat-num" id="s-correct">0</div><div class="stat-lbl">correct</div></div>
     <div class="stat"><div class="stat-num" id="s-pct">—</div><div class="stat-lbl">accuracy</div></div>
   </div>
-
   <!-- Quadratic Transformations -->
   <div class="group">
     <span class="group-title qt">Quadratic Transformations</span>
@@ -173,7 +169,6 @@
       <button class="tab qt" data-topic="grapheq" onclick="setTopic('grapheq',this)">Graph → Equation</button>
     </div>
   </div>
-
   <!-- Factoring -->
   <div class="group">
     <span class="group-title fc">Factoring</span>
@@ -184,8 +179,7 @@
       <button class="tab fc" data-topic="leada" onclick="setTopic('leada',this)">ax²+bx+c</button>
     </div>
   </div>
-
-  <!-- Graph Reading (NEW) -->
+  <!-- Graph Reading -->
   <div class="group">
     <span class="group-title gr">Graph Reading</span>
     <div class="tab-row">
@@ -193,21 +187,17 @@
       <button class="tab gr" data-topic="graphmatch" onclick="setTopic('graphmatch',this)">Match Graph to Equation</button>
     </div>
   </div>
-
   <!-- Difficulty -->
   <div class="diff-row">
     <button class="diff-btn easy active" onclick="setDiff('easy')">⭐ Easy</button>
     <button class="diff-btn medium" onclick="setDiff('medium')">⭐⭐ Medium</button>
     <button class="diff-btn hard" onclick="setDiff('hard')">⭐⭐⭐ Hard</button>
   </div>
-
   <div class="controls">
     <button class="btn btn-primary" id="new-btn" onclick="newProblem()">↻ New Problem</button>
     <button class="btn" onclick="resetStats()">✕ Reset</button>
   </div>
-
   <div class="concept-box" id="concept-box"></div>
-
   <!-- Quiz Setup -->
   <div class="quiz-setup" id="quiz-setup">
     <div class="quiz-setup-title">📝 Quiz Mode — Mix MC &amp; Fill-in</div>
@@ -224,7 +214,6 @@
     <div class="quiz-preview" id="quiz-preview">8 problems total: 5 Multiple Choice + 3 Fill-in</div>
     <button class="btn-quiz-start" onclick="startQuiz()">▶ Start Quiz</button>
   </div>
-
   <!-- Quiz Progress -->
   <div id="quiz-prog" style="display:none" class="quiz-progress">
     <div>
@@ -233,68 +222,60 @@
     </div>
     <button class="btn" onclick="endQuiz()" style="font-size:13px;padding:6px 14px">✕ End Quiz</button>
   </div>
-
   <!-- Problem Card -->
   <div class="card">
     <div class="badges">
       <span class="badge badge-qt" id="badge-topic">Vertex Form</span>
       <span class="badge badge-easy" id="badge-diff">Easy</span>
-      <span class="attempt-badge" id="attempt-badge" style="display:none"></span>
     </div>
     <div class="prob-svg-wrap" id="prob-svg"></div>
     <div class="problem-text" id="prob">Press "New Problem" to start</div>
     <div class="mc-options" id="mc-options"></div>
+    <!-- attempts-left shown below options -->
+    <div id="attempts-left-bar" style="margin-top:6px;display:none">
+      <span class="attempts-left" id="attempts-left-txt"></span>
+    </div>
     <span class="hint-link" id="hint-link" onclick="showHint()">💡 Show hint</span>
     <div class="hint" id="hint"></div>
     <div class="feedback" id="feedback"></div>
-    <div class="giveup-row" id="giveup-row">
-      <button class="btn btn-giveup" onclick="giveUp()">🏳 Show Answer</button>
-      <span style="font-size:13px;color:#999">— or keep trying!</span>
-    </div>
     <div class="next-row" id="next-row">
       <button class="btn btn-primary" onclick="nextQ()">Next Question →</button>
     </div>
   </div>
-
   <div class="footer">Quadratics &amp; Factoring Generator — YanqinFang</div>
 </div>
 <script>
+// ── Constants ─────────────────────────────────────────────────────────────────
+const MAX_ATTEMPTS = 2;   // students get exactly 2 chances
+
 // ── State ─────────────────────────────────────────────────────────────────────
 let current = null, total = 0, correct = 0;
 let difficulty = 'easy', currentTopic = 'vertex';
 const FC_TOPICS = new Set(['gcf','trinomial','diff2','leada']);
 const GR_TOPICS = new Set(['graphread','graphmatch']);
-
-// Per-question state
 let questionAnswered = false;
 let attemptCount = 0;
 let triedMcIndices = new Set();
 let mcCorrect = null;
-
-// Quiz state
 let quizMode = false, quizQ = [], quizIdx = 0, quizRes = [];
 
 // ── Utilities ─────────────────────────────────────────────────────────────────
 function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
 function abs(n){ return Math.abs(n); }
-function gcd(a,b){ a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b];}return a; }
 function sup(n){ return n===2?'²':n===3?'³':n===4?'⁴':`^${n}`; }
-
 function showQ(a,h,k){
   const aStr = a===1?'':(a===-1?'-':`${a}`);
   const hStr = h===0?'':(h>0?` - ${h}`:` + ${abs(h)}`);
   const kStr = k===0?'':(k>0?` + ${k}`:` - ${abs(k)}`);
   return `y = ${aStr}(x${hStr})²${kStr}`;
 }
-
 function normalize(s){
   return s.trim().toLowerCase()
     .replace(/\s+/g,'').replace(/×/g,'*')
     .replace(/²/g,'^2').replace(/³/g,'^3')
     .replace(/upwards/,'upward').replace(/downwards/,'downward');
 }
-
 function normalizeRange(s){
   return s.trim().toLowerCase()
     .replace(/\s+/g,'')
@@ -305,32 +286,68 @@ function normalizeRange(s){
     .replace(/r$/,'(-inf,inf)');
 }
 
+// ── Attempts-left indicator ───────────────────────────────────────────────────
+function updateAttemptsLeft(){
+  const bar = document.getElementById('attempts-left-bar');
+  const txt = document.getElementById('attempts-left-txt');
+  if(questionAnswered){ bar.style.display='none'; return; }
+  const left = MAX_ATTEMPTS - attemptCount;
+  bar.style.display = 'block';
+  txt.className = 'attempts-left' + (left <= 1 ? ' warn' : '');
+  txt.textContent = left === MAX_ATTEMPTS
+    ? `You have ${MAX_ATTEMPTS} attempts`
+    : left === 1
+    ? '⚠ Last attempt!'
+    : `${left} attempts remaining`;
+}
+
+// ── Auto-reveal after MAX_ATTEMPTS wrong ─────────────────────────────────────
+function autoReveal(container, isGraphMatch){
+  // Lock and highlight correct MC text option
+  if(!isGraphMatch && container){
+    container.querySelectorAll('.mc-opt').forEach(el=>{
+      el.classList.add('locked');
+      const optText = el.querySelector('span:last-child')?.textContent;
+      if(optText === mcCorrect){
+        el.classList.add('reveal');
+        const lbl = el.querySelector('.mc-label');
+        if(lbl) lbl.style.cssText='background:#2e7d32;color:#fff';
+      }
+    });
+  }
+  // Reveal correct graph option
+  if(isGraphMatch && current){
+    document.querySelectorAll('.graph-mc-opt').forEach((el,i)=>{
+      el.classList.add('locked');
+      if(i===current.correctIdx) el.classList.add('reveal');
+    });
+  }
+  // Disable fill-in input
+  const inp = document.getElementById('ans');
+  if(inp) inp.disabled = true;
+
+  document.getElementById('attempts-left-bar').style.display = 'none';
+  showFeedback('reveal', `❌ Out of attempts. Correct answer: <b>${current ? current.answers[0] : ''}</b>`);
+  resolveQuestion(false);
+}
+
 // ── SVG Parabola Generator ────────────────────────────────────────────────────
 function parabolaSVG(a, h, k, opts={}) {
-  const W = opts.W || 280;
-  const H = opts.H || 220;
+  const W = opts.W || 280, H = opts.H || 220;
   const mini = opts.mini || false;
   const showVertexLabel = opts.showVertexLabel !== undefined ? opts.showVertexLabel : !mini;
   const showAxisDash = opts.showAxisDash !== undefined ? opts.showAxisDash : !mini;
-
   const margin = mini ? 10 : 28;
   const iw = W - 2*margin, ih = H - 2*margin;
-
-  // Viewing window
   const xHalf = mini ? 4 : 5;
   const xMin = h - xHalf, xMax = h + xHalf;
   const ySpan = mini ? 10 : 12;
   const yMin = a > 0 ? k - 1.5 : k - ySpan + 1.5;
   const yMax = a > 0 ? k + ySpan - 1.5 : k + 1.5;
-
   const tx = x => margin + (x - xMin) / (xMax - xMin) * iw;
   const ty = y => margin + (yMax - y) / (yMax - yMin) * ih;
-
-  // Axes (clamped to visible area)
   const ax0 = Math.max(margin, Math.min(W-margin, tx(0)));
   const ay0 = Math.max(margin, Math.min(H-margin, ty(0)));
-
-  // Grid
   let grid = '';
   if (!mini) {
     for (let x = Math.ceil(xMin); x <= Math.floor(xMax); x++) {
@@ -346,32 +363,21 @@ function parabolaSVG(a, h, k, opts={}) {
       if (y !== 0) grid += `<text x="${(ax0-5)|0}" y="${(sy+3)|0}" text-anchor="end" font-size="10" fill="#ccc">${y}</text>`;
     }
   }
-
-  // Parabola path
   let pts = [];
   for (let i = 0; i <= 100; i++) {
     const x = xMin + (xMax-xMin)*i/100;
     const y = a*(x-h)*(x-h)+k;
-    if (y >= yMin-0.5 && y <= yMax+0.5) {
-      pts.push(`${tx(x).toFixed(1)},${ty(y).toFixed(1)}`);
-    }
+    if (y >= yMin-0.5 && y <= yMax+0.5) pts.push(`${tx(x).toFixed(1)},${ty(y).toFixed(1)}`);
   }
   const pathD = pts.length > 1 ? 'M'+pts.join(' L') : '';
-
-  // Axis of symmetry
-  const vsx = tx(h);
+  const vsx = tx(h), vsy = ty(k);
   const axisDash = (showAxisDash && !mini)
     ? `<line x1="${vsx|0}" y1="${margin}" x2="${vsx|0}" y2="${H-margin}" stroke="#7c4dff" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.5"/>`
     : '';
-
-  // Vertex dot + optional label
-  const vsy = ty(k);
   let vertexMark = `<circle cx="${vsx.toFixed(1)}" cy="${vsy.toFixed(1)}" r="${mini?3.5:5}" fill="#e65100" stroke="#fff" stroke-width="${mini?1:1.5}"/>`;
   if (showVertexLabel && !mini) {
-    const lx = vsx + 8, ly = vsy - 8;
-    vertexMark += `<text x="${lx|0}" y="${ly|0}" font-size="11" fill="#e65100" font-weight="bold">(${h},${k})</text>`;
+    vertexMark += `<text x="${(vsx+8)|0}" y="${(vsy-8)|0}" font-size="11" fill="#e65100" font-weight="bold">(${h},${k})</text>`;
   }
-
   return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;border-radius:8px">
     <rect width="${W}" height="${H}" fill="#f9f9ff" rx="8"/>
     ${grid}
@@ -441,12 +447,11 @@ const topics = {
       const h=rnd(-r,r),k=rnd(-r,r);
       const aOpts=d==='easy'?[1,-1]:d==='medium'?[1,-1,2,-2]:[1,-1,2,-2,3,-3];
       const a=pick(aOpts);
-      const aFmt=String(a);
       const dx=rnd(1,3)*pick([-1,1]);
       const px=h+dx,py=a*dx*dx+k;
       const eq=showQ(a,h,k);
       return {text:`Write the equation in vertex form.\nVertex: (${h}, ${k})\nPasses through point: (${px}, ${py})`,
-              answers:[eq],hint:`Start: y = a(x - ${h})² + ${k}\nSub (${px}, ${py}): ${py} = a(${px}-${h})² + ${k}\nSolve: a = ${aFmt}`,
+              answers:[eq],hint:`Start: y = a(x - ${h})² + ${k}\nSub (${px}, ${py}): ${py} = a(${px}-${h})² + ${k}\nSolve: a = ${a}`,
               multi:false};
     }
   },
@@ -519,8 +524,6 @@ const topics = {
               hint:`AC method: a×c = ${A}×${C} = ${prod}\nFind two numbers that multiply to ${prod} and add to ${B}.\nThen factor by grouping.`,multi:false};
     }
   },
-
-  // ── NEW: Read a Graph ──────────────────────────────────────────────────────
   graphread:{
     label:'Read a Graph', group:'gr',
     gen(d){
@@ -529,36 +532,33 @@ const topics = {
       const a=pick(aOpts),h=rnd(-r,r),k=rnd(-r,r);
       const props=['vertex','axis','domain','range'];
       const prop=pick(props);
-      // Hide label for vertex/axis questions so student must read the graph
       const svg=parabolaSVG(a,h,k,{showVertexLabel:prop==='domain'||prop==='range', showAxisDash:prop==='domain'||prop==='range'});
       let text,answers,hint;
       if(prop==='vertex'){
         text=`What is the vertex of this parabola?`;
         answers=[`(${h}, ${k})`,`(${h},${k})`];
-        hint=`The vertex is the orange dot — the turning point of the parabola.\nRead its (x, y) coordinates from the grid.`;
+        hint=`The vertex is the orange dot.\nRead its (x, y) from the grid.`;
       } else if(prop==='axis'){
         text=`What is the equation of the axis of symmetry?`;
         answers=[`x = ${h}`,`x=${h}`];
-        hint=`The axis of symmetry is a vertical line through the vertex.\nIt has equation x = h, where h = ${h}.`;
+        hint=`Axis of symmetry passes through the vertex.\nEquation: x = ${h}`;
       } else if(prop==='domain'){
         text=`What is the domain of this function?`;
         answers=['(-∞, ∞)','(-inf, inf)','all real numbers','ℝ','all reals'];
-        hint=`Parabolas extend infinitely left and right — no x-values are excluded.\nDomain = all real numbers = (-∞, ∞)`;
+        hint=`Parabolas extend left and right forever.\nDomain = all real numbers = (-∞, ∞)`;
       } else {
         text=`What is the range of this function?`;
         if(a>0){
           answers=[`[${k}, ∞)`,`[${k}, +∞)`,`[${k},∞)`,`y ≥ ${k}`,`y>=${k}`];
-          hint=`The parabola opens upward — the vertex (${h}, ${k}) is the MINIMUM.\nRange = [${k}, ∞)  (y can be ${k} or larger)`;
+          hint=`Opens upward — vertex (${h}, ${k}) is the minimum.\nRange = [${k}, ∞)`;
         } else {
           answers=[`(-∞, ${k}]`,`(-inf, ${k}]`,`(-∞,${k}]`,`y ≤ ${k}`,`y<=${k}`];
-          hint=`The parabola opens downward — the vertex (${h}, ${k}) is the MAXIMUM.\nRange = (-∞, ${k}]  (y can be ${k} or smaller)`;
+          hint=`Opens downward — vertex (${h}, ${k}) is the maximum.\nRange = (-∞, ${k}]`;
         }
       }
       return {text,answers,hint,svg,multi:false,isSVG:true};
     }
   },
-
-  // ── NEW: Match Graph to Equation ──────────────────────────────────────────
   graphmatch:{
     label:'Match Graph to Equation', group:'gr',
     gen(d){
@@ -566,7 +566,6 @@ const topics = {
       const r=d==='easy'?3:d==='medium'?4:5;
       const a=pick(aOpts),h=rnd(-r,r),k=rnd(-r,r);
       const eq=showQ(a,h,k);
-      // 3 distractors
       const dShift=pick([2,3,-2,-3]);
       const choices=[
         {a,h,k},
@@ -574,52 +573,50 @@ const topics = {
         {a,h:h+dShift,k},
         {a,h,k:k+(dShift>0?-3:3)}
       ];
-      // Shuffle
       for(let i=choices.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[choices[i],choices[j]]=[choices[j],choices[i]];}
       const correctIdx=choices.findIndex(c=>c.a===a&&c.h===h&&c.k===k);
       return {text:`Which graph matches the equation?\n  ${eq}`,
               answers:[String(correctIdx)],
-              hint:`Vertex is at (${h}, ${k}).\nThe parabola opens ${a>0?'upward':'downward'}.`,
+              hint:`Vertex is at (${h}, ${k}).\nOpens ${a>0?'upward':'downward'}.`,
               multi:false,isGraphMatch:true,choices,correctIdx};
     }
   }
 };
 
-// ── Examples & Rules (Concept Box) ───────────────────────────────────────────
+// ── Concept examples & rules ──────────────────────────────────────────────────
 const examples = {
   vertex:{problem:'Identify the vertex, axis of symmetry, and direction of opening:\n  y = -2(x - 3)² + 5',
     steps:[['Vertex form','y = a(x - h)² + k,  vertex = (h, k)'],['Read h and k','h = 3,  k = 5  →  vertex = (3, 5)'],['Axis of symmetry','x = h  →  x = 3'],['Direction','a = -2 < 0  →  opens downward']],answer:'Vertex: (3, 5)  |  Axis: x = 3  |  Opens: downward'},
   stretch:{problem:'Compare y = 3(x)² to the parent y = x².\nDescribe the transformation.',
-    steps:[['Identify a','a = 3'],['|a| > 1','Vertical stretch by factor of 3'],['a > 0','No reflection (opens upward)']],answer:'Vertical stretch by a factor of 3; opens upward'},
+    steps:[['Identify a','a = 3'],['|a| > 1','Vertical stretch by factor of 3'],['a > 0','No reflection']],answer:'Vertical stretch by a factor of 3'},
   shift:{problem:'Describe the transformation from y = x² to:\n  y = (x + 4)² - 7',
     steps:[['Horizontal shift','(x + 4) → h = -4  →  shift LEFT 4'],['Vertical shift','k = -7  →  shift DOWN 7']],answer:'Shift left 4, shift down 7'},
-  grapheq:{problem:'A parabola has vertex (-2, 5) and passes through (0, 1).\nWrite its equation in vertex form.',
-    steps:[['Start with vertex form','y = a(x + 2)² + 5'],['Plug in (0, 1)','1 = a(0 + 2)² + 5  →  1 = 4a + 5'],['Solve for a','4a = -4  →  a = -1'],['Write equation','y = -(x + 2)² + 5']],answer:'y = -(x + 2)² + 5'},
+  grapheq:{problem:'Vertex (-2, 5), passes through (0, 1).\nWrite in vertex form.',
+    steps:[['Start','y = a(x + 2)² + 5'],['Plug in (0,1)','1 = 4a + 5  →  a = -1'],['Equation','y = -(x + 2)² + 5']],answer:'y = -(x + 2)² + 5'},
   gcf:{problem:'Factor completely:\n  6x³ + 9x² - 12x',
-    steps:[['Find GCF','GCF of 6, 9, 12 = 3; lowest power = x¹\nGCF = 3x'],['Divide each term','6x³÷3x=2x², 9x²÷3x=3x, -12x÷3x=-4'],['Write factored form','3x(2x² + 3x - 4)']],answer:'3x(2x² + 3x - 4)'},
+    steps:[['GCF','GCF = 3x'],['Divide','6x³÷3x=2x², 9x²÷3x=3x, -12x÷3x=-4'],['Result','3x(2x² + 3x - 4)']],answer:'3x(2x² + 3x - 4)'},
   trinomial:{problem:'Factor:\n  x² + 7x + 12',
-    steps:[['Find two numbers','Multiply to 12 AND add to 7\n3 × 4 = 12  ✓   3 + 4 = 7  ✓'],['Write factors','(x + 3)(x + 4)']],answer:'(x + 3)(x + 4)'},
+    steps:[['Two numbers','3 × 4 = 12, 3 + 4 = 7'],['Factors','(x + 3)(x + 4)']],answer:'(x + 3)(x + 4)'},
   diff2:{problem:'Factor:\n  x² - 49',
-    steps:[['Recognize pattern','a² - b² = (a + b)(a - b)\nx² - 49 = x² - 7²'],['Apply formula','(x + 7)(x - 7)']],answer:'(x + 7)(x - 7)'},
+    steps:[['Pattern','a² - b² = (a+b)(a-b)'],['Apply','(x + 7)(x - 7)']],answer:'(x + 7)(x - 7)'},
   leada:{problem:'Factor:\n  2x² + 7x + 3',
-    steps:[['AC method','a×c = 2×3 = 6\nFind two numbers: multiply to 6, add to 7 → 1 and 6'],['Rewrite middle term','2x² + x + 6x + 3'],['Group','x(2x + 1) + 3(2x + 1)'],['Factor out','(2x + 1)(x + 3)']],answer:'(2x + 1)(x + 3)'},
-  graphread:{problem:'A parabola opens upward with vertex at (2, -3).\nState the domain and range.',
-    steps:[['Domain','All parabolas extend left & right without restriction.\nDomain = all real numbers = (-∞, ∞)'],['Range','Opens upward → minimum at vertex k = -3\nRange = [-3, ∞)']],answer:'Domain: (-∞, ∞)   Range: [-3, ∞)'},
+    steps:[['AC','2×3=6; find 1,6: multiply to 6, add to 7'],['Rewrite','2x² + x + 6x + 3'],['Group','x(2x+1)+3(2x+1)'],['Factor','(2x+1)(x+3)']],answer:'(2x + 1)(x + 3)'},
+  graphread:{problem:'Parabola opens upward, vertex (2, -3).\nState domain and range.',
+    steps:[['Domain','All parabolas: (-∞, ∞)'],['Range','Opens up → min at k=-3\nRange = [-3, ∞)']],answer:'Domain: (-∞, ∞)   Range: [-3, ∞)'},
   graphmatch:{problem:'Match  y = -2(x - 1)² + 4  to its graph.',
-    steps:[['Vertex','h = 1, k = 4  →  vertex at (1, 4)'],['Direction','a = -2 < 0  →  opens DOWNWARD'],['Width','|a| = 2 > 1  →  narrower than y = x²'],['Identify','Find the graph opening down with vertex at (1, 4)']],answer:'Graph opens downward, vertex (1, 4), narrow'}
+    steps:[['Vertex','(1, 4)'],['Direction','a=-2<0 → opens DOWN'],['Width','|a|=2 → narrower'],['Find','Graph opening down, vertex (1,4)']],answer:'Graph opens downward, vertex (1, 4)'}
 };
-
 const rules = {
-  vertex:`Vertex Form: y = a(x − h)² + k\nVertex = (h, k)\nAxis of Symmetry: x = h\nDirection of Opening:\n  a > 0  →  opens UPWARD  (minimum at vertex)\n  a < 0  →  opens DOWNWARD (maximum at vertex)`,
-  stretch:`Vertical Transformations of y = ax²:\n  |a| > 1  →  vertical STRETCH (graph is narrower)\n  |a| < 1  →  vertical COMPRESSION (graph is wider)\n  a < 0    →  REFLECTION over the x-axis\nCompare: y = 3x² is narrower,  y = ½x² is wider than y = x²`,
-  shift:`Translations from y = x² to y = a(x − h)² + k:\n  h > 0  →  shift RIGHT h units   e.g. (x − 3)²  →  right 3\n  h < 0  →  shift LEFT  |h| units  e.g. (x + 3)²  →  left 3\n  k > 0  →  shift UP    k units\n  k < 0  →  shift DOWN  |k| units`,
-  grapheq:`Writing the Equation from a Graph (Vertex Form):\n1. Identify the vertex (h, k)  →  y = a(x − h)² + k\n2. Pick another known point (x, y) on the parabola\n3. Substitute (x, y) and solve for a\n4. Write the final equation`,
-  gcf:`Factoring Out the Greatest Common Factor (GCF):\n1. Find the GCF of all numerical coefficients\n2. Find the lowest power of each variable present\n3. Divide each term by the GCF\n4. Write: GCF(remaining terms)\nExample: 6x³ + 9x² − 12x  →  GCF = 3x  →  3x(2x² + 3x − 4)`,
-  trinomial:`Factoring x² + bx + c:\nFind two numbers p and q such that:\n  p × q = c   (multiply to give c)\n  p + q = b   (add to give b)\nThen: x² + bx + c = (x + p)(x + q)\nTip: list factor pairs of c, check which pair sums to b`,
-  diff2:`Difference of Squares Pattern:\n  a² − b² = (a + b)(a − b)\nSteps:\n1. Verify both terms are perfect squares with subtraction\n2. Find the square root of each term\n3. Write (√first + √second)(√first − √second)\nExamples: x²−25 = (x+5)(x−5),   4x²−9 = (2x+3)(2x−3)`,
-  leada:`Factoring ax² + bx + c  (a ≠ 1) — AC Method:\n1. Compute the product: A = a × c\n2. Find p, q such that p × q = A  AND  p + q = b\n3. Rewrite the middle term: ax² + px + qx + c\n4. Factor by grouping:\n   (ax² + px) + (qx + c)\n   Factor each group, then factor out common binomial`,
-  graphread:`Reading a Parabola — Key Properties:\n• Vertex (h, k): the turning point (orange dot on graph)\n• Axis of Symmetry: x = h  (vertical line through vertex)\n• Domain: ALWAYS (-∞, ∞) — parabolas extend left & right forever\n• Range:\n    a > 0 (opens UP)   →  [k, ∞)   minimum at vertex\n    a < 0 (opens DOWN) →  (-∞, k]  maximum at vertex`,
-  graphmatch:`Matching Equation to Graph — Checklist:\n1. Find vertex (h, k) from y = a(x − h)² + k\n2. Direction: a > 0 → opens up,  a < 0 → opens down\n3. Width: |a| > 1 → narrower,  |a| < 1 → wider\n4. Locate the graph with matching vertex AND direction`
+  vertex:`Vertex Form: y = a(x − h)² + k\nVertex = (h, k)\nAxis of Symmetry: x = h\na > 0 → opens UPWARD (minimum)\na < 0 → opens DOWNWARD (maximum)`,
+  stretch:`|a| > 1 → vertical STRETCH (narrower)\n|a| < 1 → vertical COMPRESSION (wider)\na < 0 → REFLECTION over x-axis`,
+  shift:`h > 0 → shift RIGHT h units   e.g. (x−3)² → right 3\nh < 0 → shift LEFT |h| units  e.g. (x+3)² → left 3\nk > 0 → shift UP k units\nk < 0 → shift DOWN |k| units`,
+  grapheq:`1. Identify vertex (h,k) → y = a(x−h)²+k\n2. Pick another point (x,y) on the graph\n3. Substitute and solve for a\n4. Write the final equation`,
+  gcf:`1. Find GCF of coefficients\n2. Find lowest power of each variable\n3. Divide each term by GCF\n4. Write: GCF(remaining terms)`,
+  trinomial:`Find p, q such that: p×q = c  AND  p+q = b\nThen: x²+bx+c = (x+p)(x+q)`,
+  diff2:`a²−b² = (a+b)(a−b)\n1. Check both terms are perfect squares\n2. √each term\n3. Write (√first + √second)(√first − √second)`,
+  leada:`AC Method:\n1. Compute A = a×c\n2. Find p,q: p×q=A and p+q=b\n3. Rewrite middle term\n4. Factor by grouping`,
+  graphread:`Vertex (h,k): turning point (orange dot)\nAxis: x = h\nDomain: ALWAYS (-∞, ∞)\nRange: a>0 → [k,∞)   a<0 → (-∞,k]`,
+  graphmatch:`1. Find vertex (h,k)\n2. Direction: a>0=up, a<0=down\n3. Width: |a|>1=narrow, |a|<1=wide\n4. Match vertex + direction`
 };
 
 // ── Concept Box ───────────────────────────────────────────────────────────────
@@ -629,16 +626,14 @@ function renderConcept(key){
   const isFc=FC_TOPICS.has(key), isGr=GR_TOPICS.has(key);
   const cls=isFc?' fc':isGr?' gr':'';
   box.className=`concept-box${cls}`;
-  const rule=rules[key]||'';
   const ex=examples[key];
   const lbl=topics[key]?topics[key].label:key;
-  const stepsHtml=ex.steps.map(([l,t])=>`<li><span class="step-lbl" style="display:inline-block;background:${isFc?'#e0f2f1':isGr?'#e3f2fd':'#fff8e1'};border:1px solid ${isFc?'#80cbc4':isGr?'#90caf9':'#ffe082'};border-radius:6px;font-size:13px;font-weight:700;color:${isFc?'#00695c':isGr?'#1565c0':'#f57f17'};padding:1px 9px;margin-right:8px">${l}</span>${t.replace(/\n/g,'<br>')}</li>`).join('');
-  box.innerHTML=`<div class="concept-header">📚 ${lbl}</div><div class="concept-rule${cls}">${rule}</div><div class="concept-example-title">📖 Worked Example</div><div class="concept-example-prob">${ex.problem.replace(/\n/g,'<br>')}</div><ul class="concept-steps">${stepsHtml}</ul><div class="concept-answer">${ex.answer}</div>`;
+  const stepsHtml=ex.steps.map(([l,t])=>`<li><span style="display:inline-block;background:${isFc?'#e0f2f1':isGr?'#e3f2fd':'#fff8e1'};border:1px solid ${isFc?'#80cbc4':isGr?'#90caf9':'#ffe082'};border-radius:6px;font-size:13px;font-weight:700;color:${isFc?'#00695c':isGr?'#1565c0':'#f57f17'};padding:1px 9px;margin-right:8px">${l}</span>${t.replace(/\n/g,'<br>')}</li>`).join('');
+  box.innerHTML=`<div class="concept-header">📚 ${lbl}</div><div class="concept-rule${cls}">${(rules[key]||'').replace(/\n/g,'<br>')}</div><div class="concept-example-title">📖 Worked Example</div><div class="concept-example-prob">${ex.problem.replace(/\n/g,'<br>')}</div><ul class="concept-steps">${stepsHtml}</ul><div class="concept-answer">${ex.answer}</div>`;
 }
 
-// ── MC Builder (text options) ─────────────────────────────────────────────────
+// ── MC Builder ────────────────────────────────────────────────────────────────
 const MC_LABELS=['A','B','C','D'];
-
 function buildMC(cur, topic){
   let ans_str, wrong=[];
   if(topic==='vertex'){
@@ -665,7 +660,6 @@ function buildMC(cur, topic){
   } else if(topic==='gcf'){
     ans_str=cur.answers[0];
     wrong=[ans_str.replace(/\+ (\d)/g,'- $1').replace(/- (\d)/g,'+ $1'),ans_str+'²','2x('+ans_str.replace(/^\w+\(/,'')].filter(w=>w!==ans_str);
-    if(wrong.length<3)wrong.push(ans_str+'²');
   } else if(topic==='trinomial'){
     ans_str=cur.answers[0];
     wrong=[ans_str.replace(/\+ (\d+)\)/g,'- $1)').replace(/- (\d+)\)/g,'+ $1)'),ans_str.replace(/\(x ([+-]) (\d+)\)\(x ([+-]) (\d+)\)/,(_,s1,n1,s2,n2)=>`(x ${s1} ${n2})(x ${s2} ${n1})`),(ans_str.match(/\d+/g)||['1','1']).slice(0,2).reduce((_,n)=>`(x + ${n})²`,'')||'(x + 1)²'].filter(w=>w!==ans_str);
@@ -679,7 +673,6 @@ function buildMC(cur, topic){
     if(wrong.length<3)wrong.push('(x + 1)(x + 1)');
   } else if(topic==='graphread'){
     ans_str=cur.answers[0];
-    // Generate plausible wrong answers based on what's being asked
     const txt=cur.text;
     if(txt.includes('vertex')){
       const m=ans_str.match(/\((-?\d+),\s*(-?\d+)\)/);
@@ -689,19 +682,18 @@ function buildMC(cur, topic){
       const m=ans_str.match(/-?\d+/);const h=m?parseInt(m[0]):0;
       wrong=[`x = ${h+2}`,`x = ${h-2}`,`y = ${h}`].filter(w=>w!==ans_str);
     } else if(txt.includes('domain')){
-      wrong=['[0, ∞)','(-∞, 0]','[k, ∞)'].filter(w=>w!==ans_str);
+      wrong=['[0, ∞)','(-∞, 0]','[k, ∞)'];
     } else {
-      // range — give wrong range alternatives
       wrong=['(-∞, ∞)','[0, ∞)','(-∞, 0]'].filter(w=>w!==ans_str);
     }
-    if(wrong.length<3)while(wrong.length<3)wrong.push(`(${wrong.length}, ∞)`);
+    if(wrong.length<3)while(wrong.length<3)wrong.push(`[${wrong.length}, ∞)`);
   }
   const opts=[ans_str,...wrong.slice(0,3)];
   for(let i=opts.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[opts[i],opts[j]]=[opts[j],opts[i]];}
   return{opts,ans_str};
 }
 
-// ── Render MC (text options) ─────────────────────────────────────────────────
+// ── Render MC (text options) — 2-attempt limit ────────────────────────────────
 function renderMC(cur, topic){
   if(cur.isGraphMatch){ renderGraphMatch(cur); return; }
   const{opts,ans_str}=buildMC(cur,topic);
@@ -720,25 +712,31 @@ function renderMC(cur, topic){
       const isOk=(opt===mcCorrect);
       if(isOk){
         div.classList.add('correct');
-        div.querySelector('.mc-label').style.cssText='background:#2e7d32;color:#fff';
-        // Lock all others
+        const lbl=div.querySelector('.mc-label');
+        if(lbl) lbl.style.cssText='background:#2e7d32;color:#fff';
         container.querySelectorAll('.mc-opt').forEach(el=>el.classList.add('locked'));
-        showFeedback('correct', attemptCount===1?'✓ Correct! First try! 🌟':`✓ Correct! You got it in ${attemptCount} ${attemptCount===1?'try':'tries'}! 👍`);
+        document.getElementById('attempts-left-bar').style.display='none';
+        showFeedback('correct', attemptCount===1?'✓ Correct! First try! 🌟':'✓ Correct on 2nd try! 👍');
         resolveQuestion(true);
       } else {
         div.classList.add('wrong','tried');
-        div.querySelector('.mc-label').style.cssText='background:#e65100;color:#fff';
-        const msgs=['Not quite — give it another try! 💪','Think it through again — you can do it! 🤔',"Keep going, check your reasoning! 💡",'Almost there — what did you miss? 🔍'];
-        showFeedback('wrong',msgs[Math.min(attemptCount-1,msgs.length-1)]);
-        updateAttemptBadge();
-        document.getElementById('giveup-row').style.display='flex';
+        const lbl=div.querySelector('.mc-label');
+        if(lbl) lbl.style.cssText='background:#e65100;color:#fff';
+        if(attemptCount >= MAX_ATTEMPTS){
+          // Out of attempts — auto-reveal
+          autoReveal(container, false);
+        } else {
+          showFeedback('wrong','❌ Not quite — you have 1 more try! 💪');
+          updateAttemptsLeft();
+        }
       }
     };
     container.appendChild(div);
   });
+  updateAttemptsLeft();
 }
 
-// ── Render Graph Match (SVG grid) ────────────────────────────────────────────
+// ── Render Graph Match — 2-attempt limit ──────────────────────────────────────
 function renderGraphMatch(cur){
   mcCorrect=String(cur.correctIdx);
   const container=document.getElementById('mc-options');
@@ -755,29 +753,33 @@ function renderGraphMatch(cur){
       if(isOk){
         div.classList.add('correct');
         grid.querySelectorAll('.graph-mc-opt').forEach(el=>el.classList.add('locked'));
-        showFeedback('correct',attemptCount===1?'✓ Correct! 🌟':`✓ Got it in ${attemptCount} tries! 👍`);
+        document.getElementById('attempts-left-bar').style.display='none';
+        showFeedback('correct',attemptCount===1?'✓ Correct! 🌟':'✓ Correct on 2nd try! 👍');
         resolveQuestion(true);
       } else {
         div.classList.add('wrong','locked');
-        const msgs=['Not quite — try another graph! 💪','Look carefully at vertex and direction 🤔',"Check: does the vertex match? Does it open the right way? 💡"];
-        showFeedback('wrong',msgs[Math.min(attemptCount-1,msgs.length-1)]);
-        updateAttemptBadge();
-        document.getElementById('giveup-row').style.display='flex';
+        if(attemptCount >= MAX_ATTEMPTS){
+          autoReveal(null, true);
+        } else {
+          showFeedback('wrong','❌ Not quite — check vertex and direction. 1 more try! 💪');
+          updateAttemptsLeft();
+        }
       }
     };
     grid.appendChild(div);
   });
+  updateAttemptsLeft();
 }
 
-// ── Render Fill-in ────────────────────────────────────────────────────────────
+// ── Render Fill-in — 2-attempt limit ─────────────────────────────────────────
 function renderFill(){
   const container=document.getElementById('mc-options');
   container.innerHTML=`<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px">
     <input class="answer-input" id="ans" placeholder="Type your answer" onkeydown="if(event.key==='Enter')checkFill()">
     <button class="btn btn-primary" onclick="checkFill()">✓ Check</button></div>`;
   setTimeout(()=>{const a=document.getElementById('ans');if(a)a.focus();},50);
+  updateAttemptsLeft();
 }
-
 function checkFill(){
   if(!current||questionAnswered) return;
   const raw=(document.getElementById('ans')||{value:''}).value.trim();
@@ -797,37 +799,18 @@ function checkFill(){
   attemptCount++;
   if(ok){
     const inp=document.getElementById('ans');if(inp)inp.disabled=true;
-    showFeedback('correct',attemptCount===1?'✓ Correct! 🌟':`✓ Correct on attempt ${attemptCount}! 👍`);
+    document.getElementById('attempts-left-bar').style.display='none';
+    showFeedback('correct',attemptCount===1?'✓ Correct! 🌟':'✓ Correct on 2nd try! 👍');
     resolveQuestion(true);
   } else {
-    updateAttemptBadge();
-    showFeedback('wrong',attemptCount===1?'Not quite — try again! 💪':'Almost! Double-check your answer 🤔');
-    // Keep input active, just select text for easy re-type
-    const inp=document.getElementById('ans');if(inp){inp.select();}
-    document.getElementById('giveup-row').style.display='flex';
+    if(attemptCount >= MAX_ATTEMPTS){
+      autoReveal(null, false);
+    } else {
+      showFeedback('wrong','❌ Not quite — 1 more try! 💪');
+      const inp=document.getElementById('ans');if(inp)inp.select();
+      updateAttemptsLeft();
+    }
   }
-}
-
-// ── Give Up / Reveal ──────────────────────────────────────────────────────────
-function giveUp(){
-  if(questionAnswered) return;
-  // Reveal correct MC option
-  document.querySelectorAll('.mc-opt').forEach(el=>{
-    el.classList.add('locked');
-    const optText=el.querySelector('span:last-child')?.textContent;
-    if(optText===mcCorrect){el.classList.add('reveal');el.querySelector('.mc-label').style.cssText='background:#2e7d32;color:#fff';}
-  });
-  // Reveal correct graph option
-  if(current&&current.isGraphMatch){
-    document.querySelectorAll('.graph-mc-opt').forEach((el,i)=>{
-      el.classList.add('locked');
-      if(i===current.correctIdx)el.classList.add('reveal');
-    });
-  }
-  // Disable fill-in
-  const inp=document.getElementById('ans');if(inp)inp.disabled=true;
-  showFeedback('reveal',`Answer: <b>${current?current.answers[0]:''}</b>`);
-  resolveQuestion(false);
 }
 
 // ── Score Tracking ────────────────────────────────────────────────────────────
@@ -837,7 +820,6 @@ function resolveQuestion(isCorrect){
   total++;
   if(isCorrect) correct++;
   updateStats();
-  document.getElementById('giveup-row').style.display='none';
   if(quizMode){quizRes.push(isCorrect);renderDots();document.getElementById('next-row').style.display='flex';}
 }
 
@@ -847,19 +829,13 @@ function showFeedback(type, html){
   fb.className='feedback '+type;
   fb.innerHTML=html;
 }
-function updateAttemptBadge(){
-  const b=document.getElementById('attempt-badge');
-  b.style.display='inline-block';
-  b.textContent=`Attempt ${attemptCount}`;
-}
 function resetPerQuestion(){
   questionAnswered=false;
   attemptCount=0;
   triedMcIndices=new Set();
   mcCorrect=null;
-  document.getElementById('giveup-row').style.display='none';
   document.getElementById('next-row').style.display='none';
-  document.getElementById('attempt-badge').style.display='none';
+  document.getElementById('attempts-left-bar').style.display='none';
 }
 
 // ── Topic / Difficulty ────────────────────────────────────────────────────────
@@ -900,7 +876,6 @@ function newProblem(){
   if(current.isGraphMatch) renderGraphMatch(current);
   else renderMC(current,currentTopic);
 }
-
 function showHint(){
   document.getElementById('hint').style.display='block';
   document.getElementById('hint').textContent=current.hint;
@@ -967,6 +942,7 @@ function showQuizSummary(){
   document.getElementById('feedback').className='feedback';
   document.getElementById('hint-link').style.display='none';
   document.getElementById('prob-svg').innerHTML='';
+  document.getElementById('attempts-left-bar').style.display='none';
   quizMode=false;
 }
 function endQuiz(){
@@ -990,7 +966,7 @@ async function submitScore(){
   try{
     await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     msg.className='submit-msg ok';msg.textContent=`✓ Score submitted! (${total} attempted, ${correct} correct, ${pct}%)`;
-  }catch(e){msg.className='submit-msg err';msg.textContent='✗ Could not send. Check your internet connection.';}
+  }catch(e){msg.className='submit-msg err';msg.textContent='✗ Could not send. Check your connection.';}
   btn.disabled=false;
 }
 
