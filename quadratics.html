@@ -257,7 +257,7 @@ math msqrt{padding-top:1px}
       <button class="btn btn-primary" onclick="nextQ()">Next Question →</button>
     </div>
   </div>
-  <div class="footer">Math Practice Generator — YanqinFang</div>
+  <div class="footer">Math Practice Generator &nbsp;·&nbsp; © 2026 Prof. Fang Math · All rights reserved.</div>
 </div>
 <!-- ── RIGHT SIDEBAR ── -->
 <div class="topic-sidebar">
@@ -1072,7 +1072,9 @@ function nextQ(){quizIdx++;renderDots();showQProblem();}
 function showQuizSummary(){document.getElementById('quiz-prog').style.display='none';document.getElementById('next-row').style.display='none';const right=quizRes.filter(Boolean).length,tot=quizRes.length,pct=tot?Math.round(right/tot*100):0;const emoji=pct>=90?'🌟':pct>=70?'😊':pct>=50?'💪':'📚';document.getElementById('prob').innerText=`${emoji} Quiz Complete!\n\nScore: ${right} / ${tot} correct  (${pct}%)`;document.getElementById('mc-options').innerHTML=`<button class="btn btn-primary" style="margin-top:12px" onclick="endQuiz()">↩ Back to Practice</button>`;document.getElementById('feedback').className='feedback';document.getElementById('hint-link').style.display='none';document.getElementById('prob-svg').innerHTML='';document.getElementById('attempts-left-bar').style.display='none';quizMode=false;}
 function endQuiz(){quizMode=false;document.getElementById('quiz-setup').style.display='block';document.getElementById('quiz-prog').style.display='none';document.getElementById('next-row').style.display='none';newProblem();}
 // ── Submit Score ──
-const SHEET_URL='https://script.google.com/macros/s/AKfycbzGwQNy9QcikDheuK4FOSo8rw2mVNnYW0vGAzGS0yvQhd9Tf-dIRlBFgFDqPvWc5cFwkQ/exec';
+// ⬇️ Paste your own Google Apps Script Web App URL here before using "Submit Score".
+// (Left blank in the public version so the private endpoint is not exposed.)
+const SHEET_URL='YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
 async function submitScore(){
   const name=document.getElementById('student-name').value.trim();
   const msg=document.getElementById('submit-msg'),btn=document.getElementById('submit-btn');
