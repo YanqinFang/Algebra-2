@@ -177,6 +177,9 @@ h1{font-size:26px;font-weight:700;color:#4527a0;margin-bottom:3px}
 .qd.bad{background:#c62828;border-color:#c62828}
 .next-row{display:none;gap:10px;margin-top:13px;align-items:center}
 .footer{text-align:center;margin-top:1.5rem;font-size:13px;color:#bbb}
+/* ── Proper radical (MathML) rendering ── */
+math{font-size:1.05em;vertical-align:-.08em}
+math msqrt{padding-top:1px}
 @media(max-width:700px){.layout{flex-direction:column-reverse}.topic-sidebar{width:100%;position:static}.topic-sidebar .sidebar-box{display:grid;grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -186,33 +189,27 @@ h1{font-size:26px;font-weight:700;color:#4527a0;margin-bottom:3px}
 <div class="main-content">
   <h1>📐 Math Practice Generator</h1>
   <p class="subtitle">Algebra Basics · Quadratics · Factoring · Graph Reading — Easy to Hard</p>
-
   <div class="name-bar">
     <label>👤 Your name:</label>
     <input class="name-input" id="student-name" placeholder="First Last"/>
     <button class="btn-submit" id="submit-btn" onclick="submitScore()">📤 Submit Score</button>
     <span class="submit-msg" id="submit-msg"></span>
   </div>
-
   <div class="stats">
     <div class="stat"><div class="stat-num" id="s-total">0</div><div class="stat-lbl">attempted</div></div>
     <div class="stat"><div class="stat-num" id="s-correct">0</div><div class="stat-lbl">correct</div></div>
     <div class="stat"><div class="stat-num" id="s-pct">—</div><div class="stat-lbl">accuracy</div></div>
   </div>
-
   <div class="diff-row">
     <button class="diff-btn easy active" onclick="setDiff('easy')">⭐ Easy</button>
     <button class="diff-btn medium" onclick="setDiff('medium')">⭐⭐ Medium</button>
     <button class="diff-btn hard" onclick="setDiff('hard')">⭐⭐⭐ Hard</button>
   </div>
-
   <div class="controls">
     <button class="btn btn-primary" id="new-btn" onclick="newProblem()">↻ New Problem</button>
     <button class="btn" onclick="resetStats()">✕ Reset</button>
   </div>
-
   <div class="concept-box" id="concept-box"></div>
-
   <!-- Quiz Setup -->
   <div class="quiz-setup" id="quiz-setup">
     <div class="quiz-setup-title">📝 Quiz Mode — Mix MC &amp; Fill-in</div>
@@ -229,7 +226,6 @@ h1{font-size:26px;font-weight:700;color:#4527a0;margin-bottom:3px}
     <div class="quiz-preview" id="quiz-preview">8 problems total: 5 Multiple Choice + 3 Fill-in</div>
     <button class="btn-quiz-start" onclick="startQuiz()">▶ Start Quiz</button>
   </div>
-
   <!-- Quiz Progress -->
   <div id="quiz-prog" style="display:none" class="quiz-progress">
     <div>
@@ -238,7 +234,6 @@ h1{font-size:26px;font-weight:700;color:#4527a0;margin-bottom:3px}
     </div>
     <button class="btn" onclick="endQuiz()" style="font-size:12px;padding:5px 12px">✕ End Quiz</button>
   </div>
-
   <!-- Problem Card -->
   <div class="card">
     <div class="badges">
@@ -260,18 +255,15 @@ h1{font-size:26px;font-weight:700;color:#4527a0;margin-bottom:3px}
   </div>
   <div class="footer">Math Practice Generator — YanqinFang</div>
 </div>
-
 <!-- ── RIGHT SIDEBAR ── -->
 <div class="topic-sidebar">
   <div class="sidebar-box">
     <div class="sidebar-title">📋 Choose Topic</div>
-
     <div class="sidebar-group">
       <div class="sidebar-group-hdr basics">📝 Algebra Basics</div>
       <div class="sidebar-item" id="sid-combining" onclick="setTopicSidebar('combining')">Combining Like Terms</div>
       <div class="sidebar-item" id="sid-mult_binomials" onclick="setTopicSidebar('mult_binomials')">Multiplying Binomials</div>
     </div>
-
     <div class="sidebar-group">
       <div class="sidebar-group-hdr qt">📐 Quadratic Transformations</div>
       <div class="sidebar-item" id="sid-vertex" onclick="setTopicSidebar('vertex')">Vertex Form</div>
@@ -279,7 +271,6 @@ h1{font-size:26px;font-weight:700;color:#4527a0;margin-bottom:3px}
       <div class="sidebar-item" id="sid-shift" onclick="setTopicSidebar('shift')">Shifts</div>
       <div class="sidebar-item" id="sid-grapheq" onclick="setTopicSidebar('grapheq')">Graph → Equation</div>
     </div>
-
     <div class="sidebar-group">
       <div class="sidebar-group-hdr fc">✂️ Factoring</div>
       <div class="sidebar-item" id="sid-gcf" onclick="setTopicSidebar('gcf')">GCF</div>
@@ -287,18 +278,15 @@ h1{font-size:26px;font-weight:700;color:#4527a0;margin-bottom:3px}
       <div class="sidebar-item" id="sid-diff2" onclick="setTopicSidebar('diff2')">Difference of Squares</div>
       <div class="sidebar-item" id="sid-leada" onclick="setTopicSidebar('leada')">ax²+bx+c</div>
     </div>
-
     <div class="sidebar-group">
       <div class="sidebar-group-hdr gr">📊 Graph Reading</div>
       <div class="sidebar-item" id="sid-graphread" onclick="setTopicSidebar('graphread')">Read a Graph</div>
       <div class="sidebar-item" id="sid-graphmatch" onclick="setTopicSidebar('graphmatch')">Match Graph to Equation</div>
     </div>
-
     <div class="sidebar-group">
       <div class="sidebar-group-hdr se">🟰 Solving Equations</div>
       <div class="sidebar-item" id="sid-solve_factor" onclick="setTopicSidebar('solve_factor')">Solve by Factoring</div>
     </div>
-
     <div class="sidebar-group">
       <div class="sidebar-group-hdr cx">🔷 Complex Numbers</div>
       <div class="sidebar-item" id="sid-simp_neg_root" onclick="setTopicSidebar('simp_neg_root')">Simplify √(negative)</div>
@@ -307,7 +295,6 @@ h1{font-size:26px;font-weight:700;color:#4527a0;margin-bottom:3px}
   </div>
 </div>
 </div><!-- end .layout -->
-
 <script>
 const MAX_ATTEMPTS=2;
 let current=null,total=0,correct=0,difficulty='easy',currentTopic='combining';
@@ -318,11 +305,22 @@ const SE_TOPICS=new Set(['solve_factor']);
 const CX_TOPICS=new Set(['simp_neg_root','re_im_parts']);
 let questionAnswered=false,attemptCount=0,triedMcIndices=new Set(),mcCorrect=null;
 let quizMode=false,quizQ=[],quizIdx=0,quizRes=[];
-
 // ── Utilities ──
 function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
 function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a}
 function sup(n){return n===2?'²':n===3?'³':n===4?'⁴':`^${n}`}
+// ── Radical rendering: turn every √X into a proper MathML radical ──
+// (draws a real radical sign whose overline/vinculum stretches over the whole radicand)
+function sqrtToMathML(inner){
+  inner=String(inner).trim();
+  let sign='';
+  if(inner[0]==='-'||inner[0]==='−'){sign='<mo>&#8722;</mo>';inner=inner.slice(1).trim();}
+  return `<math xmlns="http://www.w3.org/1998/Math/MathML"><msqrt><mrow>${sign}<mn>${inner}</mn></mrow></msqrt></math>`;
+}
+// Matches √(...) or √ followed by an optional minus and digits, e.g. √(-144), √12, √-3
+function mathHTML(s){
+  return String(s).replace(/√(\([^)]*\)|-?\d+)/g,(m,g)=>sqrtToMathML(g.replace(/^\(|\)$/g,'')));
+}
 function showQ(a,h,k){
   const aS=a===1?'':(a===-1?'-':`${a}`);
   const hS=h===0?'':(h>0?` - ${h}`:` + ${Math.abs(h)}`);
@@ -398,7 +396,6 @@ function radAnswers(c,r){
   }
   return [...out];
 }
-
 // ── Attempts indicator ──
 function updateAttemptsLeft(){
   const bar=document.getElementById('attempts-left-bar'),txt=document.getElementById('attempts-left-txt');
@@ -408,13 +405,12 @@ function updateAttemptsLeft(){
   txt.className='attempts-left'+(left<=1?' warn':'');
   txt.textContent=left===MAX_ATTEMPTS?`You have ${MAX_ATTEMPTS} attempts`:left===1?'⚠ Last attempt!':`${left} attempts remaining`;
 }
-
 // ── Auto-reveal ──
 function autoReveal(container,isGM){
   if(!isGM&&container){
     container.querySelectorAll('.mc-opt').forEach(el=>{
       el.classList.add('locked');
-      const t=el.querySelector('span:last-child')?.textContent;
+      const t=el.dataset.val;
       if(t===mcCorrect){el.classList.add('reveal');const l=el.querySelector('.mc-label');if(l)l.style.cssText='background:#2e7d32;color:#fff';}
     });
   }
@@ -425,10 +421,9 @@ function autoReveal(container,isGM){
   }
   const inp=document.getElementById('ans');if(inp)inp.disabled=true;
   document.getElementById('attempts-left-bar').style.display='none';
-  showFeedback('reveal',`❌ Out of attempts. Correct answer: <b>${current?current.answers[0]:''}</b>`);
+  showFeedback('reveal',`❌ Out of attempts. Correct answer: <b>${current?mathHTML(current.answers[0]):''}</b>`);
   resolveQuestion(false);
 }
-
 // ── SVG Parabola ──
 function parabolaSVG(a,h,k,opts={}){
   const W=opts.W||280,H=opts.H||220,mini=opts.mini||false;
@@ -463,7 +458,6 @@ function parabolaSVG(a,h,k,opts={}){
   if(showVL&&!mini)vm+=`<text x="${(vsx+8)|0}" y="${(vsy-8)|0}" font-size="11" fill="#e65100" font-weight="bold">(${h},${k})</text>`;
   return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;border-radius:8px"><rect width="${W}" height="${H}" fill="#f9f9ff" rx="8"/>${grid}<line x1="${margin}" y1="${ay0|0}" x2="${W-margin}" y2="${ay0|0}" stroke="#aaa" stroke-width="1.5"/><line x1="${ax0|0}" y1="${margin}" x2="${ax0|0}" y2="${H-margin}" stroke="#aaa" stroke-width="1.5"/>${axisDash}<path d="${pathD}" fill="none" stroke="#4527a0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>${vm}</svg>`;
 }
-
 // ── Topic Generators ──
 const topics={
   // ── ALGEBRA BASICS ──
@@ -654,9 +648,7 @@ const topics={
     function facStr2(c,n){return n>0?`(${c}x + ${n})`:`(${c}x - ${Math.abs(n)})`;}
     function sameSet(p,q){return (p[0]===q[0]&&p[1]===q[1])||(p[0]===q[1]&&p[1]===q[0]);}
     function dispPair(p){const lo=Math.min(p[0],p[1]),hi=Math.max(p[0],p[1]);return lo===hi?`x = ${lo}`:`x = ${lo}, ${hi}`;}
-
     let text,hint,answers,W;
-
     if(d==='hard'){
       // Leading coefficient ≠ 1 → roots are fractions
       const A=pick([2,3]);
@@ -702,7 +694,6 @@ const topics={
       text=`Solve by factoring:\n  ${eqStr(1,B,C)}`;
       hint=`Factor: ${facStr(r1)}${facStr(r2)} = 0\nZero Product Property: set each factor = 0\nRoots: x = ${Math.min(r1,r2)}, ${Math.max(r1,r2)}`;
     }
-
     const acc=new Set(answers.map(normalize));
     const mcWrong=[...new Set(W)].filter(w=>!acc.has(normalize(w)));
     return{text,answers,hint,multi:false,mcWrong};
@@ -774,7 +765,6 @@ const topics={
     return{text,answers,hint,multi:false,mcWrong};
   }}
 };
-
 // ── Concept examples & rules ──
 const examples={
   combining:{problem:'Simplify:\n  4x² + 3x - 2x² + 5x - 7',
@@ -825,7 +815,6 @@ const rules={
   simp_neg_root:`The imaginary unit:  i = √-1,  so  i² = -1.\nTo simplify √-n  (n > 0):\n1. √-n = √-1 · √n = i√n\n2. Simplify √n by pulling out perfect-square factors\n3. i√(a²·b) = a·i√b\nExample: √-18 = i√18 = i√(9·2) = 3i√2`,
   re_im_parts:`A complex number in standard form:  a + bi\n• Real part = a\n• Imaginary part = b  →  the coefficient of i (keep its sign, but WITHOUT the i)\nExamples:\n  7 - 2i  →  real 7,  imaginary -2\n  -4i     →  real 0,  imaginary -4\n  9       →  real 9,  imaginary 0`
 };
-
 // ── Concept Box ──
 function renderConcept(key){
   const box=document.getElementById('concept-box');if(!box)return;
@@ -837,15 +826,13 @@ function renderConcept(key){
   const hlC=isBa?'#fff8e1':isFc?'#e0f2f1':isGr?'#e3f2fd':isSe?'#fce4ec':isCx?'#e0f7fa':'#fff8e1';
   const hlB=isBa?'#ffe082':isFc?'#80cbc4':isGr?'#90caf9':isSe?'#f48fb1':isCx?'#80deea':'#ffe082';
   const hlTxt=isBa?'#e65100':isFc?'#00695c':isGr?'#1565c0':isSe?'#c2185b':isCx?'#00838f':'#f57f17';
-  const stH=ex.steps.map(([l,t])=>`<li><span style="display:inline-block;background:${hlC};border:1px solid ${hlB};border-radius:6px;font-size:12px;font-weight:700;color:${hlTxt};padding:1px 8px;margin-right:7px">${l}</span>${t.replace(/\n/g,'<br>')}</li>`).join('');
-  box.innerHTML=`<div class="concept-header">📚 ${lbl}</div><div class="concept-rule${cls?(' '+tcls):''}">${(rules[key]||'').replace(/\n/g,'<br>')}</div><div class="concept-example-title">📖 Worked Example</div><div class="concept-example-prob">${ex.problem.replace(/\n/g,'<br>')}</div><ul class="concept-steps">${stH}</ul><div class="concept-answer">${ex.answer}</div>`;
+  const stH=ex.steps.map(([l,t])=>`<li><span style="display:inline-block;background:${hlC};border:1px solid ${hlB};border-radius:6px;font-size:12px;font-weight:700;color:${hlTxt};padding:1px 8px;margin-right:7px">${l}</span>${mathHTML(t).replace(/\n/g,'<br>')}</li>`).join('');
+  box.innerHTML=`<div class="concept-header">📚 ${lbl}</div><div class="concept-rule${cls?(' '+tcls):''}">${mathHTML(rules[key]||'').replace(/\n/g,'<br>')}</div><div class="concept-example-title">📖 Worked Example</div><div class="concept-example-prob">${mathHTML(ex.problem).replace(/\n/g,'<br>')}</div><ul class="concept-steps">${stH}</ul><div class="concept-answer">${mathHTML(ex.answer)}</div>`;
 }
-
 // ── MC Builder ──
 const MCL=['A','B','C','D'];
 function buildMC(cur,topic){
   let ans_str,rawWrong=[];
-
   // ── Universal dedup helper ──
   // Returns exactly 3 unique strings, all != ans, no duplicates among themselves
   function dedup(ans, candidates){
@@ -857,7 +844,6 @@ function buildMC(cur,topic){
     }
     return out;
   }
-
   if(topic==='combining'){
     ans_str=cur.answers[0];
     const w1=ans_str.replace(/(\d+)x(?!²)/,(m,n)=>`${parseInt(n)+rnd(1,3)}x`);
@@ -942,7 +928,6 @@ function buildMC(cur,topic){
     ans_str=cur.answers[0];
     rawWrong=['Option B','Option C','Option D'];
   }
-
   // ── Universal dedup: build exactly 3 unique wrong answers ──
   let wrong=dedup(ans_str,rawWrong);
   // Generic fallbacks if still not enough
@@ -952,12 +937,10 @@ function buildMC(cur,topic){
     const fb=gfb[gi++];
     if(fb!==ans_str&&!wrong.includes(fb))wrong.push(fb);
   }
-
   const opts=[ans_str,...wrong.slice(0,3)];
   for(let i=opts.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[opts[i],opts[j]]=[opts[j],opts[i]];}
   return{opts,ans_str};
 }
-
 function renderMC(cur,topic){
   if(cur.isGraphMatch){renderGraphMatch(cur);return;}
   const{opts,ans_str}=buildMC(cur,topic);
@@ -965,8 +948,8 @@ function renderMC(cur,topic){
   const container=document.getElementById('mc-options');
   container.innerHTML='';
   opts.forEach((opt,i)=>{
-    const div=document.createElement('div');div.className='mc-opt';div.dataset.idx=i;
-    div.innerHTML=`<span class="mc-label">${MCL[i]}</span><span>${opt}</span>`;
+    const div=document.createElement('div');div.className='mc-opt';div.dataset.idx=i;div.dataset.val=opt;
+    div.innerHTML=`<span class="mc-label">${MCL[i]}</span><span>${mathHTML(opt)}</span>`;
     div.onclick=()=>{
       if(questionAnswered||triedMcIndices.has(i))return;
       triedMcIndices.add(i);attemptCount++;
@@ -982,7 +965,6 @@ function renderMC(cur,topic){
     };container.appendChild(div);
   });updateAttemptsLeft();
 }
-
 // ── Render Graph Match ──
 function renderGraphMatch(cur){
   mcCorrect=String(cur.correctIdx);
@@ -1005,7 +987,6 @@ function renderGraphMatch(cur){
     };grid.appendChild(div);
   });updateAttemptsLeft();
 }
-
 // ── Render Fill-in ──
 function renderFill(){
   document.getElementById('mc-options').innerHTML=`<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px"><input class="answer-input" id="ans" placeholder="Type your answer" onkeydown="if(event.key==='Enter')checkFill()"><button class="btn btn-primary" onclick="checkFill()">✓ Check</button></div>`;
@@ -1027,12 +1008,10 @@ function checkFill(){
     else{showFeedback('wrong','❌ Not quite — 1 more try! 💪');const inp=document.getElementById('ans');if(inp)inp.select();updateAttemptsLeft();}
   }
 }
-
 // ── Score Tracking ──
 function resolveQuestion(isOk){if(questionAnswered)return;questionAnswered=true;total++;if(isOk)correct++;updateStats();if(quizMode){quizRes.push(isOk);renderDots();document.getElementById('next-row').style.display='flex';}}
 function showFeedback(type,html){const fb=document.getElementById('feedback');fb.className='feedback '+type;fb.innerHTML=html;}
 function resetPerQuestion(){questionAnswered=false;attemptCount=0;triedMcIndices=new Set();mcCorrect=null;document.getElementById('next-row').style.display='none';document.getElementById('attempts-left-bar').style.display='none';}
-
 // ── Sidebar ──
 function setTopicSidebar(key){
   currentTopic=key;
@@ -1051,7 +1030,6 @@ function setTopicSidebar(key){
   renderConcept(key);
   newProblem();
 }
-
 // ── Difficulty ──
 function setDiff(d){
   difficulty=d;
@@ -1059,7 +1037,6 @@ function setDiff(d){
   document.querySelector('.diff-btn.'+d).classList.add('active');
   newProblem();
 }
-
 // ── New Problem ──
 function newProblem(){
   if(quizMode)return;
@@ -1071,7 +1048,7 @@ function newProblem(){
   bt.className=`badge badge-${isBa?'basics':isFc?'fc':isGr?'gr':isSe?'se':isCx?'cx':'qt'}`;
   const bd=document.getElementById('badge-diff');
   bd.className=`badge badge-${difficulty}`;bd.textContent=difficulty.charAt(0).toUpperCase()+difficulty.slice(1);
-  document.getElementById('prob').innerText=current.text;
+  document.getElementById('prob').innerHTML=mathHTML(current.text);
   document.getElementById('prob-svg').innerHTML=current.svg||'';
   document.getElementById('feedback').className='feedback';
   document.getElementById('hint').style.display='none';
@@ -1079,19 +1056,17 @@ function newProblem(){
   if(current.isGraphMatch)renderGraphMatch(current);
   else renderMC(current,currentTopic);
 }
-function showHint(){document.getElementById('hint').style.display='block';document.getElementById('hint').textContent=current.hint;document.getElementById('hint-link').style.display='none';}
+function showHint(){document.getElementById('hint').style.display='block';document.getElementById('hint').innerHTML=mathHTML(current.hint);document.getElementById('hint-link').style.display='none';}
 function updateStats(){document.getElementById('s-total').textContent=total;document.getElementById('s-correct').textContent=correct;document.getElementById('s-pct').textContent=total?Math.round(correct/total*100)+'%':'—';}
 function resetStats(){total=0;correct=0;updateStats();newProblem();}
-
 // ── Quiz Mode ──
 function qp(){const mc=+document.getElementById('mc-count').value,fi=+document.getElementById('fill-count').value;document.getElementById('mc-val').textContent=mc;document.getElementById('fill-val').textContent=fi;const t=mc+fi;document.getElementById('quiz-preview').textContent=t===0?'Please select at least 1 problem':`${t} problems total: ${mc} Multiple Choice + ${fi} Fill-in`;}
 function startQuiz(){const mc=+document.getElementById('mc-count').value,fi=+document.getElementById('fill-count').value;if(mc+fi===0){alert('Please select at least 1 problem.');return;}quizMode=true;quizQ=[...Array(mc).fill('mc'),...Array(fi).fill('fill')];for(let i=quizQ.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[quizQ[i],quizQ[j]]=[quizQ[j],quizQ[i]];}quizIdx=0;quizRes=[];document.getElementById('quiz-setup').style.display='none';document.getElementById('quiz-prog').style.display='flex';renderDots();showQProblem();}
 function renderDots(){const c=document.getElementById('quiz-dots');c.innerHTML='';quizQ.forEach((t,i)=>{const d=document.createElement('div');d.className='qd '+(i<quizRes.length?(quizRes[i]?'ok':'bad'):t);c.appendChild(d);});document.getElementById('quiz-label').textContent=quizIdx<quizQ.length?`Question ${quizIdx+1} / ${quizQ.length}  —  ${quizQ[quizIdx]==='mc'?'🔘 Multiple Choice':'✏️ Fill-in'}`:'✓ All done!';}
-function showQProblem(){if(quizIdx>=quizQ.length){showQuizSummary();return;}resetPerQuestion();current=topics[currentTopic].gen(difficulty);const isBa=BASICS_TOPICS.has(currentTopic),isFc=FC_TOPICS.has(currentTopic),isGr=GR_TOPICS.has(currentTopic),isSe=SE_TOPICS.has(currentTopic),isCx=CX_TOPICS.has(currentTopic);const bt=document.getElementById('badge-topic');bt.textContent=topics[currentTopic].label;bt.className=`badge badge-${isBa?'basics':isFc?'fc':isGr?'gr':isSe?'se':isCx?'cx':'qt'}`;document.getElementById('prob').innerText=current.text;document.getElementById('prob-svg').innerHTML=current.svg||'';document.getElementById('feedback').className='feedback';document.getElementById('hint').style.display='none';document.getElementById('hint-link').style.display='inline';if(quizQ[quizIdx]==='mc'){if(current.isGraphMatch)renderGraphMatch(current);else renderMC(current,currentTopic);}else renderFill();}
+function showQProblem(){if(quizIdx>=quizQ.length){showQuizSummary();return;}resetPerQuestion();current=topics[currentTopic].gen(difficulty);const isBa=BASICS_TOPICS.has(currentTopic),isFc=FC_TOPICS.has(currentTopic),isGr=GR_TOPICS.has(currentTopic),isSe=SE_TOPICS.has(currentTopic),isCx=CX_TOPICS.has(currentTopic);const bt=document.getElementById('badge-topic');bt.textContent=topics[currentTopic].label;bt.className=`badge badge-${isBa?'basics':isFc?'fc':isGr?'gr':isSe?'se':isCx?'cx':'qt'}`;document.getElementById('prob').innerHTML=mathHTML(current.text);document.getElementById('prob-svg').innerHTML=current.svg||'';document.getElementById('feedback').className='feedback';document.getElementById('hint').style.display='none';document.getElementById('hint-link').style.display='inline';if(quizQ[quizIdx]==='mc'){if(current.isGraphMatch)renderGraphMatch(current);else renderMC(current,currentTopic);}else renderFill();}
 function nextQ(){quizIdx++;renderDots();showQProblem();}
 function showQuizSummary(){document.getElementById('quiz-prog').style.display='none';document.getElementById('next-row').style.display='none';const right=quizRes.filter(Boolean).length,tot=quizRes.length,pct=tot?Math.round(right/tot*100):0;const emoji=pct>=90?'🌟':pct>=70?'😊':pct>=50?'💪':'📚';document.getElementById('prob').innerText=`${emoji} Quiz Complete!\n\nScore: ${right} / ${tot} correct  (${pct}%)`;document.getElementById('mc-options').innerHTML=`<button class="btn btn-primary" style="margin-top:12px" onclick="endQuiz()">↩ Back to Practice</button>`;document.getElementById('feedback').className='feedback';document.getElementById('hint-link').style.display='none';document.getElementById('prob-svg').innerHTML='';document.getElementById('attempts-left-bar').style.display='none';quizMode=false;}
 function endQuiz(){quizMode=false;document.getElementById('quiz-setup').style.display='block';document.getElementById('quiz-prog').style.display='none';document.getElementById('next-row').style.display='none';newProblem();}
-
 // ── Submit Score ──
 const SHEET_URL='https://script.google.com/macros/s/AKfycbzGwQNy9QcikDheuK4FOSo8rw2mVNnYW0vGAzGS0yvQhd9Tf-dIRlBFgFDqPvWc5cFwkQ/exec';
 async function submitScore(){
@@ -1106,7 +1081,6 @@ async function submitScore(){
   catch(e){msg.className='submit-msg err';msg.textContent='✗ Could not send. Check your connection.';}
   btn.disabled=false;
 }
-
 // ── Init ──
 setTopicSidebar('combining');
 </script>
