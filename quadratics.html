@@ -177,6 +177,8 @@ h1{font-size:26px;font-weight:700;color:#4527a0;margin-bottom:3px}
 .qd.bad{background:#c62828;border-color:#c62828}
 .next-row{display:none;gap:10px;margin-top:13px;align-items:center}
 .footer{text-align:center;margin-top:1.5rem;font-size:13px;color:#bbb}
+.welcome-line{font-size:14.5px;color:#4527a0;background:#ede7f6;border:1px solid #d1c4e9;border-radius:10px;padding:10px 14px;margin-bottom:1rem;line-height:1.5}
+.strategy-tip{font-size:13px;color:#00695c;background:#e0f2f1;border-left:3px solid #00897b;border-radius:0 8px 8px 0;padding:8px 12px;margin-top:11px;line-height:1.55}
 /* ── Proper radical (MathML) rendering ── */
 math{font-size:1.05em;vertical-align:-.08em}
 math msqrt{padding-top:1px}
@@ -189,6 +191,7 @@ math msqrt{padding-top:1px}
 <div class="main-content">
   <h1>📐 Math Practice Generator</h1>
   <p class="subtitle">Algebra Basics · Quadratics · Factoring · Graph Reading — Easy to Hard</p>
+  <p class="welcome-line">👋 Welcome! Take your time and don't worry about mistakes — they're part of learning. Work through a few problems, then enter your name and submit your score.</p>
   <div class="name-bar">
     <label>👤 Your name:</label>
     <input class="name-input" id="student-name" placeholder="First Last"/>
@@ -248,6 +251,7 @@ math msqrt{padding-top:1px}
     </div>
     <span class="hint-link" id="hint-link" onclick="showHint()">💡 Show hint</span>
     <div class="hint" id="hint"></div>
+    <div class="strategy-tip">🧭 <b>Stuck? Try 3-S:</b> <b>Simple</b> small numbers → <b>Specific</b> one worked example → <b>Systematic</b> same steps on the real problem.</div>
     <div class="feedback" id="feedback"></div>
     <div class="next-row" id="next-row">
       <button class="btn btn-primary" onclick="nextQ()">Next Question →</button>
