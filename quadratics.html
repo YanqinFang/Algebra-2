@@ -119,6 +119,16 @@ h1{font-size:26px;font-weight:700;color:#4527a0;margin-bottom:3px}
 .badge-gr{background:#e3f2fd;color:#1565c0}
 .badge-se{background:#fce4ec;color:#c2185b}
 .badge-cx{background:#e0f7fa;color:#00838f}
+.badge-sys{background:#e8eaf6;color:#303f9f}
+.sidebar-group-hdr.sys{background:#303f9f}
+.sidebar-item.active-sys{background:#e8eaf6;border-left-color:#303f9f;color:#303f9f;font-weight:700}
+.btn-primary.sys-active{background:#303f9f;border-color:#303f9f}
+.btn-primary.sys-active:hover{background:#3949ab}
+.concept-box.sys{background:#e8eaf6;border-color:#9fa8da}
+.concept-box.sys .concept-header{color:#303f9f}
+.concept-rule.sys{border-left-color:#303f9f}
+.concept-box.sys .concept-steps li{border-bottom-color:#c5cae9}
+.concept-box.sys .concept-answer{color:#303f9f}
 .badge-easy{background:#e8f5e9;color:#2e7d32}
 .badge-medium{background:#fff3e0;color:#e65100}
 .badge-hard{background:#ffebee;color:#b71c1c}
@@ -190,7 +200,7 @@ math msqrt{padding-top:1px}
 <!-- ── MAIN CONTENT ── -->
 <div class="main-content">
   <h1>📐 Math Practice Generator</h1>
-  <p class="subtitle">Algebra Basics · Quadratics · Factoring · Graph Reading — Easy to Hard</p>
+  <p class="subtitle">Algebra Basics · Quadratics · Factoring · Graph Reading · Systems — Easy to Hard</p>
   <p class="welcome-line">👋 Welcome! Take your time and don't worry about mistakes — they're part of learning. Work through a few problems, then enter your name and submit your score.</p>
   <div class="name-bar">
     <label>👤 Your name:</label>
@@ -296,6 +306,15 @@ math msqrt{padding-top:1px}
       <div class="sidebar-item" id="sid-simp_neg_root" onclick="setTopicSidebar('simp_neg_root')">Simplify √(negative)</div>
       <div class="sidebar-item" id="sid-re_im_parts" onclick="setTopicSidebar('re_im_parts')">Real &amp; Imaginary Parts</div>
     </div>
+    <div class="sidebar-group">
+      <div class="sidebar-group-hdr sys">🧮 Systems</div>
+      <div class="sidebar-item" id="sid-sys2_elim" onclick="setTopicSidebar('sys2_elim')">2×2 — Elimination</div>
+      <div class="sidebar-item" id="sid-sys_subst" onclick="setTopicSidebar('sys_subst')">2×2 — Substitution</div>
+      <div class="sidebar-item" id="sid-sys_graph" onclick="setTopicSidebar('sys_graph')">2×2 — Graphing</div>
+      <div class="sidebar-item" id="sid-sys3_elim" onclick="setTopicSidebar('sys3_elim')">3×3 — Elimination</div>
+      <div class="sidebar-item" id="sid-sys3_matrix" onclick="setTopicSidebar('sys3_matrix')">3×3 — Matrix</div>
+      <div class="sidebar-item" id="sid-sys_ineq" onclick="setTopicSidebar('sys_ineq')">Graph Inequalities</div>
+    </div>
   </div>
 </div>
 </div><!-- end .layout -->
@@ -307,6 +326,7 @@ const GR_TOPICS=new Set(['graphread','graphmatch']);
 const BASICS_TOPICS=new Set(['combining','mult_binomials']);
 const SE_TOPICS=new Set(['solve_factor']);
 const CX_TOPICS=new Set(['simp_neg_root','re_im_parts']);
+const SYS_TOPICS=new Set(['sys2_elim','sys_subst','sys_graph','sys3_elim','sys3_matrix','sys_ineq']);
 let questionAnswered=false,attemptCount=0,triedMcIndices=new Set(),mcCorrect=null;
 let quizMode=false,quizQ=[],quizIdx=0,quizRes=[];
 // ── Utilities ──
@@ -399,6 +419,146 @@ function radAnswers(c,r){
     }
   }
   return [...out];
+}
+// ── Helpers for Systems of Equations ──
+function det3(m){
+  return m[0][0]*(m[1][1]*m[2][2]-m[1][2]*m[2][1])
+       - m[0][1]*(m[1][0]*m[2][2]-m[1][2]*m[2][0])
+       + m[0][2]*(m[1][0]*m[2][1]-m[1][1]*m[2][0]);
+}
+function linEq(coefs,vars,rhs){
+  let s='',first=true;
+  for(let i=0;i<coefs.length;i++){
+    const c=coefs[i],v=vars[i];
+    if(c===0)continue;
+    const a=Math.abs(c),cs=(a===1)?'':String(a);
+    if(first){s+=(c<0?'-':'')+cs+v;first=false;}
+    else{s+=(c<0?' - ':' + ')+cs+v;}
+  }
+  if(first)s='0';
+  return `${s} = ${rhs}`;
+}
+function sysAnswers(vals){
+  const vars=['x','y','z'],nums=vals.map(String),out=new Set();
+  out.add('('+nums.join(', ')+')');
+  out.add('('+nums.join(',')+')');
+  out.add(nums.join(', '));
+  out.add(nums.join(','));
+  const eq=vals.map((v,i)=>`${vars[i]}=${v}`);
+  out.add(eq.join(', '));out.add(eq.join(','));out.add(eq.join('; '));out.add(eq.join(' and '));
+  return [...out];
+}
+function coef3(d){
+  if(d==='easy')return pick([0,1,1,2]);
+  if(d==='medium')return pick([-2,-1,0,1,1,2,3]);
+  return pick([-3,-2,-1,0,1,2,3]);
+}
+function gen3(d){
+  const solR=d==='easy'?[1,4]:d==='medium'?[-4,4]:[-5,5];
+  let x,y,z,A,det,t=0;
+  do{
+    x=rnd(solR[0],solR[1]);y=rnd(solR[0],solR[1]);z=rnd(solR[0],solR[1]);
+    A=[[coef3(d),coef3(d),coef3(d)],[coef3(d),coef3(d),coef3(d)],[coef3(d),coef3(d),coef3(d)]];
+    det=det3(A);t++;
+  }while((det===0||Math.abs(det)>6||(x===0&&y===0&&z===0))&&t<300);
+  const b=[
+    A[0][0]*x+A[0][1]*y+A[0][2]*z,
+    A[1][0]*x+A[1][1]*y+A[1][2]*z,
+    A[2][0]*x+A[2][1]*y+A[2][2]*z
+  ];
+  return{x,y,z,A,b,det};
+}
+// ── Helpers for Systems of Inequalities (half-plane clipping) ──
+function ineqF(q){
+  if(q.op==='>='||q.op==='>')return (x,y)=>q.m*x+q.b-y;
+  return (x,y)=>y-(q.m*x+q.b);
+}
+function clipHalf(poly,f){
+  const out=[],n=poly.length;
+  for(let i=0;i<n;i++){
+    const A=poly[i],B=poly[(i+1)%n];
+    const fa=f(A[0],A[1]),fb=f(B[0],B[1]);
+    const inA=fa<=1e-9,inB=fb<=1e-9;
+    if(inA)out.push(A);
+    if(inA!==inB){const tt=fa/(fa-fb);out.push([A[0]+tt*(B[0]-A[0]),A[1]+tt*(B[1]-A[1])]);}
+  }
+  return out;
+}
+function clipRegion(ineqs){
+  let poly=[[-6,-6],[6,-6],[6,6],[-6,6]];
+  for(const q of ineqs){poly=clipHalf(poly,ineqF(q));if(poly.length===0)break;}
+  return poly;
+}
+function polyArea(poly){
+  if(poly.length<3)return 0;let a=0;
+  for(let i=0;i<poly.length;i++){const[x1,y1]=poly[i],[x2,y2]=poly[(i+1)%poly.length];a+=x1*y2-x2*y1;}
+  return Math.abs(a)/2;
+}
+function lineRHS(m,b){
+  if(m===0)return `${b}`;
+  let s=(m===1?'x':m===-1?'-x':`${m}x`);
+  if(b>0)s+=` + ${b}`;else if(b<0)s+=` - ${Math.abs(b)}`;
+  return s;
+}
+function sameLine(a,b){return a.m===b.m&&a.b===b.b;}
+// ── SVG: system of linear inequalities (shaded overlap) ──
+let _ineqId=0;
+function inequalitySystemSVG(ineqs,opts={}){
+  const W=opts.W||165,H=opts.H||135,margin=8;
+  const xMin=-6,xMax=6,yMin=-6,yMax=6,iw=W-2*margin,ih=H-2*margin;
+  const tx=x=>margin+(x-xMin)/(xMax-xMin)*iw;
+  const ty=y=>margin+(yMax-y)/(yMax-yMin)*ih;
+  const cid='iq'+(++_ineqId);
+  let grid='';
+  for(let g=xMin+1;g<=xMax-1;g++){
+    grid+=`<line x1="${tx(g).toFixed(1)}" y1="${margin}" x2="${tx(g).toFixed(1)}" y2="${H-margin}" stroke="#ececf6" stroke-width="1"/>`;
+    grid+=`<line x1="${margin}" y1="${ty(g).toFixed(1)}" x2="${W-margin}" y2="${ty(g).toFixed(1)}" stroke="#ececf6" stroke-width="1"/>`;
+  }
+  const ax=tx(0),ay=ty(0);
+  const axes=`<line x1="${margin}" y1="${ay.toFixed(1)}" x2="${W-margin}" y2="${ay.toFixed(1)}" stroke="#aaa" stroke-width="1.3"/><line x1="${ax.toFixed(1)}" y1="${margin}" x2="${ax.toFixed(1)}" y2="${H-margin}" stroke="#aaa" stroke-width="1.3"/>`;
+  const poly=clipRegion(ineqs);
+  const shade=poly.length>2?`<polygon points="${poly.map(p=>`${tx(p[0]).toFixed(1)},${ty(p[1]).toFixed(1)}`).join(' ')}" fill="#303f9f" fill-opacity="0.30" stroke="none"/>`:'';
+  let lines='';
+  for(const q of ineqs){
+    const y1=q.m*xMin+q.b,y2=q.m*xMax+q.b;
+    const dash=(q.op==='>'||q.op==='<')?' stroke-dasharray="4,3"':'';
+    lines+=`<line x1="${tx(xMin).toFixed(1)}" y1="${ty(y1).toFixed(1)}" x2="${tx(xMax).toFixed(1)}" y2="${ty(y2).toFixed(1)}" stroke="#1a237e" stroke-width="2"${dash}/>`;
+  }
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;margin:0 auto;border-radius:8px"><defs><clipPath id="${cid}"><rect x="${margin}" y="${margin}" width="${iw}" height="${ih}"/></clipPath></defs><rect width="${W}" height="${H}" fill="#f9f9ff" rx="8"/><g clip-path="url(#${cid})">${grid}${shade}${lines}</g>${axes}</svg>`;
+}
+function lineRHSv(m,b,v){
+  if(m===0)return `${b}`;
+  let s=(m===1?v:m===-1?`-${v}`:`${m}${v}`);
+  if(b>0)s+=` + ${b}`;else if(b<0)s+=` - ${Math.abs(b)}`;
+  return s;
+}
+// ── SVG: system of two lines (solve by graphing) ──
+let _linesId=0;
+function linesSystemSVG(lines,ix,iy,opts={}){
+  const W=opts.W||300,H=opts.H||250,margin=24;
+  const xMin=-7,xMax=7,yMin=-7,yMax=7,iw=W-2*margin,ih=H-2*margin;
+  const tx=x=>margin+(x-xMin)/(xMax-xMin)*iw;
+  const ty=y=>margin+(yMax-y)/(yMax-yMin)*ih;
+  const cid='ln'+(++_linesId);
+  const ax=tx(0),ay=ty(0);
+  let grid='';
+  for(let g=xMin;g<=xMax;g++){
+    grid+=`<line x1="${tx(g).toFixed(1)}" y1="${margin}" x2="${tx(g).toFixed(1)}" y2="${H-margin}" stroke="#efefef" stroke-width="1"/>`;
+    grid+=`<line x1="${margin}" y1="${ty(g).toFixed(1)}" x2="${W-margin}" y2="${ty(g).toFixed(1)}" stroke="#efefef" stroke-width="1"/>`;
+    if(g!==0&&g%2===0){
+      grid+=`<text x="${tx(g).toFixed(1)}" y="${(ay+12).toFixed(1)}" text-anchor="middle" font-size="9" fill="#bbb">${g}</text>`;
+      grid+=`<text x="${(ax-6).toFixed(1)}" y="${(ty(g)+3).toFixed(1)}" text-anchor="end" font-size="9" fill="#bbb">${g}</text>`;
+    }
+  }
+  const axes=`<line x1="${margin}" y1="${ay.toFixed(1)}" x2="${W-margin}" y2="${ay.toFixed(1)}" stroke="#999" stroke-width="1.4"/><line x1="${ax.toFixed(1)}" y1="${margin}" x2="${ax.toFixed(1)}" y2="${H-margin}" stroke="#999" stroke-width="1.4"/>`;
+  const cols=['#4527a0','#c2185b'];
+  let ls='';
+  lines.forEach((L,i)=>{
+    const y1=L.m*xMin+L.b,y2=L.m*xMax+L.b;
+    ls+=`<line x1="${tx(xMin).toFixed(1)}" y1="${ty(y1).toFixed(1)}" x2="${tx(xMax).toFixed(1)}" y2="${ty(y2).toFixed(1)}" stroke="${cols[i%2]}" stroke-width="2.4"/>`;
+  });
+  const dot=`<circle cx="${tx(ix).toFixed(1)}" cy="${ty(iy).toFixed(1)}" r="5" fill="#e65100" stroke="#fff" stroke-width="1.5"/>`;
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;border-radius:8px"><defs><clipPath id="${cid}"><rect x="${margin}" y="${margin}" width="${iw}" height="${ih}"/></clipPath></defs><rect width="${W}" height="${H}" fill="#f9f9ff" rx="8"/><g clip-path="url(#${cid})">${grid}${ls}${dot}</g>${axes}</svg>`;
 }
 // ── Attempts indicator ──
 function updateAttemptsLeft(){
@@ -767,6 +927,112 @@ const topics={
     const acc=new Set(answers.map(normalize));
     const mcWrong=[...new Set(W)].filter(w=>w!==''&&!acc.has(normalize(w)));
     return{text,answers,hint,multi:false,mcWrong};
+  }},
+  // ── SYSTEMS OF EQUATIONS & INEQUALITIES ──
+  sys2_elim:{label:'System 2×2 (Elimination)',group:'sys',gen(d){
+    let solR,cR,neg;
+    if(d==='easy'){solR=[1,5];cR=[1,3];neg=false;}
+    else if(d==='medium'){solR=[-5,5];cR=[1,4];neg=true;}
+    else{solR=[-6,6];cR=[1,5];neg=true;}
+    const cf=()=>rnd(cR[0],cR[1])*(neg?pick([1,-1]):1);
+    let x,y,a1,b1,a2,b2,t=0;
+    do{
+      x=rnd(solR[0],solR[1]);y=rnd(solR[0],solR[1]);
+      a1=cf();b1=cf();a2=cf();b2=cf();t++;
+    }while((a1*b2-a2*b1===0||(x===0&&y===0)||(a1===a2&&b1===b2))&&t<150);
+    const c1=a1*x+b1*y,c2=a2*x+b2*y;
+    const text=`Solve the system:\n  ${linEq([a1,b1],['x','y'],c1)}\n  ${linEq([a2,b2],['x','y'],c2)}`;
+    const answers=sysAnswers([x,y]);
+    const acc=new Set(answers.map(normalize));
+    const W=[`(${y}, ${x})`,`(${-x}, ${y})`,`(${x}, ${-y})`,`(${x+1}, ${y-1})`,`(${x-1}, ${y+1})`];
+    const mcWrong=[...new Set(W)].filter(w=>!acc.has(normalize(w)));
+    const hint=`Elimination: make one variable's coefficients OPPOSITES, then add the equations to cancel it.\nHere you could eliminate y (coefficients ${b1} and ${b2}) or x (coefficients ${a1} and ${a2}).\nSolve for one variable, then back-substitute.\nSolution: x = ${x}, y = ${y}`;
+    return{text,answers,hint,multi:false,mcWrong};
+  }},
+  sys_subst:{label:'Solve by Substitution',group:'sys',gen(d){
+    const R=d==='easy'?[1,5]:d==='medium'?[-5,5]:[-6,6];
+    const mO=d==='easy'?[1,2,-1,-2]:[1,2,-1,-2,3,-3];
+    const cO=d==='easy'?[1,-1,2]:[1,-1,2,-2,3];
+    let x,y,m,b,a,c,isoVar,t=0;
+    do{
+      x=rnd(R[0],R[1]);y=rnd(R[0],R[1]);
+      isoVar=(d==='easy')?'y':pick(['y','x']);
+      m=pick(mO);a=pick([1,-1,2,-2,3]);c=pick(cO);
+      b=(isoVar==='y')?y-m*x:x-m*y;
+      t++;
+    }while(((isoVar==='y'?(a+c*m===0):(a*m+c===0))||(x===0&&y===0))&&t<200);
+    const dd=a*x+c*y;
+    const eq1=(isoVar==='y')?`y = ${lineRHSv(m,b,'x')}`:`x = ${lineRHSv(m,b,'y')}`;
+    const eq2=linEq([a,c],['x','y'],dd);
+    const text=`Solve by substitution:\n  ${eq1}\n  ${eq2}`;
+    const answers=sysAnswers([x,y]);
+    const acc=new Set(answers.map(normalize));
+    const W=[`(${y}, ${x})`,`(${-x}, ${y})`,`(${x}, ${-y})`,`(${x+1}, ${y-1})`,`(${x-1}, ${y+1})`,`(${x}, ${y+1})`];
+    const mcWrong=[...new Set(W)].filter(w=>!acc.has(normalize(w)));
+    const hint=`Equation 1 is already solved for ${isoVar}.\nSubstitute that expression into Equation 2, then solve the single-variable equation.\nFinally back-substitute.\nSolution: x = ${x}, y = ${y}`;
+    return{text,answers,hint,multi:false,mcWrong};
+  }},
+  sys_graph:{label:'Solve by Graphing',group:'sys',gen(d){
+    const ptR=d==='easy'?3:d==='medium'?4:5;
+    const slopeO=d==='easy'?[1,-1,2,-2]:[1,-1,2,-2,3,-3,0];
+    let ix,iy,m1,m2,t=0;
+    do{ix=rnd(-ptR,ptR);iy=rnd(-ptR,ptR);m1=pick(slopeO);m2=pick(slopeO);t++;}while(m1===m2&&t<50);
+    const b1=iy-m1*ix,b2=iy-m2*ix;
+    const svg=linesSystemSVG([{m:m1,b:b1},{m:m2,b:b2}],ix,iy);
+    const text=`The two lines are graphed below. What is the solution to the system (the point where they intersect)?\n  Line 1:  y = ${lineRHSv(m1,b1,'x')}\n  Line 2:  y = ${lineRHSv(m2,b2,'x')}`;
+    const answers=sysAnswers([ix,iy]);
+    const acc=new Set(answers.map(normalize));
+    const W=[`(${iy}, ${ix})`,`(${-ix}, ${iy})`,`(${ix}, ${-iy})`,`(${ix+1}, ${iy+1})`,`(${ix-1}, ${iy})`,`(${ix}, ${iy-1})`];
+    const mcWrong=[...new Set(W)].filter(w=>!acc.has(normalize(w)));
+    const hint=`Find the point where the two lines cross (the orange dot).\nRead its x- and y-coordinates off the grid.\nThe lines meet at (${ix}, ${iy}) — it must satisfy BOTH equations.`;
+    return{text,answers,hint,svg,multi:false,mcWrong,isSVG:true};
+  }},
+  sys3_elim:{label:'System 3×3 (Elimination)',group:'sys',gen(d){
+    const s=gen3(d),vars=['x','y','z'];
+    const text=`Solve the system:\n  ${linEq(s.A[0],vars,s.b[0])}\n  ${linEq(s.A[1],vars,s.b[1])}\n  ${linEq(s.A[2],vars,s.b[2])}`;
+    const answers=sysAnswers([s.x,s.y,s.z]);
+    const acc=new Set(answers.map(normalize));
+    const W=[`(${s.x}, ${s.z}, ${s.y})`,`(${-s.x}, ${s.y}, ${s.z})`,`(${s.z}, ${s.y}, ${s.x})`,`(${s.x}, ${s.y}, ${s.z+1})`,`(${s.x+1}, ${s.y-1}, ${s.z})`,`(${s.y}, ${s.x}, ${s.z})`];
+    const mcWrong=[...new Set(W)].filter(w=>!acc.has(normalize(w)));
+    const hint=`Elimination (3 variables):\n1. Combine TWO different pairs of equations to cancel the SAME variable → leaves 2 equations in 2 unknowns.\n2. Solve that 2×2 system.\n3. Back-substitute for the third variable.\nSolution: x = ${s.x}, y = ${s.y}, z = ${s.z}`;
+    return{text,answers,hint,multi:false,mcWrong};
+  }},
+  sys3_matrix:{label:'System 3×3 (Matrix)',group:'sys',gen(d){
+    const s=gen3(d),vars=['x','y','z'];
+    const text=`Solve using a matrix method (row reduction or Cramer's Rule):\n  ${linEq(s.A[0],vars,s.b[0])}\n  ${linEq(s.A[1],vars,s.b[1])}\n  ${linEq(s.A[2],vars,s.b[2])}`;
+    const answers=sysAnswers([s.x,s.y,s.z]);
+    const acc=new Set(answers.map(normalize));
+    const W=[`(${s.x}, ${s.z}, ${s.y})`,`(${-s.x}, ${s.y}, ${s.z})`,`(${s.z}, ${s.y}, ${s.x})`,`(${s.x}, ${s.y}, ${s.z+1})`,`(${s.x+1}, ${s.y-1}, ${s.z})`,`(${s.y}, ${s.x}, ${s.z})`];
+    const mcWrong=[...new Set(W)].filter(w=>!acc.has(normalize(w)));
+    const Ax=s.A.map((r,i)=>[s.b[i],r[1],r[2]]);
+    const Ay=s.A.map((r,i)=>[r[0],s.b[i],r[2]]);
+    const Az=s.A.map((r,i)=>[r[0],r[1],s.b[i]]);
+    const dx=det3(Ax),dy=det3(Ay),dz=det3(Az);
+    const hint=`Cramer's Rule: divide determinants.\n det(A) = ${s.det}\n det(Ax) = ${dx} → x = ${dx}/${s.det} = ${s.x}\n det(Ay) = ${dy} → y = ${dy}/${s.det} = ${s.y}\n det(Az) = ${dz} → z = ${dz}/${s.det} = ${s.z}\n(Or row-reduce [A | b] and back-substitute.)\nSolution: (${s.x}, ${s.y}, ${s.z})`;
+    return{text,answers,hint,multi:false,mcWrong};
+  }},
+  sys_ineq:{label:'Graph a System of Inequalities',group:'sys',gen(d){
+    const slopeO=d==='easy'?[1,-1]:d==='medium'?[1,-1,2,-2]:[1,-1,2,-2,3,-3];
+    const strictO=d==='easy'?['>=','<=']:['>=','<=','>','<'];
+    const symOf={'>=':'≥','<=':'≤','>':'>','<':'<'};
+    const flip=o=>({'>=':'<=','<=':'>=','>':'<','<':'>'}[o]);
+    let q1,q2,t=0;
+    do{
+      q1={m:pick(slopeO),b:rnd(-3,3),op:pick(strictO)};
+      q2={m:pick(slopeO),b:rnd(-3,3),op:pick(strictO)};
+      t++;
+    }while((sameLine(q1,q2)||polyArea(clipRegion([q1,q2]))<3)&&t<150);
+    const correct=[q1,q2];
+    const d1=[{...q1,op:flip(q1.op)},{...q2}];
+    const d2=[{...q1},{...q2,op:flip(q2.op)}];
+    const d3=[{...q1,op:flip(q1.op)},{...q2,op:flip(q2.op)}];
+    let choices=[correct,d1,d2,d3];
+    for(let i=choices.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[choices[i],choices[j]]=[choices[j],choices[i]];}
+    const correctIdx=choices.indexOf(correct);
+    const ineqText=q=>`y ${symOf[q.op]} ${lineRHS(q.m,q.b)}`;
+    const text=`Which graph shows the solution to the system?\n  ${ineqText(q1)}\n  ${ineqText(q2)}`;
+    const hint=`Boundary lines: SOLID for ≤/≥, DASHED for </>.\nShade each inequality's side (test (0,0)), then take the OVERLAP.\nThe answer is the graph whose double-shaded region satisfies BOTH.`;
+    return{text,answers:[`Graph ${MCL[correctIdx]}`],hint,multi:false,isIneqMatch:true,choices,correctIdx};
   }}
 };
 // ── Concept examples & rules ──
@@ -800,7 +1066,19 @@ const examples={
   simp_neg_root:{problem:'Simplify:\n  √-12',
     steps:[['Split off -1','√-12 = √-1 · √12'],['√-1 = i','= i·√12'],['Simplify √12','√12 = √(4·3) = 2√3'],['Combine','= 2i√3']],answer:'2i√3'},
   re_im_parts:{problem:'Identify the real and imaginary parts:\n  5 - 3i',
-    steps:[['Standard form','a + bi:  a is the real part, b is the coefficient of i'],['Match up','5 - 3i  →  a = 5,  b = -3'],['Watch the sign','Imaginary part is -3 (keep the minus, drop the i)']],answer:'Real part = 5,  Imaginary part = -3'}
+    steps:[['Standard form','a + bi:  a is the real part, b is the coefficient of i'],['Match up','5 - 3i  →  a = 5,  b = -3'],['Watch the sign','Imaginary part is -3 (keep the minus, drop the i)']],answer:'Real part = 5,  Imaginary part = -3'},
+  sys2_elim:{problem:'Solve by elimination:\n  2x + 3y = 12\n  x - 3y = -3',
+    steps:[['Add the equations','(2x+3y)+(x-3y)=12+(-3)\n→ 3x = 9'],['Solve for x','x = 3'],['Back-substitute','2(3)+3y=12 → 3y=6 → y=2']],answer:'(3, 2)'},
+  sys_subst:{problem:'Solve by substitution:\n  y = 2x - 1\n  3x + y = 9',
+    steps:[['Eq 1 is solved for y','y = 2x - 1'],['Substitute into Eq 2','3x + (2x - 1) = 9'],['Solve for x','5x - 1 = 9 → 5x = 10 → x = 2'],['Back-substitute','y = 2(2) - 1 = 3']],answer:'(2, 3)'},
+  sys_graph:{problem:'Solve by graphing:\n  y = x + 1\n  y = -x + 5',
+    steps:[['Graph each line','Plot the y-intercept, then use the slope'],['Find the crossing','The two lines meet at ONE point'],['Read the point','They intersect at (2, 3)'],['Check','3 = 2 + 1 ✓  and  3 = -2 + 5 ✓']],answer:'(2, 3)'},
+  sys3_elim:{problem:'Solve:\n  x + y + z = 6\n  x - y + z = 2\n  2x + y - z = 1',
+    steps:[['Eq1 - Eq2 cancels x and z','2y = 4 → y = 2'],['Substitute y = 2','Eq1: x + z = 4\nEq3: 2x - z = -1'],['Add those two','3x = 3 → x = 1, so z = 3']],answer:'(1, 2, 3)'},
+  sys3_matrix:{problem:'Solve with a matrix method:\n  x + y + z = 6\n  2x + y + z = 7\n  x + 2y + z = 8',
+    steps:[['Augmented matrix','[1 1 1 | 6]\n[2 1 1 | 7]\n[1 2 1 | 8]'],['Gaussian: R2-2R1, R3-R1','[1 1 1 | 6]\n[0 -1 -1 | -5]\n[0 1 0 | 2]  → y=2, then x=1, z=3'],['Cramer: det(A)=1','x = det(Ax)/det(A) = 1/1 = 1']],answer:'(1, 2, 3)'},
+  sys_ineq:{problem:'Graph the solution:\n  y ≥ x - 1\n  y < -x + 4',
+    steps:[['Boundary 1','y = x - 1  (SOLID, since ≥); shade ABOVE'],['Boundary 2','y = -x + 4  (DASHED, since <); shade BELOW'],['Test (0,0)','0 ≥ -1 ✓  and  0 < 4 ✓\nso (0,0) is a solution']],answer:'The overlapping (double-shaded) region.'}
 };
 const rules={
   combining:`Like terms have the SAME variable AND the same exponent.\n• 3x and 5x are like terms → combine: 8x\n• 3x and 3x² are NOT like terms\n• 4xy and -2xy are like terms → combine: 2xy\nConstants (numbers with no variable) are always like terms.`,
@@ -817,19 +1095,25 @@ const rules={
   graphmatch:`1. Find vertex (h,k) from equation\n2. Direction: a>0=up, a<0=down\n3. Width: |a|>1=narrow, |a|<1=wide\n4. Match vertex + direction to graph`,
   solve_factor:`Zero Product Property: if A · B = 0, then A = 0 OR B = 0.\n1. Move all terms to one side so the equation = 0\n2. Factor the quadratic completely\n3. Set EACH factor equal to 0\n4. Solve each small equation for x\nTip: with a leading coefficient like 2x², roots are often fractions — remember to divide.`,
   simp_neg_root:`The imaginary unit:  i = √-1,  so  i² = -1.\nTo simplify √-n  (n > 0):\n1. √-n = √-1 · √n = i√n\n2. Simplify √n by pulling out perfect-square factors\n3. i√(a²·b) = a·i√b\nExample: √-18 = i√18 = i√(9·2) = 3i√2`,
-  re_im_parts:`A complex number in standard form:  a + bi\n• Real part = a\n• Imaginary part = b  →  the coefficient of i (keep its sign, but WITHOUT the i)\nExamples:\n  7 - 2i  →  real 7,  imaginary -2\n  -4i     →  real 0,  imaginary -4\n  9       →  real 9,  imaginary 0`
+  re_im_parts:`A complex number in standard form:  a + bi\n• Real part = a\n• Imaginary part = b  →  the coefficient of i (keep its sign, but WITHOUT the i)\nExamples:\n  7 - 2i  →  real 7,  imaginary -2\n  -4i     →  real 0,  imaginary -4\n  9       →  real 9,  imaginary 0`,
+  sys2_elim:`Elimination Method (2 variables):\n1. Write both equations as ax + by = c.\n2. Multiply one or both equations so a variable's coefficients are OPPOSITES.\n3. ADD the equations → that variable cancels.\n4. Solve for the remaining variable.\n5. Back-substitute to find the other.\nCheck: plug (x, y) into BOTH original equations.`,
+  sys_subst:`Substitution Method:\n1. Solve ONE equation for one variable (get y = … or x = …).\n2. SUBSTITUTE that expression into the OTHER equation.\n3. You now have one variable — solve it.\n4. Back-substitute to find the other variable.\nEasiest when a variable is already isolated or has coefficient 1.`,
+  sys_graph:`Solving by Graphing:\n1. Put each equation in y = mx + b form.\n2. Graph both lines (plot the y-intercept, then use the slope).\n3. The SOLUTION is the point where the lines INTERSECT.\n4. Read its (x, y) and check in both equations.\n• Parallel lines → NO solution.   Same line → INFINITELY many.`,
+  sys3_elim:`Elimination Method (3 variables):\n1. Pick ONE variable to eliminate first.\n2. Combine two DIFFERENT pairs of equations to remove it → you get 2 equations in 2 unknowns.\n3. Solve that 2×2 system by elimination.\n4. Back-substitute into an original equation for the third variable.\nThe answer is an ordered triple (x, y, z).`,
+  sys3_matrix:`Two matrix methods for the system A·[x y z] = b:\n\n▸ GAUSSIAN ELIMINATION (row reduction)\n  • Form the augmented matrix [A | b].\n  • Use row operations to reach row-echelon form.\n  • Back-substitute for z, then y, then x.\n\n▸ CRAMER'S RULE (determinants)\n  x = det(Ax)/det(A),  y = det(Ay)/det(A),  z = det(Az)/det(A)\n  where Ax = A with column 1 replaced by b, etc.\n  Requires det(A) ≠ 0.`,
+  sys_ineq:`Graphing a System of Inequalities:\n1. Graph each boundary line y = mx + b:\n   • ≤ or ≥ → SOLID line\n   • < or > → DASHED line\n2. Shade the correct side of EACH line (test a point such as (0,0)).\n3. The SOLUTION is where the shaded regions OVERLAP.`
 };
 // ── Concept Box ──
 function renderConcept(key){
   const box=document.getElementById('concept-box');if(!box)return;
-  const isBa=BASICS_TOPICS.has(key),isFc=FC_TOPICS.has(key),isGr=GR_TOPICS.has(key),isSe=SE_TOPICS.has(key),isCx=CX_TOPICS.has(key);
-  const cls=isBa?' basics':isFc?' fc':isGr?' gr':isSe?' se':isCx?' cx':'';
+  const isBa=BASICS_TOPICS.has(key),isFc=FC_TOPICS.has(key),isGr=GR_TOPICS.has(key),isSe=SE_TOPICS.has(key),isCx=CX_TOPICS.has(key),isSy=SYS_TOPICS.has(key);
+  const cls=isBa?' basics':isFc?' fc':isGr?' gr':isSe?' se':isCx?' cx':isSy?' sys':'';
   box.className=`concept-box${cls}`;
   const ex=examples[key],lbl=topics[key]?.label||key;
-  const tcls=isBa?'basics':isFc?'fc':isGr?'gr':isSe?'se':isCx?'cx':'';
-  const hlC=isBa?'#fff8e1':isFc?'#e0f2f1':isGr?'#e3f2fd':isSe?'#fce4ec':isCx?'#e0f7fa':'#fff8e1';
-  const hlB=isBa?'#ffe082':isFc?'#80cbc4':isGr?'#90caf9':isSe?'#f48fb1':isCx?'#80deea':'#ffe082';
-  const hlTxt=isBa?'#e65100':isFc?'#00695c':isGr?'#1565c0':isSe?'#c2185b':isCx?'#00838f':'#f57f17';
+  const tcls=isBa?'basics':isFc?'fc':isGr?'gr':isSe?'se':isCx?'cx':isSy?'sys':'';
+  const hlC=isBa?'#fff8e1':isFc?'#e0f2f1':isGr?'#e3f2fd':isSe?'#fce4ec':isCx?'#e0f7fa':isSy?'#e8eaf6':'#fff8e1';
+  const hlB=isBa?'#ffe082':isFc?'#80cbc4':isGr?'#90caf9':isSe?'#f48fb1':isCx?'#80deea':isSy?'#c5cae9':'#ffe082';
+  const hlTxt=isBa?'#e65100':isFc?'#00695c':isGr?'#1565c0':isSe?'#c2185b':isCx?'#00838f':isSy?'#303f9f':'#f57f17';
   const stH=ex.steps.map(([l,t])=>`<li><span style="display:inline-block;background:${hlC};border:1px solid ${hlB};border-radius:6px;font-size:12px;font-weight:700;color:${hlTxt};padding:1px 8px;margin-right:7px">${l}</span>${mathHTML(t).replace(/\n/g,'<br>')}</li>`).join('');
   box.innerHTML=`<div class="concept-header">📚 ${lbl}</div><div class="concept-rule${cls?(' '+tcls):''}">${mathHTML(rules[key]||'').replace(/\n/g,'<br>')}</div><div class="concept-example-title">📖 Worked Example</div><div class="concept-example-prob">${mathHTML(ex.problem).replace(/\n/g,'<br>')}</div><ul class="concept-steps">${stH}</ul><div class="concept-answer">${mathHTML(ex.answer)}</div>`;
 }
@@ -925,7 +1209,7 @@ function buildMC(cur,topic){
       // range
       rawWrong=['(-∞, ∞)','[0, ∞)','(-∞, 0]','(0, ∞)'].filter(w=>w!==ans_str);
     }
-  } else if(topic==='solve_factor'||topic==='simp_neg_root'||topic==='re_im_parts'){
+  } else if(topic==='solve_factor'||topic==='simp_neg_root'||topic==='re_im_parts'||topic==='sys2_elim'||topic==='sys_subst'||topic==='sys_graph'||topic==='sys3_elim'||topic==='sys3_matrix'){
     ans_str=cur.answers[0];
     rawWrong=cur.mcWrong||[];
   } else {
@@ -947,6 +1231,7 @@ function buildMC(cur,topic){
 }
 function renderMC(cur,topic){
   if(cur.isGraphMatch){renderGraphMatch(cur);return;}
+  if(cur.isIneqMatch){renderInequalityMatch(cur);return;}
   const{opts,ans_str}=buildMC(cur,topic);
   mcCorrect=ans_str;
   const container=document.getElementById('mc-options');
@@ -991,6 +1276,27 @@ function renderGraphMatch(cur){
     };grid.appendChild(div);
   });updateAttemptsLeft();
 }
+// ── Render Inequality System Match (pick correct graph) ──
+function renderInequalityMatch(cur){
+  const container=document.getElementById('mc-options');
+  container.innerHTML='<div class="graph-mc-grid" id="graph-mc-grid"></div>';
+  const grid=document.getElementById('graph-mc-grid');
+  cur.choices.forEach((choice,i)=>{
+    const div=document.createElement('div');div.className='graph-mc-opt';
+    div.innerHTML=`<span class="graph-mc-corner">${MCL[i]}</span>${inequalitySystemSVG(choice,{W:165,H:135})}`;
+    div.onclick=()=>{
+      if(questionAnswered||div.classList.contains('locked'))return;
+      attemptCount++;const ok=(i===cur.correctIdx);
+      if(ok){div.classList.add('correct');grid.querySelectorAll('.graph-mc-opt').forEach(e=>e.classList.add('locked'));
+        document.getElementById('attempts-left-bar').style.display='none';
+        showFeedback('correct',attemptCount===1?'✓ Correct! 🌟':'✓ Correct on 2nd try! 👍');resolveQuestion(true);
+      } else {div.classList.add('wrong','locked');
+        if(attemptCount>=MAX_ATTEMPTS)autoReveal(null,true);
+        else{showFeedback('wrong','❌ Not quite — check which side each line is shaded, then the overlap. 1 more try! 💪');updateAttemptsLeft();}
+      }
+    };grid.appendChild(div);
+  });updateAttemptsLeft();
+}
 // ── Render Fill-in ──
 function renderFill(){
   document.getElementById('mc-options').innerHTML=`<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px"><input class="answer-input" id="ans" placeholder="Type your answer" onkeydown="if(event.key==='Enter')checkFill()"><button class="btn btn-primary" onclick="checkFill()">✓ Check</button></div>`;
@@ -1024,13 +1330,13 @@ function setTopicSidebar(key){
     el.className='sidebar-item';
   });
   // Set active state
-  const isBa=BASICS_TOPICS.has(key),isFc=FC_TOPICS.has(key),isGr=GR_TOPICS.has(key),isSe=SE_TOPICS.has(key),isCx=CX_TOPICS.has(key);
-  const cls=isBa?'active-basics':isFc?'active-fc':isGr?'active-gr':isSe?'active-se':isCx?'active-cx':'active-qt';
+  const isBa=BASICS_TOPICS.has(key),isFc=FC_TOPICS.has(key),isGr=GR_TOPICS.has(key),isSe=SE_TOPICS.has(key),isCx=CX_TOPICS.has(key),isSy=SYS_TOPICS.has(key);
+  const cls=isBa?'active-basics':isFc?'active-fc':isGr?'active-gr':isSe?'active-se':isCx?'active-cx':isSy?'active-sys':'active-qt';
   const sid=document.getElementById('sid-'+key);
   if(sid)sid.className='sidebar-item '+cls;
   // Update new button color
   const nb=document.getElementById('new-btn');
-  nb.className='btn btn-primary'+(isBa?' basics-active':isFc?' fc-active':isGr?' gr-active':isSe?' se-active':isCx?' cx-active':'');
+  nb.className='btn btn-primary'+(isBa?' basics-active':isFc?' fc-active':isGr?' gr-active':isSe?' se-active':isCx?' cx-active':isSy?' sys-active':'');
   renderConcept(key);
   newProblem();
 }
@@ -1046,10 +1352,10 @@ function newProblem(){
   if(quizMode)return;
   resetPerQuestion();
   current=topics[currentTopic].gen(difficulty);
-  const isBa=BASICS_TOPICS.has(currentTopic),isFc=FC_TOPICS.has(currentTopic),isGr=GR_TOPICS.has(currentTopic),isSe=SE_TOPICS.has(currentTopic),isCx=CX_TOPICS.has(currentTopic);
+  const isBa=BASICS_TOPICS.has(currentTopic),isFc=FC_TOPICS.has(currentTopic),isGr=GR_TOPICS.has(currentTopic),isSe=SE_TOPICS.has(currentTopic),isCx=CX_TOPICS.has(currentTopic),isSy=SYS_TOPICS.has(currentTopic);
   const bt=document.getElementById('badge-topic');
   bt.textContent=topics[currentTopic].label;
-  bt.className=`badge badge-${isBa?'basics':isFc?'fc':isGr?'gr':isSe?'se':isCx?'cx':'qt'}`;
+  bt.className=`badge badge-${isBa?'basics':isFc?'fc':isGr?'gr':isSe?'se':isCx?'cx':isSy?'sys':'qt'}`;
   const bd=document.getElementById('badge-diff');
   bd.className=`badge badge-${difficulty}`;bd.textContent=difficulty.charAt(0).toUpperCase()+difficulty.slice(1);
   document.getElementById('prob').innerHTML=mathHTML(current.text);
@@ -1058,6 +1364,7 @@ function newProblem(){
   document.getElementById('hint').style.display='none';
   document.getElementById('hint-link').style.display='inline';
   if(current.isGraphMatch)renderGraphMatch(current);
+  else if(current.isIneqMatch)renderInequalityMatch(current);
   else renderMC(current,currentTopic);
 }
 function showHint(){document.getElementById('hint').style.display='block';document.getElementById('hint').innerHTML=mathHTML(current.hint);document.getElementById('hint-link').style.display='none';}
@@ -1067,7 +1374,7 @@ function resetStats(){total=0;correct=0;updateStats();newProblem();}
 function qp(){const mc=+document.getElementById('mc-count').value,fi=+document.getElementById('fill-count').value;document.getElementById('mc-val').textContent=mc;document.getElementById('fill-val').textContent=fi;const t=mc+fi;document.getElementById('quiz-preview').textContent=t===0?'Please select at least 1 problem':`${t} problems total: ${mc} Multiple Choice + ${fi} Fill-in`;}
 function startQuiz(){const mc=+document.getElementById('mc-count').value,fi=+document.getElementById('fill-count').value;if(mc+fi===0){alert('Please select at least 1 problem.');return;}quizMode=true;quizQ=[...Array(mc).fill('mc'),...Array(fi).fill('fill')];for(let i=quizQ.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[quizQ[i],quizQ[j]]=[quizQ[j],quizQ[i]];}quizIdx=0;quizRes=[];document.getElementById('quiz-setup').style.display='none';document.getElementById('quiz-prog').style.display='flex';renderDots();showQProblem();}
 function renderDots(){const c=document.getElementById('quiz-dots');c.innerHTML='';quizQ.forEach((t,i)=>{const d=document.createElement('div');d.className='qd '+(i<quizRes.length?(quizRes[i]?'ok':'bad'):t);c.appendChild(d);});document.getElementById('quiz-label').textContent=quizIdx<quizQ.length?`Question ${quizIdx+1} / ${quizQ.length}  —  ${quizQ[quizIdx]==='mc'?'🔘 Multiple Choice':'✏️ Fill-in'}`:'✓ All done!';}
-function showQProblem(){if(quizIdx>=quizQ.length){showQuizSummary();return;}resetPerQuestion();current=topics[currentTopic].gen(difficulty);const isBa=BASICS_TOPICS.has(currentTopic),isFc=FC_TOPICS.has(currentTopic),isGr=GR_TOPICS.has(currentTopic),isSe=SE_TOPICS.has(currentTopic),isCx=CX_TOPICS.has(currentTopic);const bt=document.getElementById('badge-topic');bt.textContent=topics[currentTopic].label;bt.className=`badge badge-${isBa?'basics':isFc?'fc':isGr?'gr':isSe?'se':isCx?'cx':'qt'}`;document.getElementById('prob').innerHTML=mathHTML(current.text);document.getElementById('prob-svg').innerHTML=current.svg||'';document.getElementById('feedback').className='feedback';document.getElementById('hint').style.display='none';document.getElementById('hint-link').style.display='inline';if(quizQ[quizIdx]==='mc'){if(current.isGraphMatch)renderGraphMatch(current);else renderMC(current,currentTopic);}else renderFill();}
+function showQProblem(){if(quizIdx>=quizQ.length){showQuizSummary();return;}resetPerQuestion();current=topics[currentTopic].gen(difficulty);const isBa=BASICS_TOPICS.has(currentTopic),isFc=FC_TOPICS.has(currentTopic),isGr=GR_TOPICS.has(currentTopic),isSe=SE_TOPICS.has(currentTopic),isCx=CX_TOPICS.has(currentTopic),isSy=SYS_TOPICS.has(currentTopic);const bt=document.getElementById('badge-topic');bt.textContent=topics[currentTopic].label;bt.className=`badge badge-${isBa?'basics':isFc?'fc':isGr?'gr':isSe?'se':isCx?'cx':isSy?'sys':'qt'}`;document.getElementById('prob').innerHTML=mathHTML(current.text);document.getElementById('prob-svg').innerHTML=current.svg||'';document.getElementById('feedback').className='feedback';document.getElementById('hint').style.display='none';document.getElementById('hint-link').style.display='inline';const forceMC=current.isGraphMatch||current.isIneqMatch;if(quizQ[quizIdx]==='mc'||forceMC){if(current.isGraphMatch)renderGraphMatch(current);else if(current.isIneqMatch)renderInequalityMatch(current);else renderMC(current,currentTopic);}else renderFill();}
 function nextQ(){quizIdx++;renderDots();showQProblem();}
 function showQuizSummary(){document.getElementById('quiz-prog').style.display='none';document.getElementById('next-row').style.display='none';const right=quizRes.filter(Boolean).length,tot=quizRes.length,pct=tot?Math.round(right/tot*100):0;const emoji=pct>=90?'🌟':pct>=70?'😊':pct>=50?'💪':'📚';document.getElementById('prob').innerText=`${emoji} Quiz Complete!\n\nScore: ${right} / ${tot} correct  (${pct}%)`;document.getElementById('mc-options').innerHTML=`<button class="btn btn-primary" style="margin-top:12px" onclick="endQuiz()">↩ Back to Practice</button>`;document.getElementById('feedback').className='feedback';document.getElementById('hint-link').style.display='none';document.getElementById('prob-svg').innerHTML='';document.getElementById('attempts-left-bar').style.display='none';quizMode=false;}
 function endQuiz(){quizMode=false;document.getElementById('quiz-setup').style.display='block';document.getElementById('quiz-prog').style.display='none';document.getElementById('next-row').style.display='none';newProblem();}
