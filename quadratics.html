@@ -311,6 +311,8 @@ math msqrt{padding-top:1px}
       <div class="sidebar-group-hdr se" onclick="toggleGroup(this)">🟰 Solving Equations<span class="grp-toggle">+</span></div>
       <div class="sidebar-group-body" id="grp-se">
         <div class="sidebar-item" id="sid-solve_factor" onclick="setTopicSidebar('solve_factor')">Solve by Factoring</div>
+        <div class="sidebar-item" id="sid-complete_square" onclick="setTopicSidebar('complete_square')">Completing the Square</div>
+        <div class="sidebar-item" id="sid-quad_formula" onclick="setTopicSidebar('quad_formula')">Quadratic Formula</div>
       </div>
     </div>
     <div class="sidebar-group">
@@ -318,6 +320,9 @@ math msqrt{padding-top:1px}
       <div class="sidebar-group-body" id="grp-cx">
         <div class="sidebar-item" id="sid-simp_neg_root" onclick="setTopicSidebar('simp_neg_root')">Simplify √(negative)</div>
         <div class="sidebar-item" id="sid-re_im_parts" onclick="setTopicSidebar('re_im_parts')">Real &amp; Imaginary Parts</div>
+        <div class="sidebar-item" id="sid-cx_addsub" onclick="setTopicSidebar('cx_addsub')">Add &amp; Subtract</div>
+        <div class="sidebar-item" id="sid-cx_mult" onclick="setTopicSidebar('cx_mult')">Multiply</div>
+        <div class="sidebar-item" id="sid-cx_rationalize" onclick="setTopicSidebar('cx_rationalize')">Rationalize the Denominator</div>
       </div>
     </div>
     <div class="sidebar-group">
@@ -351,8 +356,8 @@ let current=null,total=0,correct=0,difficulty='easy',currentTopic='combining';
 const FC_TOPICS=new Set(['gcf','trinomial','diff2','leada']);
 const GR_TOPICS=new Set(['graphread','graphmatch']);
 const BASICS_TOPICS=new Set(['combining','mult_binomials']);
-const SE_TOPICS=new Set(['solve_factor']);
-const CX_TOPICS=new Set(['simp_neg_root','re_im_parts']);
+const SE_TOPICS=new Set(['solve_factor','complete_square','quad_formula']);
+const CX_TOPICS=new Set(['simp_neg_root','re_im_parts','cx_addsub','cx_mult','cx_rationalize']);
 const SYS_TOPICS=new Set(['sys2_elim','sys_subst','sys_graph','sys3_elim','sys3_matrix','sys_ineq']);
 const MX_TOPICS=new Set(['mat_add','mat_sub','mat_mult','mat_det2','mat_det3','mat_rref']);
 let questionAnswered=false,attemptCount=0,triedMcIndices=new Set(),mcCorrect=null;
@@ -906,6 +911,85 @@ const topics={
     const mcWrong=[...new Set(W)].filter(w=>!acc.has(normalize(w)));
     return{text,answers,hint,multi:false,mcWrong};
   }},
+  complete_square:{label:'Completing the Square',group:'se',gen(d){
+    function eqStr(B,C){
+      const bS=B===0?'':(B>0?` + ${B}x`:` - ${Math.abs(B)}x`);
+      const cS=C===0?'':(C>0?` + ${C}`:` - ${Math.abs(C)}`);
+      return `x²${bS}${cS} = 0`;
+    }
+    function dispPair(p){const lo=Math.min(p[0],p[1]),hi=Math.max(p[0],p[1]);return lo===hi?`x = ${lo}`:`x = ${lo}, ${hi}`;}
+    let B,C,text,hint,answers,W;
+    if(d==='easy'){
+      let m=rnd(-7,7);if(m===0)m=1;
+      const rt=rnd(0,6),dVal=rt*rt;
+      B=2*m;C=m*m-dVal;
+      const r1=-m+rt,r2=-m-rt;
+      answers=[dispPair([r1,r2]),...rootAnswers(Math.min(r1,r2),Math.max(r1,r2))];
+      W=[dispPair([r1+2,r2]),dispPair([m,-m]),dispPair([r1,r2-2])];
+      text=`Solve by completing the square:\n  ${eqStr(B,C)}`;
+      hint=`Move the constant: x² ${B>=0?'+':'-'} ${Math.abs(B)}x = ${-C}\nAdd (b/2)² = ${m*m} to both sides:\n  (x ${m>=0?'+':'-'} ${Math.abs(m)})² = ${dVal}\nSquare root both sides: x ${m>=0?'+':'-'} ${Math.abs(m)} = ±${rt}\nSolve: x = ${-m} ± ${rt} = ${Math.max(r1,r2)}, ${Math.min(r1,r2)}`;
+    } else if(d==='medium'){
+      let m=rnd(-6,6);if(m===0)m=1;
+      const dVal=pick([2,3,5,6,7,10,11,13,15]);
+      B=2*m;C=m*m-dVal;
+      const negm=-m,rootStr=`√${dVal}`;
+      answers=[`x = ${negm} + ${rootStr}, ${negm} - ${rootStr}`,`x=${negm}+${rootStr},x=${negm}-${rootStr}`,`${negm}+${rootStr},${negm}-${rootStr}`,`x=${negm}±${rootStr}`,`${negm}±${rootStr}`];
+      W=[`x = ${m} ± √${dVal}`,`x = ${negm} ± ${dVal}`,`x = ${negm*2} ± √${dVal}`];
+      text=`Solve by completing the square:\n  ${eqStr(B,C)}`;
+      hint=`Move the constant: x² ${B>=0?'+':'-'} ${Math.abs(B)}x = ${-C}\nAdd (b/2)² = ${m*m} to both sides:\n  (x ${m>=0?'+':'-'} ${Math.abs(m)})² = ${dVal}\nSquare root both sides: x ${m>=0?'+':'-'} ${Math.abs(m)} = ±√${dVal}\nSolve: x = ${negm} ± √${dVal}`;
+    } else {
+      let m=rnd(-6,6);if(m===0)m=1;
+      const dVal=pick([2,3,5,6,7,10,11]);
+      B=2*m;C=m*m+dVal;
+      const negm=-m,rootStr=`√${dVal}`;
+      answers=[`x = ${negm} + i${rootStr}, ${negm} - i${rootStr}`,`x=${negm}+i${rootStr},x=${negm}-i${rootStr}`,`${negm}+i${rootStr},${negm}-i${rootStr}`,`x=${negm}±i${rootStr}`,`${negm}±i${rootStr}`];
+      W=[`x = ${negm} ± √${dVal}`,`x = ${m} ± i√${dVal}`];
+      text=`Solve by completing the square:\n  ${eqStr(B,C)}`;
+      hint=`Move the constant: x² ${B>=0?'+':'-'} ${Math.abs(B)}x = ${-C}\nAdd (b/2)² = ${m*m} to both sides:\n  (x ${m>=0?'+':'-'} ${Math.abs(m)})² = ${-dVal}\nThe right side is negative, so square root gives i:\n  x ${m>=0?'+':'-'} ${Math.abs(m)} = ±i√${dVal}\nSolve: x = ${negm} ± i√${dVal}`;
+    }
+    const acc=new Set(answers.map(normalize));
+    const mcWrong=[...new Set(W)].filter(w=>!acc.has(normalize(w)));
+    return{text,answers,hint,multi:false,mcWrong};
+  }},
+  quad_formula:{label:'Quadratic Formula',group:'se',gen(d){
+    function eqStr(B,C){
+      const bS=B===0?'':(B>0?` + ${B}x`:` - ${Math.abs(B)}x`);
+      const cS=C===0?'':(C>0?` + ${C}`:` - ${Math.abs(C)}`);
+      return `x²${bS}${cS} = 0`;
+    }
+    function dispPair(p){const lo=Math.min(p[0],p[1]),hi=Math.max(p[0],p[1]);return lo===hi?`x = ${lo}`:`x = ${lo}, ${hi}`;}
+    let B,C,text,hint,answers,W;
+    if(d==='easy'){
+      let r1,r2,t=0;do{r1=rnd(-7,7);r2=rnd(-7,7);t++;}while((r1===0||r2===0||r1===r2)&&t<60);
+      B=-(r1+r2);C=r1*r2;
+      const D=B*B-4*C;
+      answers=[dispPair([r1,r2]),...rootAnswers(Math.min(r1,r2),Math.max(r1,r2))];
+      W=[dispPair([r1+1,r2]),dispPair([-r1,-r2]),dispPair([r1,r2+1])];
+      text=`Solve using the quadratic formula:\n  ${eqStr(B,C)}`;
+      hint=`x = (-b ± √(b²-4ac)) / (2a)\na=1, b=${B}, c=${C}\nDiscriminant: b²-4ac = (${B})² - 4(1)(${C}) = ${D}\n√${D} = ${Math.sqrt(D)}\nx = (${-B} ± ${Math.sqrt(D)}) / 2 = ${Math.max(r1,r2)}, ${Math.min(r1,r2)}`;
+    } else if(d==='medium'){
+      let m=rnd(-6,6);if(m===0)m=1;
+      const dVal=pick([2,3,5,6,7,10,11,13,15]);
+      B=2*m;C=m*m-dVal;
+      const D=4*dVal,negm=-m,rootStr=`√${dVal}`;
+      answers=[`x = ${negm} + ${rootStr}, ${negm} - ${rootStr}`,`x=${negm}+${rootStr},x=${negm}-${rootStr}`,`${negm}+${rootStr},${negm}-${rootStr}`,`x=${negm}±${rootStr}`,`${negm}±${rootStr}`];
+      W=[`x = ${m} ± √${dVal}`,`x = ${negm} ± ${dVal}`,`x = ${negm*2} ± √${dVal}`];
+      text=`Solve using the quadratic formula:\n  ${eqStr(B,C)}`;
+      hint=`x = (-b ± √(b²-4ac)) / (2a)\na=1, b=${B}, c=${C}\nDiscriminant: (${B})² - 4(1)(${C}) = ${D}\nx = (${-B} ± √${D}) / 2 = ${negm} ± √${dVal}\n(√${D} simplifies to 2√${dVal}, then divide by 2)`;
+    } else {
+      let B0;do{B0=rnd(-9,9);}while(B0===0||B0%2===0);
+      const k=pick([3,7,11,19,23]);
+      const C=(B0*B0+k)/4;
+      const negB=-B0,rootStr=`√${k}`;
+      answers=[`x = (${negB} + i${rootStr})/2, (${negB} - i${rootStr})/2`,`x=(${negB}+i${rootStr})/2,x=(${negB}-i${rootStr})/2`,`(${negB}+i${rootStr})/2,(${negB}-i${rootStr})/2`,`x=(${negB}±i${rootStr})/2`,`(${negB}±i${rootStr})/2`];
+      W=[`x = (${B0} ± i√${k})/2`,`x = (${negB} ± √${k})/2`,`x = (${negB} ± i√${k})/4`];
+      text=`Solve using the quadratic formula:\n  ${eqStr(B0,C)}`;
+      hint=`x = (-b ± √(b²-4ac)) / (2a)\na=1, b=${B0}, c=${C}\nDiscriminant: (${B0})² - 4(1)(${C}) = ${-k} (negative!)\n√${-k} = i√${k}\nx = (${negB} ± i√${k}) / 2`;
+    }
+    const acc=new Set(answers.map(normalize));
+    const mcWrong=[...new Set(W)].filter(w=>!acc.has(normalize(w)));
+    return{text,answers,hint,multi:false,mcWrong};
+  }},
   simp_neg_root:{label:'Simplify √(negative)',group:'cx',gen(d){
     let c,r;
     if(d==='easy'){ c=rnd(2,12); r=1; }
@@ -968,6 +1052,104 @@ const topics={
     const answers=[ans];
     const acc=new Set(answers.map(normalize));
     const mcWrong=[...new Set(W)].filter(w=>w!==''&&!acc.has(normalize(w)));
+    return{text,answers,hint,multi:false,mcWrong};
+  }},
+  cx_addsub:{label:'Add & Subtract Complex Numbers',group:'cx',gen(d){
+    function cx(a,b){
+      if(b===0) return `${a}`;
+      const mag=Math.abs(b)===1?'i':`${Math.abs(b)}i`;
+      if(a===0) return (b<0?`-${mag}`:`${mag}`);
+      return `${a}${b>0?' + ':' - '}${mag}`;
+    }
+    const R=d==='easy'?[1,9]:d==='medium'?[1,12]:[1,12];
+    function term(){return{a:pick([-1,1])*rnd(R[0],R[1]),b:pick([-1,1])*rnd(R[0],R[1])};}
+    let t1=term(),t2=term();
+    if(d==='easy'){t1.a=Math.abs(t1.a);t1.b=Math.abs(t1.b);t2.a=Math.abs(t2.a);t2.b=Math.abs(t2.b);}
+    const op1=d==='easy'?'+':pick(['+','-']);
+    let text,hint,ans,W;
+    if(d==='hard'){
+      const t3=term();
+      const op2=pick(['+','-']);
+      const A=cx(t1.a,t1.b),B2=cx(t2.a,t2.b),C2=cx(t3.a,t3.b);
+      let rr=t1.a,ri=t1.b;
+      rr=op1==='+'?rr+t2.a:rr-t2.a; ri=op1==='+'?ri+t2.b:ri-t2.b;
+      rr=op2==='+'?rr+t3.a:rr-t3.a; ri=op2==='+'?ri+t3.b:ri-t3.b;
+      ans=cx(rr,ri);
+      text=`Simplify:\n  (${A}) ${op1} (${B2}) ${op2} (${C2})`;
+      hint=`Add/subtract the real parts: ${t1.a} ${op1} ${t2.a} ${op2} ${t3.a} = ${rr}\nAdd/subtract the imaginary parts: ${t1.b} ${op1} ${t2.b} ${op2} ${t3.b} = ${ri}\nResult: ${ans}`;
+      W=[cx(rr,-ri),cx(-rr,ri),cx(rr+2,ri),cx(rr,ri+2)];
+    } else {
+      const A=cx(t1.a,t1.b),B2=cx(t2.a,t2.b);
+      const rr=op1==='+'?t1.a+t2.a:t1.a-t2.a, ri=op1==='+'?t1.b+t2.b:t1.b-t2.b;
+      ans=cx(rr,ri);
+      text=`Simplify:\n  (${A}) ${op1} (${B2})`;
+      hint=`Combine the real parts: ${t1.a} ${op1} ${t2.a} = ${rr}\nCombine the imaginary parts: ${t1.b} ${op1} ${t2.b} = ${ri}\nResult: ${ans}`;
+      W=[cx(rr,-ri),cx(-rr,ri),cx(t1.a+t2.a,t1.b+t2.b),cx(t1.a-t2.a,t1.b-t2.b)];
+    }
+    const answers=[ans];
+    const acc=new Set(answers.map(normalize));
+    const mcWrong=[...new Set(W)].filter(w=>w!==ans&&!acc.has(normalize(w)));
+    return{text,answers,hint,multi:false,mcWrong};
+  }},
+  cx_mult:{label:'Multiply Complex Numbers',group:'cx',gen(d){
+    function cx(a,b){
+      if(b===0) return `${a}`;
+      const mag=Math.abs(b)===1?'i':`${Math.abs(b)}i`;
+      if(a===0) return (b<0?`-${mag}`:`${mag}`);
+      return `${a}${b>0?' + ':' - '}${mag}`;
+    }
+    const R=d==='easy'?[1,6]:d==='medium'?[1,8]:[1,9];
+    let a=rnd(R[0],R[1]),b=rnd(R[0],R[1]),c,e,square=false;
+    if(d==='easy'){c=rnd(R[0],R[1]);e=rnd(R[0],R[1]);}
+    else{a=pick([-1,1])*a;b=pick([-1,1])*b;c=pick([-1,1])*rnd(R[0],R[1]);e=pick([-1,1])*rnd(R[0],R[1]);}
+    if(d==='hard'&&pick([true,false])){c=a;e=b;square=true;}
+    const rr=a*c-b*e, ri=a*e+b*c;
+    const A=cx(a,b),B2=cx(c,e);
+    const ans=cx(rr,ri);
+    const text=square?`Simplify (square the complex number):\n  (${A})²`:`Multiply:\n  (${A})(${B2})`;
+    const hint=`FOIL: (${A})(${B2})\n= ${a}·${c} + ${a}·(${e}i) + (${b}i)·${c} + (${b}i)(${e}i)\n= ${a*c} + ${a*e}i + ${b*c}i + ${b*e}i²\nRemember i² = -1, so ${b*e}i² = ${-b*e}\nReal part: ${a*c} + (${-b*e}) = ${rr}\nImaginary part: ${a*e} + ${b*c} = ${ri}\nResult: ${ans}`;
+    const answers=[ans];
+    const W=[cx(a*c+b*e,ri),cx(rr,a*e-b*c),cx(a*c,b*e)];
+    const acc=new Set(answers.map(normalize));
+    const mcWrong=[...new Set(W)].filter(w=>w!==ans&&!acc.has(normalize(w)));
+    return{text,answers,hint,multi:false,mcWrong};
+  }},
+  cx_rationalize:{label:'Rationalize the Denominator',group:'cx',gen(d){
+    function cx(a,b){
+      if(b===0) return `${a}`;
+      const mag=Math.abs(b)===1?'i':`${Math.abs(b)}i`;
+      if(a===0) return (b<0?`-${mag}`:`${mag}`);
+      return `${a}${b>0?' + ':' - '}${mag}`;
+    }
+    let text,hint,ans,W;
+    if(d==='easy'){
+      let b;do{b=pick([-1,1])*rnd(2,9);}while(b===0);
+      const k=pick([-1,1])*rnd(1,6);
+      const n=b*k;
+      ans=cx(0,-k);
+      text=`Rationalize the denominator:\n  ${n} / (${b}i)`;
+      hint=`Multiply top and bottom by i:\n  ${n}/(${b}i) · (i/i) = ${n}i / (${b}i²)\nSince i² = -1: = ${n}i / (${-b}) = ${ans}`;
+      W=[cx(0,k),`${k}`,`${-k}`];
+    } else if(d==='medium'){
+      let a,b;do{a=pick([-1,1])*rnd(1,6);b=pick([-1,1])*rnd(1,6);}while(a*a+b*b===0);
+      const k=pick([-1,1])*rnd(1,5);
+      const denomN=a*a+b*b,n=denomN*k;
+      ans=cx(k*a,-k*b);
+      text=`Rationalize the denominator:\n  ${n} / (${cx(a,b)})`;
+      hint=`Multiply top and bottom by the conjugate, ${cx(a,-b)}:\n  ${n}(${cx(a,-b)}) / [(${cx(a,b)})(${cx(a,-b)})]\nDenominator: ${a}² + ${b}² = ${denomN}\nNumerator: ${n}(${cx(a,-b)}) = ${n*a}${(-n*b)>=0?' + ':' - '}${Math.abs(n*b)}i\nDivide every term by ${denomN}: ${ans}`;
+      W=[cx(k*a,k*b),cx(-k*a,-k*b),cx(k*a,-k*b+1)];
+    } else {
+      let a,b;do{a=pick([-1,1])*rnd(1,6);b=pick([-1,1])*rnd(1,6);}while(a*a+b*b===0);
+      let m,n2;do{m=pick([-1,1])*rnd(1,5);n2=pick([-1,1])*rnd(1,5);}while(m===0&&n2===0);
+      const p=m*a-n2*b, q=m*b+n2*a;
+      ans=cx(m,n2);
+      text=`Rationalize the denominator:\n  (${cx(p,q)}) / (${cx(a,b)})`;
+      hint=`Multiply top and bottom by the conjugate, ${cx(a,-b)}.\nDenominator: ${a}² + ${b}² = ${a*a+b*b}\nNumerator: (${cx(p,q)})(${cx(a,-b)}) — expand with FOIL and simplify using i²=-1\nDivide every term by ${a*a+b*b}: ${ans}`;
+      W=[cx(-m,n2),cx(m,-n2),cx(n2,m)];
+    }
+    const answers=[ans];
+    const acc=new Set(answers.map(normalize));
+    const mcWrong=[...new Set(W)].filter(w=>w!==ans&&!acc.has(normalize(w)));
     return{text,answers,hint,multi:false,mcWrong};
   }},
   sys2_elim:{label:'System 2×2 (Elimination)',group:'sys',gen(d){
@@ -1191,10 +1373,20 @@ const examples={
     steps:[['Vertex','(1, 4)'],['Direction','a=-2<0 → opens DOWN'],['Width','|a|=2 → narrower'],['Find','Graph: down, vertex (1,4)']],answer:'Graph opens downward, vertex (1, 4)'},
   solve_factor:{problem:'Solve by factoring:\n  x² - x - 6 = 0',
     steps:[['Factor the left side','x² - x - 6 = (x - 3)(x + 2)'],['Zero Product Property','(x - 3)(x + 2) = 0\nso  x - 3 = 0  or  x + 2 = 0'],['Solve each factor','x = 3   or   x = -2']],answer:'x = -2, 3'},
+  complete_square:{problem:'Solve by completing the square:\n  x² + 6x + 5 = 0',
+    steps:[['Move the constant','x² + 6x = -5'],['Add (b/2)² = 9 to both sides','x² + 6x + 9 = -5 + 9\n(x + 3)² = 4'],['Square root both sides','x + 3 = ±2'],['Solve for x','x = -3 + 2 = -1   or   x = -3 - 2 = -5']],answer:'x = -5, -1'},
+  quad_formula:{problem:'Solve using the quadratic formula:\n  x² - 2x - 8 = 0',
+    steps:[['Identify a, b, c','a = 1, b = -2, c = -8'],['Discriminant','b² - 4ac = 4 - 4(1)(-8) = 36'],['Plug into the formula','x = (2 ± √36) / 2 = (2 ± 6) / 2'],['Solve both cases','x = 8/2 = 4   or   x = -4/2 = -2']],answer:'x = -2, 4'},
   simp_neg_root:{problem:'Simplify:\n  √-12',
     steps:[['Split off -1','√-12 = √-1 · √12'],['√-1 = i','= i·√12'],['Simplify √12','√12 = √(4·3) = 2√3'],['Combine','= 2i√3']],answer:'2i√3'},
   re_im_parts:{problem:'Identify the real and imaginary parts:\n  5 - 3i',
     steps:[['Standard form','a + bi:  a is the real part, b is the coefficient of i'],['Match up','5 - 3i  →  a = 5,  b = -3'],['Watch the sign','Imaginary part is -3 (keep the minus, drop the i)']],answer:'Real part = 5,  Imaginary part = -3'},
+  cx_addsub:{problem:'Simplify:\n  (4 + 3i) - (1 - 2i)',
+    steps:[['Distribute the minus sign','4 + 3i - 1 + 2i'],['Combine real parts','4 - 1 = 3'],['Combine imaginary parts','3i + 2i = 5i']],answer:'3 + 5i'},
+  cx_mult:{problem:'Multiply:\n  (2 + 3i)(1 - 4i)',
+    steps:[['FOIL','2·1 + 2·(-4i) + 3i·1 + 3i·(-4i)'],['Simplify each term','2 - 8i + 3i - 12i²'],['i² = -1','-12i² = 12'],['Combine like terms','(2 + 12) + (-8 + 3)i = 14 - 5i']],answer:'14 - 5i'},
+  cx_rationalize:{problem:'Rationalize the denominator:\n  5 / (2 + i)',
+    steps:[['Multiply by the conjugate','5(2 - i) / [(2 + i)(2 - i)]'],['Denominator becomes real','2² + 1² = 5'],['Expand the numerator','5(2 - i) = 10 - 5i'],['Divide every term by 5','(10 - 5i)/5 = 2 - i']],answer:'2 - i'},
   sys2_elim:{problem:'Solve by elimination:\n  2x + 3y = 12\n  x - 3y = -3',
     steps:[['Add the equations','(2x+3y)+(x-3y)=12+(-3)\n→ 3x = 9'],['Solve for x','x = 3'],['Back-substitute','2(3)+3y=12 → 3y=6 → y=2']],answer:'(3, 2)'},
   sys_subst:{problem:'Solve by substitution:\n  y = 2x - 1\n  3x + y = 9',
@@ -1234,8 +1426,13 @@ const rules={
   graphread:`Vertex (h,k): turning point (orange dot)\nAxis: x = h\nDomain: ALWAYS (-∞, ∞) for any parabola\nRange: a>0 → [k,∞)   a<0 → (-∞,k]`,
   graphmatch:`1. Find vertex (h,k) from equation\n2. Direction: a>0=up, a<0=down\n3. Width: |a|>1=narrow, |a|<1=wide\n4. Match vertex + direction to graph`,
   solve_factor:`Zero Product Property: if A · B = 0, then A = 0 OR B = 0.\n1. Move all terms to one side so the equation = 0\n2. Factor the quadratic completely\n3. Set EACH factor equal to 0\n4. Solve each small equation for x\nTip: with a leading coefficient like 2x², roots are often fractions — remember to divide.`,
+  complete_square:`To solve x² + bx + c = 0 by completing the square:\n1. Move c to the other side: x² + bx = -c\n2. Add (b/2)² to BOTH sides\n3. The left side is now a perfect square: (x + b/2)² = (b/2)² - c\n4. Square root both sides — don't forget ± !\n5. Solve for x\nIf the right side under the √ is negative, the roots are complex (use i).`,
+  quad_formula:`The Quadratic Formula solves ANY equation ax² + bx + c = 0:\n\n  x = (-b ± √(b² - 4ac)) / (2a)\n\n1. Identify a, b, c\n2. Compute the discriminant: b² - 4ac\n   • positive perfect square → two rational roots\n   • positive, not a perfect square → two irrational roots\n   • zero → one repeated root\n   • negative → two complex roots (use i)\n3. Plug into the formula and simplify`,
   simp_neg_root:`The imaginary unit:  i = √-1,  so  i² = -1.\nTo simplify √-n  (n > 0):\n1. √-n = √-1 · √n = i√n\n2. Simplify √n by pulling out perfect-square factors\n3. i√(a²·b) = a·i√b\nExample: √-18 = i√18 = i√(9·2) = 3i√2`,
   re_im_parts:`A complex number in standard form:  a + bi\n• Real part = a\n• Imaginary part = b  →  the coefficient of i (keep its sign, but WITHOUT the i)\nExamples:\n  7 - 2i  →  real 7,  imaginary -2\n  -4i     →  real 0,  imaginary -4\n  9       →  real 9,  imaginary 0`,
+  cx_addsub:`Add or subtract complex numbers like polynomials — combine the REAL parts together and the IMAGINARY parts together.\n(a + bi) + (c + di) = (a+c) + (b+d)i\n(a + bi) - (c + di) = (a-c) + (b-d)i\nTip: distribute the minus sign to BOTH terms of the second number when subtracting.`,
+  cx_mult:`Multiply complex numbers with FOIL, then simplify using i² = -1:\n(a + bi)(c + di) = ac + adi + bci + bdi²\n= ac + (ad+bc)i + bd(-1)\n= (ac - bd) + (ad + bc)i\nTip: i² = -1,  i³ = -i,  i⁴ = 1`,
+  cx_rationalize:`A fraction isn't fully simplified if i is left in the denominator.\n• Denominator is bi (pure imaginary): multiply top & bottom by i\n• Denominator is a + bi: multiply top & bottom by its CONJUGATE, a - bi\n   (a+bi)(a-bi) = a² + b²   (always a real number!)\nThen distribute the numerator and divide every term by that real number.`,
   sys2_elim:`Elimination Method (2 variables):\n1. Write both equations as ax + by = c.\n2. Multiply one or both equations so a variable's coefficients are OPPOSITES.\n3. ADD the equations → that variable cancels.\n4. Solve for the remaining variable.\n5. Back-substitute to find the other.\nCheck: plug (x, y) into BOTH original equations.`,
   sys_subst:`Substitution Method:\n1. Solve ONE equation for one variable (get y = … or x = …).\n2. SUBSTITUTE that expression into the OTHER equation.\n3. You now have one variable — solve it.\n4. Back-substitute to find the other variable.\nEasiest when a variable is already isolated or has coefficient 1.`,
   sys_graph:`Solving by Graphing:\n1. Put each equation in y = mx + b form.\n2. Graph both lines (plot the y-intercept, then use the slope).\n3. The SOLUTION is the point where the lines INTERSECT.\n4. Read its (x, y) and check in both equations.\n• Parallel lines → NO solution.   Same line → INFINITELY many.`,
