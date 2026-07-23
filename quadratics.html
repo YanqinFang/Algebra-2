@@ -345,6 +345,8 @@ math msqrt{padding-top:1px}
         <div class="sidebar-item" id="sid-mat_det2" onclick="setTopicSidebar('mat_det2')">Determinant (2×2)</div>
         <div class="sidebar-item" id="sid-mat_det3" onclick="setTopicSidebar('mat_det3')">Determinant (3×3)</div>
         <div class="sidebar-item" id="sid-mat_rref" onclick="setTopicSidebar('mat_rref')">Row Reduction</div>
+        <div class="sidebar-item" id="sid-mat_rowop_apply" onclick="setTopicSidebar('mat_rowop_apply')">Apply a Row Operation</div>
+        <div class="sidebar-item" id="sid-mat_rowop_identify" onclick="setTopicSidebar('mat_rowop_identify')">Identify the Row Operation</div>
       </div>
     </div>
   </div>
@@ -359,7 +361,7 @@ const BASICS_TOPICS=new Set(['combining','mult_binomials']);
 const SE_TOPICS=new Set(['solve_factor','complete_square','quad_formula']);
 const CX_TOPICS=new Set(['simp_neg_root','re_im_parts','cx_addsub','cx_mult','cx_rationalize']);
 const SYS_TOPICS=new Set(['sys2_elim','sys_subst','sys_graph','sys3_elim','sys3_matrix','sys_ineq']);
-const MX_TOPICS=new Set(['mat_add','mat_sub','mat_mult','mat_det2','mat_det3','mat_rref']);
+const MX_TOPICS=new Set(['mat_add','mat_sub','mat_mult','mat_det2','mat_det3','mat_rref','mat_rowop_apply','mat_rowop_identify']);
 let questionAnswered=false,attemptCount=0,triedMcIndices=new Set(),mcCorrect=null;
 let quizMode=false,quizQ=[],quizIdx=0,quizRes=[];
 function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
@@ -487,6 +489,81 @@ function prettyMatOpt(s){
   if(typeof s!=='string'||!/^\[\[.*\]\]$/.test(s))return null;
   const rows=s.slice(2,-2).split('],[').map(r=>r.split(',').map(x=>x.trim()));
   return matrixHTML(rows);
+}
+function randomRowOp(n,d){
+  const type=pick(['swap','scale','add']);
+  if(type==='swap'){
+    const i=rnd(0,n-1);let j;do{j=rnd(0,n-1);}while(j===i);
+    return{type:'swap',i,j};
+  }
+  const scaleKs=d==='easy'?[2,-1,-2]:[2,3,-2,-3];
+  const addKs=d==='easy'?[1,-1,2,-2]:[1,-1,2,-2,3,-3];
+  if(type==='scale'){
+    return{type:'scale',i:rnd(0,n-1),k:pick(scaleKs)};
+  }
+  const i=rnd(0,n-1);let j;do{j=rnd(0,n-1);}while(j===i);
+  return{type:'add',i,j,k:pick(addKs)};
+}
+function applyRowOp(M,op){
+  const R=M.map(r=>r.slice());
+  if(op.type==='swap'){[R[op.i],R[op.j]]=[R[op.j],R[op.i]];}
+  else if(op.type==='scale'){R[op.i]=M[op.i].map(v=>v*op.k);}
+  else{R[op.i]=M[op.i].map((v,c)=>v+op.k*M[op.j][c]);}
+  return R;
+}
+function rowOpStr(op){
+  if(op.type==='swap')return `R${op.i+1} ↔ R${op.j+1}`;
+  if(op.type==='scale'){
+    const k=op.k,ks=k===-1?'-':String(k);
+    return `R${op.i+1} → ${ks}R${op.i+1}`;
+  }
+  const k=op.k,sign=k>=0?'+':'-',a=Math.abs(k),ks=a===1?'':String(a);
+  return `R${op.i+1} → R${op.i+1} ${sign} ${ks}R${op.j+1}`;
+}
+function rowOpApplyDistractors(M,op){
+  const out=[];
+  out.push(M);
+  if(op.type==='scale'){
+    out.push(applyRowOp(M,{type:'scale',i:op.i,k:-op.k}));
+    out.push(M.map((r,idx)=>idx===op.i?r.map(v=>v+op.k):r));
+  } else if(op.type==='add'){
+    out.push(applyRowOp(M,{type:'add',i:op.i,j:op.j,k:-op.k}));
+    out.push(applyRowOp(M,{type:'add',i:op.j,j:op.i,k:op.k}));
+  } else {
+    const n=M.length;
+    if(n===3){
+      const alt=[0,1,2].find(x=>x!==op.i&&x!==op.j);
+      const R2=M.map(r=>r.slice());[R2[op.i],R2[alt]]=[R2[alt],R2[op.i]];out.push(R2);
+      const R3=M.map(r=>r.slice());[R3[op.j],R3[alt]]=[R3[alt],R3[op.j]];out.push(R3);
+    } else {
+      out.push(applyRowOp(M,{type:'scale',i:op.i,k:-1}));
+      out.push(applyRowOp(M,{type:'scale',i:op.j,k:-1}));
+    }
+  }
+  return out;
+}
+function rowOpStrDistractors(op,n){
+  const out=[];
+  if(op.type==='swap'){
+    if(n===3){
+      const alt=[0,1,2].find(x=>x!==op.i&&x!==op.j);
+      out.push(rowOpStr({type:'swap',i:op.i,j:alt}));
+      out.push(rowOpStr({type:'swap',i:op.j,j:alt}));
+    } else {
+      out.push(rowOpStr({type:'scale',i:op.i,k:-1}));
+    }
+    out.push(rowOpStr({type:'scale',i:op.j,k:-1}));
+  } else if(op.type==='scale'){
+    const otherRow=(op.i+1)%n;
+    out.push(rowOpStr({type:'scale',i:op.i,k:-op.k}));
+    out.push(rowOpStr({type:'scale',i:otherRow,k:op.k}));
+    out.push(rowOpStr({type:'swap',i:op.i,j:otherRow}));
+  } else {
+    out.push(rowOpStr({type:'add',i:op.i,j:op.j,k:-op.k}));
+    out.push(rowOpStr({type:'add',i:op.j,j:op.i,k:op.k}));
+    out.push(rowOpStr({type:'scale',i:op.i,k:op.k}));
+  }
+  return out;
 }
 function linEq(coefs,vars,rhs){
   let s='',first=true;
@@ -1344,6 +1421,63 @@ const topics={
     const mcWrong=[mcMat([[1,0,x+1],[0,1,y]]),mcMat([[1,0,y],[0,1,x]]),mcMat([[1,0,-x],[0,1,y]])].filter(w=>!acc.has(normalize(w)));
     const hint=`Use row operations to reach RREF: 1's on the diagonal, 0's elsewhere.\nThe last column gives the solution: x=${x}, y=${y}\nRREF:\n${matrixHTML(R)}`;
     return{text,answers,hint,multi:false,mcWrong};
+  }},
+  mat_rowop_apply:{label:'Apply a Row Operation',group:'mx',gen(d){
+    if(d==='easy'){
+      const n=2;
+      const M=randMat(n,n,-5,5);
+      const op=randomRowOp(n,'easy');
+      const R=applyRowOp(M,op);
+      const text=`Apply the row operation ${rowOpStr(op)} to the matrix below.\nEnter the resulting matrix (as [[row1],[row2]]):\n\n${matrixHTML(M)}`;
+      const answers=matAnswers(R);
+      const acc=new Set(answers.map(normalize));
+      const mcWrong=rowOpApplyDistractors(M,op).map(mcMat).filter(w=>!acc.has(normalize(w)));
+      const stepDetail=op.type==='swap'
+        ?`Step 1 — swap the ENTIRE rows R${op.i+1} and R${op.j+1} (every entry moves together).\nStep 2 — new R${op.i+1} = old R${op.j+1} = [${M[op.j].join(', ')}]\nStep 3 — new R${op.j+1} = old R${op.i+1} = [${M[op.i].join(', ')}]`
+        :op.type==='scale'
+        ?`Step 1 — target row: R${op.i+1} = [${M[op.i].join(', ')}]\nStep 2 — multiply each entry by ${op.k}:\n${M[op.i].map((v,c)=>`   entry ${c+1}: ${v} × ${op.k} = ${v*op.k}`).join('\n')}\nStep 3 — new R${op.i+1} = [${R[op.i].join(', ')}]`
+        :`Step 1 — take ${op.k}×R${op.j+1}: ${op.k}×[${M[op.j].join(', ')}] = [${M[op.j].map(v=>v*op.k).join(', ')}]\nStep 2 — add that to R${op.i+1} = [${M[op.i].join(', ')}], entry-by-entry:\n${M[op.i].map((v,c)=>`   entry ${c+1}: ${v} + (${op.k})(${M[op.j][c]}) = ${v+op.k*M[op.j][c]}`).join('\n')}\nStep 3 — new R${op.i+1} = [${R[op.i].join(', ')}]`;
+      const hint=`${stepDetail}\n\nFull result:\n${matrixHTML(R)}`;
+      return{text,answers,hint,multi:false,mcWrong};
+    }
+    if(d==='medium'){
+      const n=2;
+      const M=randMat(n,n,-6,6);
+      const op1=randomRowOp(n,'medium'),op2=randomRowOp(n,'medium');
+      const M1=applyRowOp(M,op1),R=applyRowOp(M1,op2);
+      const text=`Apply these row operations IN ORDER:\n  1) ${rowOpStr(op1)}\n  2) ${rowOpStr(op2)}\nEnter the FINAL resulting matrix (as [[row1],[row2]]):\n\n${matrixHTML(M)}`;
+      const answers=matAnswers(R);
+      const acc=new Set(answers.map(normalize));
+      const cand=[mcMat(M1),mcMat(M),...rowOpApplyDistractors(M1,op2).map(mcMat)];
+      const mcWrong=cand.filter(w=>!acc.has(normalize(w))).filter((w,i,a)=>a.indexOf(w)===i);
+      const hint=`After step 1 (${rowOpStr(op1)}):\n${matrixHTML(M1)}\n\nAfter step 2 (${rowOpStr(op2)}):\n${matrixHTML(R)}`;
+      return{text,answers,hint,multi:false,mcWrong};
+    }
+    const n=3;
+    const M=randMat(n,n,-4,4);
+    const ops=[randomRowOp(n,'hard'),randomRowOp(n,'hard')];
+    const M1=applyRowOp(M,ops[0]),R=applyRowOp(M1,ops[1]);
+    const opsList=ops.map((o,idx)=>`  ${idx+1}) ${rowOpStr(o)}`).join('\n');
+    const text=`Apply these row operations in order, then choose the final matrix:\n${opsList}\n\n${matrixHTML(M)}`;
+    const answers=matAnswers(R);
+    const acc=new Set(answers.map(normalize));
+    const cand=[mcMat(M1),mcMat(M),...rowOpApplyDistractors(M1,ops[1]).map(mcMat)];
+    const mcWrong=cand.filter(w=>!acc.has(normalize(w))).filter((w,i,a)=>a.indexOf(w)===i);
+    const hint=`After step 1 (${rowOpStr(ops[0])}):\n${matrixHTML(M1)}\n\nAfter step 2 (${rowOpStr(ops[1])}):\n${matrixHTML(R)}`;
+    return{text,answers,hint,multi:false,mcWrong,mcOnly:true};
+  }},
+  mat_rowop_identify:{label:'Identify the Row Operation',group:'mx',gen(d){
+    const n=d==='hard'?3:2;
+    const lo=d==='easy'?-5:d==='medium'?-8:-6,hi=d==='easy'?5:d==='medium'?8:6;
+    const M=randMat(n,n,lo,hi);
+    const op=randomRowOp(n,d);
+    const R=applyRowOp(M,op);
+    const trueStr=rowOpStr(op);
+    const text=`Matrix A is transformed into matrix B by ONE row operation.\nWhich row operation was used?\n\nA =\n${matrixHTML(M)}\n\nB =\n${matrixHTML(R)}`;
+    const answers=[trueStr];
+    const mcWrong=[...new Set(rowOpStrDistractors(op,n))].filter(s=>s!==trueStr);
+    const hint=`Compare A and B row by row.\n• A row that's unchanged wasn't the target.\n• A row that traded places with another exactly is a swap.\n• A row that's a constant multiple of its old self is a scale.\n• A row equal to (old row) + k×(another row) is an add-a-multiple — try k = ±1, ±2, ±3.\nAnswer: ${trueStr}`;
+    return{text,answers,hint,multi:false,mcWrong,mcOnly:true};
   }}
 };
 const examples={
@@ -1410,7 +1544,13 @@ const examples={
   mat_det3:{problem:`Find the determinant using cofactor expansion along the first row:\n\n${matrixHTML([[1,2,3],[0,1,4],[5,6,0]])}`,
     steps:[['Expand along row 1','det = 1·M11 - 2·M12 + 3·M13'],['Minors','M11 = (1)(0)-(4)(6) = -24\nM12 = (0)(0)-(4)(5) = -20\nM13 = (0)(6)-(1)(5) = -5'],['Combine','det = 1(-24) - 2(-20) + 3(-5) = -24 + 40 - 15 = 1']],answer:'det = 1'},
   mat_rref:{problem:`Row-reduce to RREF:\n\n${matrixHTML([[1,1,5],[2,-1,1]])}`,
-    steps:[['R2 → R2 - 2R1',matrixHTML([[1,1,5],[0,-3,-9]])],['R2 → R2 ÷ (-3)',matrixHTML([[1,1,5],[0,1,3]])],['R1 → R1 - R2',matrixHTML([[1,0,2],[0,1,3]])]],answer:matrixHTML([[1,0,2],[0,1,3]])+'  →  x = 2, y = 3'}
+    steps:[['R2 → R2 - 2R1',matrixHTML([[1,1,5],[0,-3,-9]])],['R2 → R2 ÷ (-3)',matrixHTML([[1,1,5],[0,1,3]])],['R1 → R1 - R2',matrixHTML([[1,0,2],[0,1,3]])]],answer:matrixHTML([[1,0,2],[0,1,3]])+'  →  x = 2, y = 3'},
+  mat_rowop_apply:{problem:'Apply R2 → R2 - 2R1 to:\n\n'+matrixHTML([[1,3],[2,4]]),
+    steps:[['Identify the target row','R2 = [2, 4],  R1 = [1, 3]'],['Compute 2×R1','2 × [1, 3] = [2, 6]'],['Subtract entry-by-entry','R2 - 2R1 = [2-2, 4-6] = [0, -2]'],['Write the new matrix','R1 stays [1, 3]. R2 becomes [0, -2].']],
+    answer:matrixHTML([[1,3],[0,-2]])},
+  mat_rowop_identify:{problem:'A = '+matrixHTML([[1,3],[2,4]])+'  →  B = '+matrixHTML([[1,3],[0,-2]])+'\nWhich row operation was used?',
+    steps:[['Compare Row 1','[1,3] → [1,3]  — unchanged, so Row 1 was not the target'],['Compare Row 2','[2,4] → [0,-2]  — this row changed'],['Test R2 - 2R1','[2,4] - 2[1,3] = [2-2, 4-6] = [0,-2]  ✓ matches B!']],
+    answer:'R2 → R2 - 2R1'}
 };
 const rules={
   combining:`Like terms have the SAME variable AND the same exponent.\n• 3x and 5x are like terms → combine: 8x\n• 3x and 3x² are NOT like terms\n• 4xy and -2xy are like terms → combine: 2xy\nConstants (numbers with no variable) are always like terms.`,
@@ -1444,7 +1584,9 @@ const rules={
   mat_mult:`Matrix Multiplication:\nTo multiply A (m×n) by B (n×p), the number of COLUMNS in A must equal the number of ROWS in B.\nEach entry c[i][j] = (row i of A) · (column j of B) — multiply matching entries, then add.\nMatrix multiplication is NOT commutative: A × B ≠ B × A in general.`,
   mat_det2:`Determinant of a 2×2 Matrix:\nFor A = [[a,b],[c,d]]:\ndet(A) = ad - bc\nIf det(A) = 0, the matrix has NO inverse (it's singular).`,
   mat_det3:`Determinant of a 3×3 Matrix (Cofactor Expansion):\nFor A = [[a,b,c],[d,e,f],[g,h,i]], expand along row 1:\ndet(A) = a(ei - fh) - b(di - fg) + c(dh - eg)\nTip: alternate +, -, + signs across the row.`,
-  mat_rref:`Row Reduction (Gaussian Elimination → RREF):\nUse three row operations to simplify a matrix:\n1. Swap two rows\n2. Multiply a row by a nonzero constant\n3. Add a multiple of one row to another\nGoal — Reduced Row-Echelon Form (RREF): 1's on the diagonal, 0's everywhere else in those columns.\nFor an augmented matrix [A | b], the last column in RREF gives the solution to the system.`
+  mat_rref:`Row Reduction (Gaussian Elimination → RREF):\nUse three row operations to simplify a matrix:\n1. Swap two rows\n2. Multiply a row by a nonzero constant\n3. Add a multiple of one row to another\nGoal — Reduced Row-Echelon Form (RREF): 1's on the diagonal, 0's everywhere else in those columns.\nFor an augmented matrix [A | b], the last column in RREF gives the solution to the system.`,
+  mat_rowop_apply:`Applying a Row Operation:\nThe 3 elementary row operations are:\n1. Swap two rows: Ri ↔ Rj\n2. Scale a row: Ri → k·Ri  (k ≠ 0)\n3. Add a multiple of one row to another: Ri → Ri + k·Rj\nOnly the target row changes — every other row stays exactly the same.\nTo do Ri → Ri + k·Rj: multiply row j by k first, then add it to row i entry-by-entry (same column lines up with same column).\nEasy = one operation on a 2×2 (shown fully worked, entry by entry). Medium = two operations in a row (combine the steps). Hard = two operations on a 3×3 — pick the correct final matrix from the choices.`,
+  mat_rowop_identify:`Identifying a Row Operation:\nCompare matrix A to matrix B row by row.\n• A row that's unchanged wasn't the target.\n• A row that traded places exactly with another row is a swap: Ri ↔ Rj.\n• A row that's a constant multiple of its old self is a scale: Ri → k·Ri.\n• A row that equals (its old self) + k×(another row) is an add-a-multiple operation: Ri → Ri + k·Rj. Try small integers k = ±1, ±2, ±3 to find the match.`
 };
 function renderConcept(key){
   const box=document.getElementById('concept-box');if(!box)return;
@@ -1546,7 +1688,7 @@ function buildMC(cur,topic){
     } else {
       rawWrong=['(-∞, ∞)','[0, ∞)','(-∞, 0]','(0, ∞)'].filter(w=>w!==ans_str);
     }
-  } else if(topic==='solve_factor'||topic==='simp_neg_root'||topic==='re_im_parts'||topic==='sys2_elim'||topic==='sys_subst'||topic==='sys_graph'||topic==='sys3_elim'||topic==='sys3_matrix'||topic==='mat_add'||topic==='mat_sub'||topic==='mat_mult'||topic==='mat_det2'||topic==='mat_det3'||topic==='mat_rref'){
+  } else if(topic==='solve_factor'||topic==='complete_square'||topic==='quad_formula'||topic==='simp_neg_root'||topic==='re_im_parts'||topic==='cx_addsub'||topic==='cx_mult'||topic==='cx_rationalize'||topic==='sys2_elim'||topic==='sys_subst'||topic==='sys_graph'||topic==='sys3_elim'||topic==='sys3_matrix'||topic==='mat_add'||topic==='mat_sub'||topic==='mat_mult'||topic==='mat_det2'||topic==='mat_det3'||topic==='mat_rref'||topic==='mat_rowop_apply'||topic==='mat_rowop_identify'){
     ans_str=cur.answers[0];
     rawWrong=cur.mcWrong||[];
   } else {
@@ -1698,7 +1840,8 @@ function setDiff(d){
   difficulty=d;
   document.querySelectorAll('.diff-btn').forEach(b=>b.classList.remove('active'));
   document.querySelector('.diff-btn.'+d).classList.add('active');
-  newProblem();
+  if(quizMode){showQProblem();}
+  else{newProblem();}
 }
 function newProblem(){
   if(quizMode)return;
@@ -1725,7 +1868,7 @@ function resetStats(){total=0;correct=0;updateStats();newProblem();}
 function qp(){const mc=+document.getElementById('mc-count').value,fi=+document.getElementById('fill-count').value;document.getElementById('mc-val').textContent=mc;document.getElementById('fill-val').textContent=fi;const t=mc+fi;document.getElementById('quiz-preview').textContent=t===0?'Please select at least 1 problem':`${t} problems total: ${mc} Multiple Choice + ${fi} Fill-in`;}
 function startQuiz(){const mc=+document.getElementById('mc-count').value,fi=+document.getElementById('fill-count').value;if(mc+fi===0){alert('Please select at least 1 problem.');return;}quizMode=true;quizQ=[...Array(mc).fill('mc'),...Array(fi).fill('fill')];for(let i=quizQ.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[quizQ[i],quizQ[j]]=[quizQ[j],quizQ[i]];}quizIdx=0;quizRes=[];document.getElementById('quiz-setup').style.display='none';document.getElementById('quiz-prog').style.display='flex';renderDots();showQProblem();}
 function renderDots(){const c=document.getElementById('quiz-dots');c.innerHTML='';quizQ.forEach((t,i)=>{const d=document.createElement('div');d.className='qd '+(i<quizRes.length?(quizRes[i]?'ok':'bad'):t);c.appendChild(d);});document.getElementById('quiz-label').textContent=quizIdx<quizQ.length?`Question ${quizIdx+1} / ${quizQ.length}  —  ${quizQ[quizIdx]==='mc'?'🔘 Multiple Choice':'✏️ Fill-in'}`:'✓ All done!';}
-function showQProblem(){if(quizIdx>=quizQ.length){showQuizSummary();return;}resetPerQuestion();current=topics[currentTopic].gen(difficulty);const isBa=BASICS_TOPICS.has(currentTopic),isFc=FC_TOPICS.has(currentTopic),isGr=GR_TOPICS.has(currentTopic),isSe=SE_TOPICS.has(currentTopic),isCx=CX_TOPICS.has(currentTopic),isSy=SYS_TOPICS.has(currentTopic),isMx=MX_TOPICS.has(currentTopic);const bt=document.getElementById('badge-topic');bt.textContent=topics[currentTopic].label;bt.className=`badge badge-${isBa?'basics':isFc?'fc':isGr?'gr':isSe?'se':isCx?'cx':isSy?'sys':isMx?'mx':'qt'}`;document.getElementById('prob').innerHTML=mathHTML(current.text);document.getElementById('prob-svg').innerHTML=current.svg||'';document.getElementById('feedback').className='feedback';document.getElementById('hint').style.display='none';document.getElementById('hint-link').style.display='inline';const forceMC=current.isGraphMatch||current.isIneqMatch;if(quizQ[quizIdx]==='mc'||forceMC){if(current.isGraphMatch)renderGraphMatch(current);else if(current.isIneqMatch)renderInequalityMatch(current);else renderMC(current,currentTopic);}else renderFill();}
+function showQProblem(){if(quizIdx>=quizQ.length){showQuizSummary();return;}resetPerQuestion();current=topics[currentTopic].gen(difficulty);const isBa=BASICS_TOPICS.has(currentTopic),isFc=FC_TOPICS.has(currentTopic),isGr=GR_TOPICS.has(currentTopic),isSe=SE_TOPICS.has(currentTopic),isCx=CX_TOPICS.has(currentTopic),isSy=SYS_TOPICS.has(currentTopic),isMx=MX_TOPICS.has(currentTopic);const bt=document.getElementById('badge-topic');bt.textContent=topics[currentTopic].label;bt.className=`badge badge-${isBa?'basics':isFc?'fc':isGr?'gr':isSe?'se':isCx?'cx':isSy?'sys':isMx?'mx':'qt'}`;const bd=document.getElementById('badge-diff');bd.className=`badge badge-${difficulty}`;bd.textContent=difficulty.charAt(0).toUpperCase()+difficulty.slice(1);document.getElementById('prob').innerHTML=mathHTML(current.text);document.getElementById('prob-svg').innerHTML=current.svg||'';document.getElementById('feedback').className='feedback';document.getElementById('hint').style.display='none';document.getElementById('hint-link').style.display='inline';const forceMC=current.isGraphMatch||current.isIneqMatch||current.mcOnly;if(quizQ[quizIdx]==='mc'||forceMC){if(current.isGraphMatch)renderGraphMatch(current);else if(current.isIneqMatch)renderInequalityMatch(current);else renderMC(current,currentTopic);}else renderFill();}
 function nextQ(){quizIdx++;renderDots();showQProblem();}
 function showQuizSummary(){document.getElementById('quiz-prog').style.display='none';document.getElementById('next-row').style.display='none';const right=quizRes.filter(Boolean).length,tot=quizRes.length,pct=tot?Math.round(right/tot*100):0;const emoji=pct>=90?'🌟':pct>=70?'😊':pct>=50?'💪':'📚';document.getElementById('prob').innerText=`${emoji} Quiz Complete!\n\nScore: ${right} / ${tot} correct  (${pct}%)`;document.getElementById('mc-options').innerHTML=`<button class="btn btn-primary" style="margin-top:12px" onclick="endQuiz()">↩ Back to Practice</button>`;document.getElementById('feedback').className='feedback';document.getElementById('hint-link').style.display='none';document.getElementById('prob-svg').innerHTML='';document.getElementById('attempts-left-bar').style.display='none';quizMode=false;}
 function endQuiz(){quizMode=false;document.getElementById('quiz-setup').style.display='block';document.getElementById('quiz-prog').style.display='none';document.getElementById('next-row').style.display='none';newProblem();}
