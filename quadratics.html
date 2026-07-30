@@ -133,6 +133,16 @@ h1{font-size:26px;font-weight:700;color:#4527a0;margin-bottom:3px}
 .concept-rule.mx{border-left-color:#4e342e}
 .concept-box.mx .concept-steps li{border-bottom-color:#d7ccc8}
 .concept-box.mx .concept-answer{color:#4e342e}
+.badge-py{background:#f1f8e9;color:#33691e}
+.sidebar-group-hdr.py{background:#33691e}
+.sidebar-item.active-py{background:#f1f8e9;border-left-color:#33691e;color:#33691e;font-weight:700}
+.btn-primary.py-active{background:#33691e;border-color:#33691e}
+.btn-primary.py-active:hover{background:#43a047}
+.concept-box.py{background:#f1f8e9;border-color:#aed581}
+.concept-box.py .concept-header{color:#33691e}
+.concept-rule.py{border-left-color:#33691e}
+.concept-box.py .concept-steps li{border-bottom-color:#c5e1a5}
+.concept-box.py .concept-answer{color:#33691e}
 .badge-easy{background:#e8f5e9;color:#2e7d32}
 .badge-medium{background:#fff3e0;color:#e65100}
 .badge-hard{background:#ffebee;color:#b71c1c}
@@ -283,6 +293,20 @@ math msqrt{padding-top:1px}
       </div>
     </div>
     <div class="sidebar-group">
+      <div class="sidebar-group-hdr py" onclick="toggleGroup(this)">🧬 Polynomials<span class="grp-toggle">+</span></div>
+      <div class="sidebar-group-body" id="grp-py">
+        <div class="sidebar-item" id="sid-poly_classify_deg" onclick="setTopicSidebar('poly_classify_deg')">Classify by Degree</div>
+        <div class="sidebar-item" id="sid-poly_classify_terms" onclick="setTopicSidebar('poly_classify_terms')">Classify by # of Terms</div>
+        <div class="sidebar-item" id="sid-poly_degree_lc" onclick="setTopicSidebar('poly_degree_lc')">Degree &amp; Leading Coeff.</div>
+        <div class="sidebar-item" id="sid-poly_simplify" onclick="setTopicSidebar('poly_simplify')">Simplify (Standard Form)</div>
+        <div class="sidebar-item" id="sid-poly_addsub" onclick="setTopicSidebar('poly_addsub')">Add &amp; Subtract</div>
+        <div class="sidebar-item" id="sid-poly_mult" onclick="setTopicSidebar('poly_mult')">Multiply</div>
+        <div class="sidebar-item" id="sid-poly_grouping" onclick="setTopicSidebar('poly_grouping')">Factor by Grouping</div>
+        <div class="sidebar-item" id="sid-poly_cubes" onclick="setTopicSidebar('poly_cubes')">Sum / Difference of Cubes</div>
+        <div class="sidebar-item" id="sid-poly_eval" onclick="setTopicSidebar('poly_eval')">Evaluate</div>
+      </div>
+    </div>
+    <div class="sidebar-group">
       <div class="sidebar-group-hdr qt" onclick="toggleGroup(this)">📐 Quadratic Transformations<span class="grp-toggle">+</span></div>
       <div class="sidebar-group-body" id="grp-qt">
         <div class="sidebar-item" id="sid-vertex" onclick="setTopicSidebar('vertex')">Vertex Form</div>
@@ -362,11 +386,12 @@ const SE_TOPICS=new Set(['solve_factor','complete_square','quad_formula']);
 const CX_TOPICS=new Set(['simp_neg_root','re_im_parts','cx_addsub','cx_mult','cx_rationalize']);
 const SYS_TOPICS=new Set(['sys2_elim','sys_subst','sys_graph','sys3_elim','sys3_matrix','sys_ineq']);
 const MX_TOPICS=new Set(['mat_add','mat_sub','mat_mult','mat_det2','mat_det3','mat_rref','mat_rowop_apply','mat_rowop_identify']);
+const PY_TOPICS=new Set(['poly_classify_deg','poly_classify_terms','poly_degree_lc','poly_simplify','poly_addsub','poly_mult','poly_grouping','poly_cubes','poly_eval']);
 let questionAnswered=false,attemptCount=0,triedMcIndices=new Set(),mcCorrect=null;
 let quizMode=false,quizQ=[],quizIdx=0,quizRes=[];
 function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
 function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a}
-function sup(n){return n===2?'²':n===3?'³':n===4?'⁴':`^${n}`}
+function sup(n){return n===2?'²':n===3?'³':n===4?'⁴':n===5?'⁵':n===6?'⁶':`^${n}`}
 function sqrtToMathML(inner){
   inner=String(inner).trim();
   let sign='';
@@ -756,6 +781,13 @@ function parabolaSVG(a,h,k,opts={}){
   if(showVL&&!mini)vm+=`<text x="${(vsx+8)|0}" y="${(vsy-8)|0}" font-size="11" fill="#e65100" font-weight="bold">(${h},${k})</text>`;
   return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;border-radius:8px"><rect width="${W}" height="${H}" fill="#f9f9ff" rx="8"/>${grid}<line x1="${margin}" y1="${ay0|0}" x2="${W-margin}" y2="${ay0|0}" stroke="#aaa" stroke-width="1.5"/><line x1="${ax0|0}" y1="${margin}" x2="${ax0|0}" y2="${H-margin}" stroke="#aaa" stroke-width="1.5"/>${axisDash}<path d="${pathD}" fill="none" stroke="#4527a0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>${vm}</svg>`;
 }
+const PDEG_NAME={0:'Constant',1:'Linear',2:'Quadratic',3:'Cubic',4:'Quartic',5:'Quintic',6:'6th degree'};
+const PDEG_LIST=['Constant','Linear','Quadratic','Cubic','Quartic','Quintic'];
+function pterm(c,d){return {c,v:d===0?'':(d===1?'x':'x'+sup(d))};}
+function polyDesc(pairs){return poly(pairs.map(([c,d])=>pterm(c,d)));}
+function polyMk(pairs){return poly(pairs.map(([c,d])=>pterm(c,d)))||'0';}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function nz(v,alt){return v===0?alt:v;}
 const topics={
   combining:{
     label:'Combining Like Terms',group:'basics',
@@ -816,6 +848,217 @@ const topics={
         return{text:`Expand:\n  (${p}x ${aS})(${q}x ${bS})`,answers:[ans],
           hint:`F: ${p}x · ${q}x = ${A}x²\nO: ${p}x · (${b}) = ${p*b}x\nI: (${a}) · ${q}x = ${a*q}x\nL: (${a}) · (${b}) = ${C}\nCombine middle: ${B}x`,multi:false};
       }
+    }
+  },
+  poly_classify_deg:{
+    label:'Classify by Degree',group:'py',
+    gen(d){
+      const maxDeg=d==='easy'?2:d==='medium'?4:5;
+      const deg=rnd(d==='easy'?0:1,maxDeg);
+      const terms=[[nz(pick([1,-1])*rnd(2,6),3),deg]];
+      const used=new Set([deg]);
+      const nLower=deg===0?0:rnd(1,Math.min(deg,2));
+      for(let i=0;i<nLower;i++){const dd=rnd(0,deg-1);if(used.has(dd))continue;used.add(dd);terms.push([nz(pick([1,-1])*rnd(1,7),2),dd]);}
+      if(d==='hard')shuffle(terms);else terms.sort((a,b)=>b[1]-a[1]);
+      const expr=polyDesc(terms),ans=PDEG_NAME[deg];
+      const near=[PDEG_LIST[deg-1],PDEG_LIST[deg+1],PDEG_LIST[deg+2],PDEG_LIST[deg-2]].filter(Boolean).filter(n=>n!==ans);
+      const mcWrong=[...new Set([...near,...PDEG_LIST.filter(n=>n!==ans)])].slice(0,3);
+      return{text:`Classify this polynomial by its degree:\n  ${expr}`,answers:[ans],
+        hint:`Degree = the HIGHEST exponent on the variable (even if it isn't written first).\nHere the highest power is ${deg}.\n0 Constant · 1 Linear · 2 Quadratic · 3 Cubic · 4 Quartic · 5 Quintic`,
+        multi:false,mcWrong,mcOnly:true};
+    }
+  },
+  poly_classify_terms:{
+    label:'Classify by # of Terms',group:'py',
+    gen(d){
+      const maxT=d==='easy'?3:4;
+      const nT=rnd(1,maxT);
+      const pool=shuffle([0,1,2,3,4,5]).slice(0,nT).sort((a,b)=>b-a);
+      const terms=pool.map(dd=>[nz(pick([1,-1])*rnd(1,9),4),dd]);
+      const expr=polyDesc(terms);
+      const NAME={1:'Monomial',2:'Binomial',3:'Trinomial'};
+      const ans=nT<=3?NAME[nT]:'Polynomial';
+      const mcWrong=['Monomial','Binomial','Trinomial','Polynomial'].filter(n=>n!==ans);
+      return{text:`Classify this polynomial by its number of terms:\n  ${expr}`,answers:[ans],
+        hint:`Count the terms separated by + or − :\n1 term → Monomial\n2 terms → Binomial\n3 terms → Trinomial\n4 or more → Polynomial`,
+        multi:false,mcWrong,mcOnly:true};
+    }
+  },
+  poly_degree_lc:{
+    label:'Degree & Leading Coeff.',group:'py',
+    gen(d){
+      const deg=d==='easy'?rnd(1,2):d==='medium'?rnd(2,4):rnd(3,5);
+      const lead=nz(pick([1,-1])*rnd(2,7),3);
+      const terms=[[lead,deg]];const used=new Set([deg]);
+      const nLower=rnd(1,2);
+      for(let i=0;i<nLower;i++){const dd=rnd(0,deg-1);if(used.has(dd))continue;used.add(dd);terms.push([nz(pick([1,-1])*rnd(1,8),2),dd]);}
+      let disp=[...terms];
+      if(d!=='easy')shuffle(disp);else disp.sort((a,b)=>b[1]-a[1]);
+      const expr=polyDesc(disp);
+      const ans=`Degree ${deg}, leading coefficient ${lead}`;
+      const mcWrong=[
+        `Degree ${deg}, leading coefficient ${-lead}`,
+        `Degree ${deg+1}, leading coefficient ${lead}`,
+        `Degree ${deg}, leading coefficient ${nz(lead+pick([1,-1])*rnd(1,3),lead+1)}`
+      ];
+      if(d!=='easy'&&disp[0][1]!==deg)mcWrong[1]=`Degree ${disp[0][1]}, leading coefficient ${disp[0][0]}`;
+      return{text:`State the degree and leading coefficient:\n  ${expr}`,answers:[ans,`degree ${deg}, leading coefficient ${lead}`,`${deg}, ${lead}`,`${deg},${lead}`],
+        hint:`Leading term = the term with the HIGHEST degree (it may not be written first).\nHighest power here is ${deg}; its coefficient is ${lead}.\nPut the polynomial in standard form first if the terms are out of order.`,
+        multi:false,mcWrong};
+    }
+  },
+  poly_simplify:{
+    label:'Simplify (Standard Form)',group:'py',
+    gen(d){
+      const degrees=d==='easy'?[2,1,0]:[3,2,1,0];
+      const finalC={};degrees.forEach(dd=>{finalC[dd]=nz(pick([1,-1])*rnd(1,7),4);});
+      const nSplit=d==='easy'?1:2;
+      const splitDegs=new Set(shuffle([...degrees]).slice(0,nSplit));
+      let disp=[];
+      degrees.forEach(dd=>{
+        const c=finalC[dd];
+        if(splitDegs.has(dd)){
+          let p1;do{p1=c+pick([1,-1])*rnd(1,5);}while(p1===0||(c-p1)===0);
+          disp.push([p1,dd]);disp.push([c-p1,dd]);
+        } else disp.push([c,dd]);
+      });
+      shuffle(disp);
+      const expr=polyDesc(disp);
+      const ans=polyMk(degrees.map(dd=>[finalC[dd],dd]));
+      const lead=degrees[0];
+      const wLC=nz(finalC[lead]+pick([1,-1])*rnd(1,3),finalC[lead]+1);
+      const w1=polyMk(degrees.map(dd=>[dd===lead?finalC[dd]:-finalC[dd],dd]));
+      const w2=polyMk(degrees.map(dd=>[dd===lead?wLC:finalC[dd],dd]));
+      const w3=polyMk(degrees.map(dd=>[dd===0?finalC[0]+nz(pick([1,-1])*rnd(1,4),2):finalC[dd],dd]));
+      return{text:`Simplify and write in standard form:\n  ${expr}`,answers:[ans],
+        hint:`1. Group like terms (same power of x).\n2. Add their coefficients.\n3. Write from the HIGHEST power down to the constant.`,
+        multi:false,mcWrong:[w1,w2,w3]};
+    }
+  },
+  poly_addsub:{
+    label:'Add & Subtract',group:'py',
+    gen(d){
+      const op=pick(['+','-']);
+      const degrees=d==='easy'?[2,1,0]:[3,2,1,0];
+      const A={},B={};degrees.forEach(dd=>{A[dd]=nz(pick([1,-1])*rnd(1,7),3);B[dd]=nz(pick([1,-1])*rnd(1,7),2);});
+      const lead=degrees[0];
+      if((op==='+'?A[lead]+B[lead]:A[lead]-B[lead])===0)B[lead]+=(B[lead]>0?1:-1)||1;
+      const res={};degrees.forEach(dd=>{res[dd]=op==='+'?A[dd]+B[dd]:A[dd]-B[dd];});
+      const P1=polyMk(degrees.map(dd=>[A[dd],dd])),P2=polyMk(degrees.map(dd=>[B[dd],dd]));
+      const ans=polyMk(degrees.map(dd=>[res[dd],dd]));
+      const text=op==='+'?`Add:\n  (${P1}) + (${P2})`:`Subtract:\n  (${P1}) − (${P2})`;
+      const flip={...res};flip[degrees[1]]=-flip[degrees[1]];
+      const w1=polyMk(degrees.map(dd=>[flip[dd],dd]));
+      const w2=polyMk(degrees.map(dd=>[op==='+'?A[dd]-B[dd]:A[dd]+B[dd],dd]));
+      let w3;
+      if(op==='-')w3=polyMk(degrees.map((dd,i)=>[i===0?A[dd]-B[dd]:A[dd]+B[dd],dd]));
+      else w3=polyMk(degrees.map(dd=>[dd===lead?res[dd]+nz(pick([1,-1])*rnd(1,3),2):res[dd],dd]));
+      return{text,answers:[ans],
+        hint:op==='+'?`Combine like terms: add the coefficients of matching powers of x.`:`Distribute the − to EVERY term of the second polynomial, then combine like terms.`,
+        multi:false,mcWrong:[w1,w2,w3]};
+    }
+  },
+  poly_mult:{
+    label:'Multiply',group:'py',
+    gen(d){
+      if(d==='easy'){
+        const k=nz(pick([1,-1])*rnd(2,5),2),m=pick([1,2]);
+        const p=nz(pick([1,-1])*rnd(1,5),2),q=nz(pick([1,-1])*rnd(1,6),3),r=nz(pick([1,-1])*rnd(1,7),4);
+        const mono=polyMk([[k,m]]),inner=polyMk([[p,2],[q,1],[r,0]]);
+        const ans=polyMk([[k*p,m+2],[k*q,m+1],[k*r,m]]);
+        const w1=polyMk([[k*p,m+2],[k*q,m+1],[r,m]]);
+        const w2=polyMk([[k*p,m+2],[-k*q,m+1],[k*r,m]]);
+        const w3=polyMk([[k*p+nz(pick([1,-1])*rnd(1,3),2),m+2],[k*q,m+1],[k*r,m]]);
+        return{text:`Multiply (distribute):\n  ${mono}(${inner})`,answers:[ans],
+          hint:`Multiply the monomial by EACH term inside.\nMultiply coefficients, and ADD exponents on x.`,
+          multi:false,mcWrong:[w1,w2,w3]};
+      } else if(d==='medium'){
+        const a=nz(pick([1,-1])*rnd(1,6),2),b=nz(pick([1,-1])*rnd(1,5),3),c=nz(pick([1,-1])*rnd(1,6),4);
+        const A2=b+a,A1=c+a*b,A0=a*c;
+        const left=polyMk([[1,1],[a,0]]),right=polyMk([[1,2],[b,1],[c,0]]);
+        const ans=polyMk([[1,3],[A2,2],[A1,1],[A0,0]]);
+        const w1=polyMk([[1,3],[A2,2],[-A1,1],[A0,0]]);
+        const w2=polyMk([[1,3],[b,2],[c,1],[A0,0]]);
+        const w3=polyMk([[1,3],[A2,2],[A1,1],[A0+nz(pick([1,-1])*rnd(1,4),2),0]]);
+        return{text:`Multiply:\n  (${left})(${right})`,answers:[ans],
+          hint:`Distribute each term of (${left}) across the trinomial, then combine like terms.`,
+          multi:false,mcWrong:[w1,w2,w3]};
+      } else {
+        const a=nz(pick([1,-1])*rnd(2,4),2),b=nz(pick([1,-1])*rnd(1,5),3),c=nz(pick([1,-1])*rnd(1,3),2),e2=nz(pick([1,-1])*rnd(1,5),3),e0=nz(pick([1,-1])*rnd(1,6),4);
+        const C3=a*c,C2=a*e2+b*c,C1=a*e0+b*e2,C0=b*e0;
+        const left=polyMk([[a,1],[b,0]]),right=polyMk([[c,2],[e2,1],[e0,0]]);
+        const ans=polyMk([[C3,3],[C2,2],[C1,1],[C0,0]]);
+        const w1=polyMk([[C3,3],[C2,2],[-C1,1],[C0,0]]);
+        const w2=polyMk([[C3,3],[C2+nz(pick([1,-1])*rnd(1,3),2),2],[C1,1],[C0,0]]);
+        const w3=polyMk([[C3,3],[C2,2],[C1,1],[C0+nz(pick([1,-1])*rnd(1,4),3),0]]);
+        return{text:`Multiply:\n  (${left})(${right})`,answers:[ans],
+          hint:`Each term of (${left}) times each term of the trinomial (that's 6 products), then combine like terms.`,
+          multi:false,mcWrong:[w1,w2,w3]};
+      }
+    }
+  },
+  poly_grouping:{
+    label:'Factor by Grouping',group:'py',
+    gen(d){
+      const p=d==='hard'?rnd(2,3):1;
+      const q=nz(pick([1,-1])*rnd(1,5),2),r=nz(pick([1,-1])*rnd(1,6),3);
+      const expr=polyMk([[p,3],[q,2],[p*r,1],[q*r,0]]);
+      const bin1=polyMk([[p,1],[q,0]]),bin2=polyMk([[1,2],[r,0]]);
+      const ans=`(${bin1})(${bin2})`;
+      const w1=`(${bin1})(${polyMk([[1,2],[-r,0]])})`;
+      const w2=`(${polyMk([[p,1],[-q,0]])})(${bin2})`;
+      const w3=`(${polyMk([[1,1],[r,0]])})(${polyMk([[p,2],[q,0]])})`;
+      return{text:`Factor by grouping:\n  ${expr}`,answers:[ans,`(${bin2})(${bin1})`],
+        hint:`1. Group into two pairs: (${polyMk([[p,3],[q,2]])}) + (${polyMk([[p*r,1],[q*r,0]])})\n2. Factor the GCF out of each pair.\n3. Both pairs share the binomial (${bin1}); factor it out.`,
+        multi:false,mcWrong:[w1,w2,w3]};
+    }
+  },
+  poly_cubes:{
+    label:'Sum / Difference of Cubes',group:'py',
+    gen(d){
+      const sign=pick([1,-1]);
+      if(d==='hard'){
+        const m=rnd(2,3),n=rnd(2,4);
+        const expr=`${polyMk([[m*m*m,3]])} ${sign>0?'+':'−'} ${n*n*n}`;
+        const bin=polyMk([[m,1],[sign*n,0]]);
+        const tri=polyMk([[m*m,2],[-sign*m*n,1],[n*n,0]]);
+        const ans=`(${bin})(${tri})`;
+        const w1=`(${bin})(${polyMk([[m*m,2],[sign*m*n,1],[n*n,0]])})`;
+        const w2=`(${polyMk([[m,1],[-sign*n,0]])})(${tri})`;
+        const w3=`(${bin})(${polyMk([[m*m,2],[-sign*2*m*n,1],[n*n,0]])})`;
+        return{text:`Factor completely:\n  ${expr}`,answers:[ans,`(${tri})(${bin})`],
+          hint:`a³ ± b³ = (a ± b)(a² ∓ ab + b²).\nHere a = ${m}x, b = ${n}.\nSOAP: Same sign, Opposite sign, Always Positive.`,
+          multi:false,mcWrong:[w1,w2,w3]};
+      } else {
+        const n=rnd(2,5);
+        const expr=`x³ ${sign>0?'+':'−'} ${n*n*n}`;
+        const bin=polyMk([[1,1],[sign*n,0]]);
+        const tri=polyMk([[1,2],[-sign*n,1],[n*n,0]]);
+        const ans=`(${bin})(${tri})`;
+        const w1=`(${bin})(${polyMk([[1,2],[sign*n,1],[n*n,0]])})`;
+        const w2=`(${polyMk([[1,1],[-sign*n,0]])})(${tri})`;
+        const w3=`(${bin})(${polyMk([[1,2],[-sign*2*n,1],[n*n,0]])})`;
+        return{text:`Factor completely:\n  ${expr}`,answers:[ans,`(${tri})(${bin})`],
+          hint:`a³ ± b³ = (a ± b)(a² ∓ ab + b²).\nHere a = x, b = ${n}  (since ${n}³ = ${n*n*n}).\nSOAP: Same sign, Opposite sign, Always Positive.`,
+          multi:false,mcWrong:[w1,w2,w3]};
+      }
+    }
+  },
+  poly_eval:{
+    label:'Evaluate',group:'py',
+    gen(d){
+      const deg=d==='easy'?2:3;
+      const val=d==='easy'?rnd(1,4):pick([-3,-2,-1,2,3]);
+      const cs={};for(let k=0;k<=deg;k++)cs[k]=nz(pick([1,-1])*rnd(1,5),2);
+      cs[deg]=Math.abs(cs[deg])||1;
+      const terms=[];for(let k=deg;k>=0;k--)terms.push([cs[k],k]);
+      const Pstr=polyMk(terms);
+      let res=0;for(let k=0;k<=deg;k++)res+=cs[k]*Math.pow(val,k);
+      let r2=0;for(let k=0;k<=deg;k++)r2+=cs[k]*Math.pow(-val,k);
+      const mcWrong=[`${r2}`,`${res-cs[0]}`,`${res+nz(pick([1,-1])*rnd(2,6),3)}`];
+      return{text:`Evaluate P(${val}) for:\n  P(x) = ${Pstr}`,answers:[`${res}`],
+        hint:`Substitute x = ${val} into every term, then use order of operations.\nBe careful with signs: (${val})² is positive.`,
+        multi:false,mcWrong};
     }
   },
   vertex:{label:'Vertex Form',group:'qt',gen(d){
@@ -1550,7 +1793,25 @@ const examples={
     answer:matrixHTML([[1,3],[0,-2]])},
   mat_rowop_identify:{problem:'A = '+matrixHTML([[1,3],[2,4]])+'  →  B = '+matrixHTML([[1,3],[0,-2]])+'\nWhich row operation was used?',
     steps:[['Compare Row 1','[1,3] → [1,3]  — unchanged, so Row 1 was not the target'],['Compare Row 2','[2,4] → [0,-2]  — this row changed'],['Test R2 - 2R1','[2,4] - 2[1,3] = [2-2, 4-6] = [0,-2]  ✓ matches B!']],
-    answer:'R2 → R2 - 2R1'}
+    answer:'R2 → R2 - 2R1'},
+  poly_classify_deg:{problem:'Classify by degree:\n  7x - 2x⁴ + 5',
+    steps:[['Find the highest exponent','The powers present are 1 and 4'],['Take the largest','Highest power = 4'],['Name it','Degree 4 → Quartic']],answer:'Quartic'},
+  poly_classify_terms:{problem:'Classify by number of terms:\n  3x² - x + 8',
+    steps:[['Count the terms','3x²  |  -x  |  8  → three terms'],['Match the name','3 terms → Trinomial']],answer:'Trinomial'},
+  poly_degree_lc:{problem:'State the degree and leading coefficient:\n  5x - 3x³ + 2',
+    steps:[['Put in standard form','-3x³ + 5x + 2'],['Degree = highest power','Highest power is 3 → degree 3'],['Leading coefficient','Coefficient of the x³ term = -3']],answer:'Degree 3, leading coefficient -3'},
+  poly_simplify:{problem:'Simplify and write in standard form:\n  4x + 2x² - x + 5 - 3x²',
+    steps:[['Group like terms','x²: 2x² - 3x²   |   x: 4x - x   |   constant: 5'],['Combine each group','x²: -x²   |   x: 3x   |   constant: 5'],['Write highest power first','-x² + 3x + 5']],answer:'-x² + 3x + 5'},
+  poly_addsub:{problem:'Subtract:\n  (3x² + 2x - 1) − (x² - 4x + 6)',
+    steps:[['Distribute the minus','3x² + 2x - 1 - x² + 4x - 6'],['Combine x² terms','3x² - x² = 2x²'],['Combine x terms','2x + 4x = 6x'],['Combine constants','-1 - 6 = -7']],answer:'2x² + 6x - 7'},
+  poly_mult:{problem:'Multiply:\n  (x + 3)(x² - 2x + 4)',
+    steps:[['Distribute x','x·x² - x·2x + x·4 = x³ - 2x² + 4x'],['Distribute 3','3·x² - 3·2x + 3·4 = 3x² - 6x + 12'],['Add the results','x³ - 2x² + 4x + 3x² - 6x + 12'],['Combine like terms','x³ + x² - 2x + 12']],answer:'x³ + x² - 2x + 12'},
+  poly_grouping:{problem:'Factor by grouping:\n  x³ + 2x² + 5x + 10',
+    steps:[['Group in pairs','(x³ + 2x²) + (5x + 10)'],['Factor each pair','x²(x + 2) + 5(x + 2)'],['Common binomial','both have (x + 2)'],['Factor it out','(x + 2)(x² + 5)']],answer:'(x + 2)(x² + 5)'},
+  poly_cubes:{problem:'Factor completely:\n  x³ - 27',
+    steps:[['Recognize cubes','x³ - 27 = x³ - 3³, so a = x, b = 3'],['Apply the formula','a³ - b³ = (a - b)(a² + ab + b²)'],['Substitute','(x - 3)(x² + 3x + 9)'],['Check middle sign (SOAP)','Same (−), Opposite (+), Always Positive (+9)']],answer:'(x - 3)(x² + 3x + 9)'},
+  poly_eval:{problem:'Evaluate P(-2) for:\n  P(x) = x³ - 2x² + 4',
+    steps:[['Substitute x = -2','(-2)³ - 2(-2)² + 4'],['Powers first','(-2)³ = -8,  (-2)² = 4'],['Multiply','-8 - 2(4) + 4 = -8 - 8 + 4'],['Add','= -12']],answer:'P(-2) = -12'}
 };
 const rules={
   combining:`Like terms have the SAME variable AND the same exponent.\n• 3x and 5x are like terms → combine: 8x\n• 3x and 3x² are NOT like terms\n• 4xy and -2xy are like terms → combine: 2xy\nConstants (numbers with no variable) are always like terms.`,
@@ -1586,18 +1847,27 @@ const rules={
   mat_det3:`Determinant of a 3×3 Matrix (Cofactor Expansion):\nFor A = [[a,b,c],[d,e,f],[g,h,i]], expand along row 1:\ndet(A) = a(ei - fh) - b(di - fg) + c(dh - eg)\nTip: alternate +, -, + signs across the row.`,
   mat_rref:`Row Reduction (Gaussian Elimination → RREF):\nUse three row operations to simplify a matrix:\n1. Swap two rows\n2. Multiply a row by a nonzero constant\n3. Add a multiple of one row to another\nGoal — Reduced Row-Echelon Form (RREF): 1's on the diagonal, 0's everywhere else in those columns.\nFor an augmented matrix [A | b], the last column in RREF gives the solution to the system.`,
   mat_rowop_apply:`Applying a Row Operation:\nThe 3 elementary row operations are:\n1. Swap two rows: Ri ↔ Rj\n2. Scale a row: Ri → k·Ri  (k ≠ 0)\n3. Add a multiple of one row to another: Ri → Ri + k·Rj\nOnly the target row changes — every other row stays exactly the same.\nTo do Ri → Ri + k·Rj: multiply row j by k first, then add it to row i entry-by-entry (same column lines up with same column).\nEasy = one operation on a 2×2 (shown fully worked, entry by entry). Medium = two operations in a row (combine the steps). Hard = two operations on a 3×3 — pick the correct final matrix from the choices.`,
+  poly_classify_deg:`The DEGREE of a polynomial is the highest exponent on the variable.\nClassify by degree:\n  0 → Constant   (e.g. 7)\n  1 → Linear     (e.g. 2x + 1)\n  2 → Quadratic  (e.g. x² - 5)\n  3 → Cubic      (e.g. x³ + x)\n  4 → Quartic\n  5 → Quintic\nTip: scan ALL terms for the biggest power — it isn't always the first one written.`,
+  poly_classify_terms:`Classify a polynomial by its NUMBER OF TERMS (terms are separated by + or −):\n  1 term  → Monomial   (e.g. 4x³)\n  2 terms → Binomial   (e.g. x² - 9)\n  3 terms → Trinomial  (e.g. x² + 5x + 6)\n  4 or more → Polynomial\nSimplify (combine like terms) BEFORE you count.`,
+  poly_degree_lc:`Standard form writes terms from the HIGHEST power down to the constant.\n• Degree = the highest exponent.\n• Leading coefficient = the coefficient of that highest-degree term.\nExample:  -3x³ + 5x + 2  → degree 3, leading coefficient -3.\nWatch out: if the polynomial is out of order, reorder it first — the leading term is the highest-degree one, not the first one written.`,
+  poly_simplify:`To simplify a polynomial:\n1. Identify LIKE terms — same variable to the same power.\n2. Add the coefficients of each group.\n3. Write the result in standard form (highest power first).\nOnly like terms combine:  3x² and 5x² do,  3x² and 5x do NOT.`,
+  poly_addsub:`Add or subtract polynomials by combining LIKE terms.\n• Addition: just combine matching powers.\n• Subtraction: distribute the − to EVERY term of the second polynomial first, then combine.\n(3x² + 2x) − (x² − 4x) = 3x² + 2x − x² + 4x = 2x² + 6x.`,
+  poly_mult:`Multiply polynomials with the DISTRIBUTIVE property:\n• Multiply every term of the first by every term of the second.\n• Multiply coefficients; ADD exponents on the variable (x² · x³ = x⁵).\n• Combine like terms at the end.\nA binomial × a trinomial gives 2 × 3 = 6 products before combining.`,
+  poly_grouping:`Factor by Grouping (used for 4-term polynomials):\n1. Group the terms into two pairs.\n2. Factor the GCF out of each pair.\n3. If both pairs now share the SAME binomial, factor that binomial out.\n   ax³ + bx² + cx + d → (…)(…)\nIf the shared binomials don't match, try reordering the terms.`,
+  poly_cubes:`Sum & Difference of Cubes:\n  a³ + b³ = (a + b)(a² − ab + b²)\n  a³ − b³ = (a − b)(a² + ab + b²)\nSteps:\n1. Write each part as a cube to find a and b.\n2. Plug into the formula.\nRemember SOAP for the signs: Same, Opposite, Always Positive.\nThe trinomial factor does NOT factor further (and it's not a perfect square).`,
+  poly_eval:`To evaluate a polynomial at a value:\n1. Substitute the number for x in EVERY term.\n2. Apply exponents first, then multiply, then add (order of operations).\n3. Watch signs — a negative input raised to an EVEN power becomes positive.\nExample: P(x)=x²−3x, P(−2) = (−2)² − 3(−2) = 4 + 6 = 10.`,
   mat_rowop_identify:`Identifying a Row Operation:\nCompare matrix A to matrix B row by row.\n• A row that's unchanged wasn't the target.\n• A row that traded places exactly with another row is a swap: Ri ↔ Rj.\n• A row that's a constant multiple of its old self is a scale: Ri → k·Ri.\n• A row that equals (its old self) + k×(another row) is an add-a-multiple operation: Ri → Ri + k·Rj. Try small integers k = ±1, ±2, ±3 to find the match.`
 };
 function renderConcept(key){
   const box=document.getElementById('concept-box');if(!box)return;
-  const isBa=BASICS_TOPICS.has(key),isFc=FC_TOPICS.has(key),isGr=GR_TOPICS.has(key),isSe=SE_TOPICS.has(key),isCx=CX_TOPICS.has(key),isSy=SYS_TOPICS.has(key),isMx=MX_TOPICS.has(key);
-  const cls=isBa?' basics':isFc?' fc':isGr?' gr':isSe?' se':isCx?' cx':isSy?' sys':isMx?' mx':'';
+  const isBa=BASICS_TOPICS.has(key),isFc=FC_TOPICS.has(key),isGr=GR_TOPICS.has(key),isSe=SE_TOPICS.has(key),isCx=CX_TOPICS.has(key),isSy=SYS_TOPICS.has(key),isMx=MX_TOPICS.has(key),isPy=PY_TOPICS.has(key);
+  const cls=isBa?' basics':isFc?' fc':isGr?' gr':isSe?' se':isCx?' cx':isSy?' sys':isMx?' mx':isPy?' py':'';
   box.className=`concept-box${cls}`;
   const ex=examples[key],lbl=topics[key]?.label||key;
-  const tcls=isBa?'basics':isFc?'fc':isGr?'gr':isSe?'se':isCx?'cx':isSy?'sys':isMx?'mx':'';
-  const hlC=isBa?'#fff8e1':isFc?'#e0f2f1':isGr?'#e3f2fd':isSe?'#fce4ec':isCx?'#e0f7fa':isSy?'#e8eaf6':isMx?'#efebe9':'#fff8e1';
-  const hlB=isBa?'#ffe082':isFc?'#80cbc4':isGr?'#90caf9':isSe?'#f48fb1':isCx?'#80deea':isSy?'#c5cae9':isMx?'#bcaaa4':'#ffe082';
-  const hlTxt=isBa?'#e65100':isFc?'#00695c':isGr?'#1565c0':isSe?'#c2185b':isCx?'#00838f':isSy?'#303f9f':isMx?'#4e342e':'#f57f17';
+  const tcls=isBa?'basics':isFc?'fc':isGr?'gr':isSe?'se':isCx?'cx':isSy?'sys':isMx?'mx':isPy?'py':'';
+  const hlC=isBa?'#fff8e1':isFc?'#e0f2f1':isGr?'#e3f2fd':isSe?'#fce4ec':isCx?'#e0f7fa':isSy?'#e8eaf6':isMx?'#efebe9':isPy?'#f1f8e9':'#fff8e1';
+  const hlB=isBa?'#ffe082':isFc?'#80cbc4':isGr?'#90caf9':isSe?'#f48fb1':isCx?'#80deea':isSy?'#c5cae9':isMx?'#bcaaa4':isPy?'#c5e1a5':'#ffe082';
+  const hlTxt=isBa?'#e65100':isFc?'#00695c':isGr?'#1565c0':isSe?'#c2185b':isCx?'#00838f':isSy?'#303f9f':isMx?'#4e342e':isPy?'#33691e':'#f57f17';
   const stH=ex.steps.map(([l,t])=>`<li><span style="display:inline-block;background:${hlC};border:1px solid ${hlB};border-radius:6px;font-size:12px;font-weight:700;color:${hlTxt};padding:1px 8px;margin-right:7px">${l}</span>${mathHTML(t).replace(/\n/g,'<br>')}</li>`).join('');
   box.innerHTML=`<div class="concept-header">📚 ${lbl}</div><div class="concept-rule${cls?(' '+tcls):''}">${mathHTML(rules[key]||'').replace(/\n/g,'<br>')}</div><div class="concept-example-title">📖 Worked Example</div><div class="concept-example-prob">${mathHTML(ex.problem).replace(/\n/g,'<br>')}</div><ul class="concept-steps">${stH}</ul><div class="concept-answer">${mathHTML(ex.answer)}</div>`;
 }
@@ -1688,7 +1958,7 @@ function buildMC(cur,topic){
     } else {
       rawWrong=['(-∞, ∞)','[0, ∞)','(-∞, 0]','(0, ∞)'].filter(w=>w!==ans_str);
     }
-  } else if(topic==='solve_factor'||topic==='complete_square'||topic==='quad_formula'||topic==='simp_neg_root'||topic==='re_im_parts'||topic==='cx_addsub'||topic==='cx_mult'||topic==='cx_rationalize'||topic==='sys2_elim'||topic==='sys_subst'||topic==='sys_graph'||topic==='sys3_elim'||topic==='sys3_matrix'||topic==='mat_add'||topic==='mat_sub'||topic==='mat_mult'||topic==='mat_det2'||topic==='mat_det3'||topic==='mat_rref'||topic==='mat_rowop_apply'||topic==='mat_rowop_identify'){
+  } else if(topic==='solve_factor'||topic==='complete_square'||topic==='quad_formula'||topic==='simp_neg_root'||topic==='re_im_parts'||topic==='cx_addsub'||topic==='cx_mult'||topic==='cx_rationalize'||topic==='sys2_elim'||topic==='sys_subst'||topic==='sys_graph'||topic==='sys3_elim'||topic==='sys3_matrix'||topic==='mat_add'||topic==='mat_sub'||topic==='mat_mult'||topic==='mat_det2'||topic==='mat_det3'||topic==='mat_rref'||topic==='mat_rowop_apply'||topic==='mat_rowop_identify'||PY_TOPICS.has(topic)){
     ans_str=cur.answers[0];
     rawWrong=cur.mcWrong||[];
   } else {
@@ -1804,6 +2074,7 @@ function groupIdOf(key){
   if(CX_TOPICS.has(key))return 'cx';
   if(SYS_TOPICS.has(key))return 'sys';
   if(MX_TOPICS.has(key))return 'mx';
+  if(PY_TOPICS.has(key))return 'py';
   return 'qt';
 }
 function toggleGroup(hdr){
@@ -1827,12 +2098,12 @@ function setTopicSidebar(key){
   document.querySelectorAll('.sidebar-item').forEach(el=>{
     el.className='sidebar-item';
   });
-  const isBa=BASICS_TOPICS.has(key),isFc=FC_TOPICS.has(key),isGr=GR_TOPICS.has(key),isSe=SE_TOPICS.has(key),isCx=CX_TOPICS.has(key),isSy=SYS_TOPICS.has(key),isMx=MX_TOPICS.has(key);
-  const cls=isBa?'active-basics':isFc?'active-fc':isGr?'active-gr':isSe?'active-se':isCx?'active-cx':isSy?'active-sys':isMx?'active-mx':'active-qt';
+  const isBa=BASICS_TOPICS.has(key),isFc=FC_TOPICS.has(key),isGr=GR_TOPICS.has(key),isSe=SE_TOPICS.has(key),isCx=CX_TOPICS.has(key),isSy=SYS_TOPICS.has(key),isMx=MX_TOPICS.has(key),isPy=PY_TOPICS.has(key);
+  const cls=isBa?'active-basics':isFc?'active-fc':isGr?'active-gr':isSe?'active-se':isCx?'active-cx':isSy?'active-sys':isMx?'active-mx':isPy?'active-py':'active-qt';
   const sid=document.getElementById('sid-'+key);
   if(sid)sid.className='sidebar-item '+cls;
   const nb=document.getElementById('new-btn');
-  nb.className='btn btn-primary'+(isBa?' basics-active':isFc?' fc-active':isGr?' gr-active':isSe?' se-active':isCx?' cx-active':isSy?' sys-active':isMx?' mx-active':'');
+  nb.className='btn btn-primary'+(isBa?' basics-active':isFc?' fc-active':isGr?' gr-active':isSe?' se-active':isCx?' cx-active':isSy?' sys-active':isMx?' mx-active':isPy?' py-active':'');
   renderConcept(key);
   newProblem();
 }
@@ -1847,10 +2118,10 @@ function newProblem(){
   if(quizMode)return;
   resetPerQuestion();
   current=topics[currentTopic].gen(difficulty);
-  const isBa=BASICS_TOPICS.has(currentTopic),isFc=FC_TOPICS.has(currentTopic),isGr=GR_TOPICS.has(currentTopic),isSe=SE_TOPICS.has(currentTopic),isCx=CX_TOPICS.has(currentTopic),isSy=SYS_TOPICS.has(currentTopic),isMx=MX_TOPICS.has(currentTopic);
+  const isBa=BASICS_TOPICS.has(currentTopic),isFc=FC_TOPICS.has(currentTopic),isGr=GR_TOPICS.has(currentTopic),isSe=SE_TOPICS.has(currentTopic),isCx=CX_TOPICS.has(currentTopic),isSy=SYS_TOPICS.has(currentTopic),isMx=MX_TOPICS.has(currentTopic),isPy=PY_TOPICS.has(currentTopic);
   const bt=document.getElementById('badge-topic');
   bt.textContent=topics[currentTopic].label;
-  bt.className=`badge badge-${isBa?'basics':isFc?'fc':isGr?'gr':isSe?'se':isCx?'cx':isSy?'sys':isMx?'mx':'qt'}`;
+  bt.className=`badge badge-${isBa?'basics':isFc?'fc':isGr?'gr':isSe?'se':isCx?'cx':isSy?'sys':isMx?'mx':isPy?'py':'qt'}`;
   const bd=document.getElementById('badge-diff');
   bd.className=`badge badge-${difficulty}`;bd.textContent=difficulty.charAt(0).toUpperCase()+difficulty.slice(1);
   document.getElementById('prob').innerHTML=mathHTML(current.text);
@@ -1868,7 +2139,7 @@ function resetStats(){total=0;correct=0;updateStats();newProblem();}
 function qp(){const mc=+document.getElementById('mc-count').value,fi=+document.getElementById('fill-count').value;document.getElementById('mc-val').textContent=mc;document.getElementById('fill-val').textContent=fi;const t=mc+fi;document.getElementById('quiz-preview').textContent=t===0?'Please select at least 1 problem':`${t} problems total: ${mc} Multiple Choice + ${fi} Fill-in`;}
 function startQuiz(){const mc=+document.getElementById('mc-count').value,fi=+document.getElementById('fill-count').value;if(mc+fi===0){alert('Please select at least 1 problem.');return;}quizMode=true;quizQ=[...Array(mc).fill('mc'),...Array(fi).fill('fill')];for(let i=quizQ.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[quizQ[i],quizQ[j]]=[quizQ[j],quizQ[i]];}quizIdx=0;quizRes=[];document.getElementById('quiz-setup').style.display='none';document.getElementById('quiz-prog').style.display='flex';renderDots();showQProblem();}
 function renderDots(){const c=document.getElementById('quiz-dots');c.innerHTML='';quizQ.forEach((t,i)=>{const d=document.createElement('div');d.className='qd '+(i<quizRes.length?(quizRes[i]?'ok':'bad'):t);c.appendChild(d);});document.getElementById('quiz-label').textContent=quizIdx<quizQ.length?`Question ${quizIdx+1} / ${quizQ.length}  —  ${quizQ[quizIdx]==='mc'?'🔘 Multiple Choice':'✏️ Fill-in'}`:'✓ All done!';}
-function showQProblem(){if(quizIdx>=quizQ.length){showQuizSummary();return;}resetPerQuestion();current=topics[currentTopic].gen(difficulty);const isBa=BASICS_TOPICS.has(currentTopic),isFc=FC_TOPICS.has(currentTopic),isGr=GR_TOPICS.has(currentTopic),isSe=SE_TOPICS.has(currentTopic),isCx=CX_TOPICS.has(currentTopic),isSy=SYS_TOPICS.has(currentTopic),isMx=MX_TOPICS.has(currentTopic);const bt=document.getElementById('badge-topic');bt.textContent=topics[currentTopic].label;bt.className=`badge badge-${isBa?'basics':isFc?'fc':isGr?'gr':isSe?'se':isCx?'cx':isSy?'sys':isMx?'mx':'qt'}`;const bd=document.getElementById('badge-diff');bd.className=`badge badge-${difficulty}`;bd.textContent=difficulty.charAt(0).toUpperCase()+difficulty.slice(1);document.getElementById('prob').innerHTML=mathHTML(current.text);document.getElementById('prob-svg').innerHTML=current.svg||'';document.getElementById('feedback').className='feedback';document.getElementById('hint').style.display='none';document.getElementById('hint-link').style.display='inline';const forceMC=current.isGraphMatch||current.isIneqMatch||current.mcOnly;if(quizQ[quizIdx]==='mc'||forceMC){if(current.isGraphMatch)renderGraphMatch(current);else if(current.isIneqMatch)renderInequalityMatch(current);else renderMC(current,currentTopic);}else renderFill();}
+function showQProblem(){if(quizIdx>=quizQ.length){showQuizSummary();return;}resetPerQuestion();current=topics[currentTopic].gen(difficulty);const isBa=BASICS_TOPICS.has(currentTopic),isFc=FC_TOPICS.has(currentTopic),isGr=GR_TOPICS.has(currentTopic),isSe=SE_TOPICS.has(currentTopic),isCx=CX_TOPICS.has(currentTopic),isSy=SYS_TOPICS.has(currentTopic),isMx=MX_TOPICS.has(currentTopic),isPy=PY_TOPICS.has(currentTopic);const bt=document.getElementById('badge-topic');bt.textContent=topics[currentTopic].label;bt.className=`badge badge-${isBa?'basics':isFc?'fc':isGr?'gr':isSe?'se':isCx?'cx':isSy?'sys':isMx?'mx':isPy?'py':'qt'}`;const bd=document.getElementById('badge-diff');bd.className=`badge badge-${difficulty}`;bd.textContent=difficulty.charAt(0).toUpperCase()+difficulty.slice(1);document.getElementById('prob').innerHTML=mathHTML(current.text);document.getElementById('prob-svg').innerHTML=current.svg||'';document.getElementById('feedback').className='feedback';document.getElementById('hint').style.display='none';document.getElementById('hint-link').style.display='inline';const forceMC=current.isGraphMatch||current.isIneqMatch||current.mcOnly;if(quizQ[quizIdx]==='mc'||forceMC){if(current.isGraphMatch)renderGraphMatch(current);else if(current.isIneqMatch)renderInequalityMatch(current);else renderMC(current,currentTopic);}else renderFill();}
 function nextQ(){quizIdx++;renderDots();showQProblem();}
 function showQuizSummary(){document.getElementById('quiz-prog').style.display='none';document.getElementById('next-row').style.display='none';const right=quizRes.filter(Boolean).length,tot=quizRes.length,pct=tot?Math.round(right/tot*100):0;const emoji=pct>=90?'🌟':pct>=70?'😊':pct>=50?'💪':'📚';document.getElementById('prob').innerText=`${emoji} Quiz Complete!\n\nScore: ${right} / ${tot} correct  (${pct}%)`;document.getElementById('mc-options').innerHTML=`<button class="btn btn-primary" style="margin-top:12px" onclick="endQuiz()">↩ Back to Practice</button>`;document.getElementById('feedback').className='feedback';document.getElementById('hint-link').style.display='none';document.getElementById('prob-svg').innerHTML='';document.getElementById('attempts-left-bar').style.display='none';quizMode=false;}
 function endQuiz(){quizMode=false;document.getElementById('quiz-setup').style.display='block';document.getElementById('quiz-prog').style.display='none';document.getElementById('next-row').style.display='none';newProblem();}
