@@ -301,6 +301,7 @@ math msqrt{padding-top:1px}
         <div class="sidebar-item" id="sid-poly_simplify" onclick="setTopicSidebar('poly_simplify')">Simplify (Standard Form)</div>
         <div class="sidebar-item" id="sid-poly_addsub" onclick="setTopicSidebar('poly_addsub')">Add &amp; Subtract</div>
         <div class="sidebar-item" id="sid-poly_mult" onclick="setTopicSidebar('poly_mult')">Multiply</div>
+        <div class="sidebar-item" id="sid-poly_binomial_theorem" onclick="setTopicSidebar('poly_binomial_theorem')">Binomial Theorem</div>
         <div class="sidebar-item" id="sid-poly_grouping" onclick="setTopicSidebar('poly_grouping')">Factor by Grouping</div>
         <div class="sidebar-item" id="sid-poly_cubes" onclick="setTopicSidebar('poly_cubes')">Sum / Difference of Cubes</div>
         <div class="sidebar-item" id="sid-poly_eval" onclick="setTopicSidebar('poly_eval')">Evaluate</div>
@@ -391,7 +392,7 @@ const SE_TOPICS=new Set(['solve_factor','complete_square','quad_formula']);
 const CX_TOPICS=new Set(['simp_neg_root','re_im_parts','cx_addsub','cx_mult','cx_rationalize']);
 const SYS_TOPICS=new Set(['sys2_elim','sys_subst','sys_graph','sys3_elim','sys3_matrix','sys_ineq']);
 const MX_TOPICS=new Set(['mat_add','mat_sub','mat_mult','mat_det2','mat_det3','mat_rref','mat_rowop_apply','mat_rowop_identify']);
-const PY_TOPICS=new Set(['poly_classify_deg','poly_classify_terms','poly_degree_lc','poly_simplify','poly_addsub','poly_mult','poly_grouping','poly_cubes','poly_eval','poly_long_div','poly_synth_div','poly_rational_root','poly_conjugate','poly_descartes']);
+const PY_TOPICS=new Set(['poly_classify_deg','poly_classify_terms','poly_degree_lc','poly_simplify','poly_addsub','poly_mult','poly_binomial_theorem','poly_grouping','poly_cubes','poly_eval','poly_long_div','poly_synth_div','poly_rational_root','poly_conjugate','poly_descartes']);
 let questionAnswered=false,attemptCount=0,triedMcIndices=new Set(),mcCorrect=null;
 let quizMode=false,quizQ=[],quizIdx=0,quizRes=[];
 function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
@@ -793,6 +794,7 @@ function polyDesc(pairs){return poly(pairs.map(([c,d])=>pterm(c,d)));}
 function polyMk(pairs){return poly(pairs.map(([c,d])=>pterm(c,d)))||'0';}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function nz(v,alt){return v===0?alt:v;}
+function nCr(n,k){if(k<0||k>n)return 0;k=Math.min(k,n-k);let r=1;for(let i=0;i<k;i++)r=r*(n-i)/(i+1);return Math.round(r);}
 function coefsPairs(coefs){const deg=coefs.length-1;return coefs.map((c,i)=>[c,deg-i]);}
 function longDivC(coefs,divCoefs){
   let rem=coefs.slice();
@@ -1037,6 +1039,38 @@ const topics={
         const w3=polyMk([[C3,3],[C2,2],[C1,1],[C0+nz(pick([1,-1])*rnd(1,4),3),0]]);
         return{text:`Multiply:\n  (${left})(${right})`,answers:[ans],
           hint:`Each term of (${left}) times each term of the trinomial (that's 6 products), then combine like terms.`,
+          multi:false,mcWrong:[w1,w2,w3]};
+      }
+    }
+  },
+  poly_binomial_theorem:{
+    label:'Binomial Theorem',group:'py',
+    gen(d){
+      const n=d==='easy'?pick([2,3]):d==='medium'?4:pick([5,6]);
+      const b=pick([1,-1])*rnd(1,d==='easy'?4:5);
+      const bS=b>0?`+ ${b}`:`- ${Math.abs(b)}`;
+      if(d!=='hard'){
+        const terms=[];
+        for(let k=0;k<=n;k++)terms.push([nCr(n,k)*Math.pow(b,k),n-k]);
+        const ans=polyMk(terms);
+        const w1=polyMk(terms.map(([c,dd],k)=>[Math.pow(b,k),dd]));
+        const w2=polyMk(terms.map(([c,dd],k)=>[nCr(n-1,k)*Math.pow(b,k),dd]));
+        const w3=b<0?polyMk(terms.map(([c,dd],k)=>[nCr(n,k)*Math.pow(Math.abs(b),k),dd]))
+                    :polyMk(terms.map(([c,dd],k)=>[k===1?c*2:c,dd]));
+        const pRow=Array.from({length:n+1},(_,k)=>nCr(n,k)).join(', ');
+        return{text:`Expand using the Binomial Theorem:\n  (x ${bS})${sup(n)}`,answers:[ans],
+          hint:`(a+b)ⁿ = C(n,0)aⁿ + C(n,1)aⁿ⁻¹b + … + C(n,n)bⁿ\nRow ${n} of Pascal's Triangle: ${pRow}\nMultiply each coefficient by the matching power of ${b}, and pair it with the matching power of x (powers of x count DOWN from ${n}, powers of ${b} count UP from 0).${b<0?'\nSince b is negative, the term signs ALTERNATE.':''}`,
+          multi:false,mcWrong:[w1,w2,w3],mcOnly:true};
+      } else {
+        const k=rnd(1,n-1),deg=n-k;
+        const coeff=nCr(n,k)*Math.pow(b,k);
+        const degStr=deg===1?'x':'x'+sup(deg);
+        const ans=`${coeff}`;
+        const w1=`${nCr(n,k)}`;
+        const w2=`${nCr(n,k-1)*Math.pow(b,k-1)}`;
+        const w3=`${-coeff}`;
+        return{text:`In the expansion of (x ${bS})${sup(n)}, find the coefficient of the ${degStr} term.`,answers:[ans],
+          hint:`The ${degStr} term uses k=${k} (the exponent on x is n−k = ${n}−${k} = ${deg}).\nCoefficient = C(${n}, ${k}) · (${b})${k===1?'':sup(k)} = ${nCr(n,k)} · ${Math.pow(b,k)} = ${coeff}.`,
           multi:false,mcWrong:[w1,w2,w3]};
       }
     }
@@ -1969,6 +2003,8 @@ const examples={
     steps:[['Distribute the minus','3x² + 2x - 1 - x² + 4x - 6'],['Combine x² terms','3x² - x² = 2x²'],['Combine x terms','2x + 4x = 6x'],['Combine constants','-1 - 6 = -7']],answer:'2x² + 6x - 7'},
   poly_mult:{problem:'Multiply:\n  (x + 3)(x² - 2x + 4)',
     steps:[['Distribute x','x·x² - x·2x + x·4 = x³ - 2x² + 4x'],['Distribute 3','3·x² - 3·2x + 3·4 = 3x² - 6x + 12'],['Add the results','x³ - 2x² + 4x + 3x² - 6x + 12'],['Combine like terms','x³ + x² - 2x + 12']],answer:'x³ + x² - 2x + 12'},
+  poly_binomial_theorem:{problem:'Expand using the Binomial Theorem:\n  (x + 2)⁴',
+    steps:[['Read row 4 of Pascal\'s Triangle','1, 4, 6, 4, 1 — these are C(4,0) through C(4,4)'],['Write each term: C(4,k)·x⁴⁻ᵏ·2ᵏ','1·x⁴,  4·x³·2,  6·x²·4,  4·x·8,  1·16'],['Simplify each term','x⁴,  8x³,  24x²,  32x,  16'],['Add them up','x⁴ + 8x³ + 24x² + 32x + 16']],answer:'x⁴ + 8x³ + 24x² + 32x + 16'},
   poly_grouping:{problem:'Factor by grouping:\n  x³ + 2x² + 5x + 10',
     steps:[['Group in pairs','(x³ + 2x²) + (5x + 10)'],['Factor each pair','x²(x + 2) + 5(x + 2)'],['Common binomial','both have (x + 2)'],['Factor it out','(x + 2)(x² + 5)']],answer:'(x + 2)(x² + 5)'},
   poly_cubes:{problem:'Factor completely:\n  x³ - 27',
@@ -2026,6 +2062,7 @@ const rules={
   poly_simplify:`To simplify a polynomial:\n1. Identify LIKE terms — same variable to the same power.\n2. Add the coefficients of each group.\n3. Write the result in standard form (highest power first).\nOnly like terms combine:  3x² and 5x² do,  3x² and 5x do NOT.`,
   poly_addsub:`Add or subtract polynomials by combining LIKE terms.\n• Addition: just combine matching powers.\n• Subtraction: distribute the − to EVERY term of the second polynomial first, then combine.\n(3x² + 2x) − (x² − 4x) = 3x² + 2x − x² + 4x = 2x² + 6x.`,
   poly_mult:`Multiply polynomials with the DISTRIBUTIVE property:\n• Multiply every term of the first by every term of the second.\n• Multiply coefficients; ADD exponents on the variable (x² · x³ = x⁵).\n• Combine like terms at the end.\nA binomial × a trinomial gives 2 × 3 = 6 products before combining.`,
+  poly_binomial_theorem:`The Binomial Theorem expands (a+b)ⁿ WITHOUT multiplying it out term by term:\n  (a+b)ⁿ = C(n,0)aⁿb⁰ + C(n,1)aⁿ⁻¹b¹ + C(n,2)aⁿ⁻²b² + … + C(n,n)a⁰bⁿ\nC(n,k) = n! / (k!(n−k)!) — these are exactly the numbers in row n of Pascal's Triangle.\nPattern to remember: the exponent on a starts at n and counts DOWN by 1 each term; the exponent on b starts at 0 and counts UP by 1 each term — they always add to n.\nIf b is negative, the term signs ALTERNATE (+, −, +, −, …).`,
   poly_grouping:`Factor by Grouping (used for 4-term polynomials):\n1. Group the terms into two pairs.\n2. Factor the GCF out of each pair.\n3. If both pairs now share the SAME binomial, factor that binomial out.\n   ax³ + bx² + cx + d → (…)(…)\nIf the shared binomials don't match, try reordering the terms.`,
   poly_cubes:`Sum & Difference of Cubes:\n  a³ + b³ = (a + b)(a² − ab + b²)\n  a³ − b³ = (a − b)(a² + ab + b²)\nSteps:\n1. Write each part as a cube to find a and b.\n2. Plug into the formula.\nRemember SOAP for the signs: Same, Opposite, Always Positive.\nThe trinomial factor does NOT factor further (and it's not a perfect square).`,
   poly_eval:`To evaluate a polynomial at a value:\n1. Substitute the number for x in EVERY term.\n2. Apply exponents first, then multiply, then add (order of operations).\n3. Watch signs — a negative input raised to an EVEN power becomes positive.\nExample: P(x)=x²−3x, P(−2) = (−2)² − 3(−2) = 4 + 6 = 10.`,
